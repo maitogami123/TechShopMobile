@@ -8,43 +8,50 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.vi.techshopmobile.R
 
-val Poppins = FontFamily(
+val Roboto = FontFamily(
     fonts = listOf(
-        Font(R.font.poppins_regular, FontWeight.Normal),
-        Font(R.font.poppins_bold, FontWeight.Bold),
-        Font(R.font.poppins_semibold, FontWeight.SemiBold),
+        Font(R.font.roboto_regular, FontWeight.Normal),
+        Font(R.font.roboto_bold, FontWeight.Bold),
+        Font(R.font.roboto_medium, FontWeight.SemiBold),
     )
 )
 
 val Typography = Typography(
-    displaySmall = TextStyle(
-        fontSize = 24.sp,
-        fontFamily = Poppins,
-        fontWeight = FontWeight.Normal,
-        lineHeight = 36.sp,
-    ),
-    displayMedium = TextStyle(
-        fontSize = 32.sp,
-        fontFamily = Poppins,
-        fontWeight = FontWeight.Normal,
-        lineHeight = 48.sp,
+    headlineMedium = TextStyle(
+        fontSize = 18.sp,
+        fontFamily = Roboto,
+        fontWeight = FontWeight.SemiBold,
     ),
     bodySmall = TextStyle(
-        fontSize = 14.sp,
-        fontFamily = Poppins,
+        fontSize = 12.sp,
+        fontFamily = Roboto,
         fontWeight = FontWeight.Normal,
-        lineHeight = 21.sp,
     ),
     bodyMedium = TextStyle(
+        fontSize = 14.sp,
+        fontFamily = Roboto,
+        fontWeight = FontWeight.Normal,
+    ),
+    labelMedium = TextStyle(
+        fontSize = 14.sp,
+        fontFamily = Roboto,
+        fontWeight = FontWeight.Normal,
+        lineHeight = 18.sp
+    ),
+    displaySmall = TextStyle(
         fontSize = 16.sp,
-        fontFamily = Poppins,
+        fontFamily = Roboto,
         fontWeight = FontWeight.Normal,
-        lineHeight = 24.sp,
     ),
-    labelSmall = TextStyle(
-        fontSize = 13.sp,
-        fontFamily = Poppins,
+    displayMedium = TextStyle(
+        fontSize = 24.sp,
+        fontFamily = Roboto,
         fontWeight = FontWeight.Normal,
-        lineHeight = 19.sp,
+        lineHeight = 32.sp
     ),
+    displayLarge = TextStyle(
+        fontSize = 32.sp,
+        fontFamily = Roboto,
+        fontWeight = FontWeight.Normal,
+    )
 )
