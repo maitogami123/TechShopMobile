@@ -41,12 +41,12 @@ val Typography = Typography(
     displaySmall = TextStyle(
         fontSize = 16.sp,
         fontFamily = Roboto,
-        fontWeight = FontWeight.Normal,
+        fontWeight = FontWeight.SemiBold,
     ),
     displayMedium = TextStyle(
         fontSize = 24.sp,
         fontFamily = Roboto,
-        fontWeight = FontWeight.Normal,
+        fontWeight = FontWeight.SemiBold,
         lineHeight = 32.sp
     ),
     displayLarge = TextStyle(
