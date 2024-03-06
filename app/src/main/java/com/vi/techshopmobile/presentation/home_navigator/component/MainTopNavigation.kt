@@ -1,4 +1,4 @@
-package com.vi.techshopmobile.presentation.techshop_navigator.component
+package com.vi.techshopmobile.presentation.home_navigator.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
