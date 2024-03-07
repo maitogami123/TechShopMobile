@@ -2,7 +2,7 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
-      <entry key="PreviewFloatingBottomBar">
+      <entry key="PreviewInput">
         <State />
       </entry>
       <entry key="PreviewMainTopNavigation">
@@ -11,7 +11,7 @@
       <entry key="PreviewShoppingCartBtn">
         <State />
       </entry>
-      <entry key="PreviewTopBar">
+      <entry key="PreviewSignInScreen">
         <State />
       </entry>
       <entry key="PreviewUserTopNavigation">

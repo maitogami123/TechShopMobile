@@ -2,6 +2,7 @@ package com.vi.techshopmobile.presentation.home_navigator.component
 
 import android.content.res.Configuration
 import androidx.annotation.DrawableRes
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -9,6 +10,8 @@ import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
@@ -32,12 +35,12 @@ fun TechShopBottomNavigation(
     selectedItem: Int,
     onItemClick: (Int) -> Unit
 ) {
-    BoxWithConstraints {
+    Box {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(24.dp, 24.dp, 0.dp, 0.dp))
-                .size(64.dp)
+                .height(64.dp)
                 .background(MaterialTheme.colorScheme.primary)
                 .align(Alignment.BottomCenter),
         ) {}
@@ -76,7 +79,8 @@ fun PreviewBottomNavigation() {
     TechShopMobileTheme {
         Box(
             modifier = Modifier
-                .background(Color(0xFFFFFFFF)).fillMaxSize(), contentAlignment = Alignment.BottomCenter
+                .background(Color(0xFFFFFFFF))
+                .fillMaxSize(), contentAlignment = Alignment.BottomCenter
         ) {
             TechShopBottomNavigation(items = listOf(
                 BottomNavigationItem(icon = R.drawable.ic_search, text = "Search"),

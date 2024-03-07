@@ -13,7 +13,7 @@ import com.vi.techshopmobile.presentation.authenticate.sign_in.SignInScreen
 import com.vi.techshopmobile.presentation.authenticate.sign_up.SignUpScreen
 
 @Composable
-fun AuthenticateNavigator(navGraphController: NavController) {
+fun AuthenticateNavigator(navGraphController: NavController, isLoggedIn: Boolean = false) {
     val navController = rememberNavController();
 
     NavHost(

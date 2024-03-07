@@ -10,12 +10,13 @@ import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import com.vi.techshopmobile.presentation.authenticate.authenticate_navigator.AuthenticateNavigator
 import com.vi.techshopmobile.presentation.home_navigator.HomeNavigator
+import com.vi.techshopmobile.presentation.home_navigator.TechShopNavigatorViewModel
 import com.vi.techshopmobile.presentation.onboarding.OnBoardingScreen
 import com.vi.techshopmobile.presentation.onboarding.OnBoardingViewModel
 
 @Composable
 fun NavGraph(
-    startDestination: String
+    startDestination: String,
 ) {
     val navController = rememberNavController()
     NavHost(

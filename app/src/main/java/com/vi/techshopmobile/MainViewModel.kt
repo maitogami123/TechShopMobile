@@ -6,6 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.vi.techshopmobile.domain.usecases.app_entry.AppEntryUseCases
+import com.vi.techshopmobile.domain.usecases.app_session.AppSessionUseCases
 import com.vi.techshopmobile.presentation.navgraph.Route
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
@@ -15,7 +16,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val appEntryUseCases: AppEntryUseCases
+    private val appEntryUseCases: AppEntryUseCases,
+    private val appSessionUseCases: AppSessionUseCases
 ) : ViewModel() {
     var splashCondition by mutableStateOf(true)
         private set
@@ -31,5 +33,6 @@ class MainViewModel @Inject constructor(
             delay(300)
             splashCondition = false
         }.launchIn(viewModelScope)
+
     }
 }

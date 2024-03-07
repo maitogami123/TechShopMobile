@@ -33,9 +33,15 @@ val Typography = Typography(
         fontWeight = FontWeight.Normal,
     ),
     labelMedium = TextStyle(
-        fontSize = 14.sp,
+        fontSize = 16.sp,
         fontFamily = Roboto,
         fontWeight = FontWeight.Normal,
+        lineHeight = (18.75).sp
+    ),
+    labelLarge = TextStyle(
+        fontSize = 14.sp,
+        fontFamily = Roboto,
+        fontWeight = FontWeight.SemiBold,
         lineHeight = 18.sp
     ),
     displaySmall = TextStyle(
