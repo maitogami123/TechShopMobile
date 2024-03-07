@@ -16,11 +16,13 @@ import com.vi.techshopmobile.R
 import com.vi.techshopmobile.presentation.home_navigator.component.BottomNavigationItem
 import com.vi.techshopmobile.presentation.home_navigator.component.TechShopBottomNavigation
 import com.vi.techshopmobile.presentation.home_navigator.component.UtilityTopNavigation
+import com.vi.techshopmobile.presentation.products.ProductsScreen
 import com.vi.techshopmobile.ui.theme.TechShopMobileTheme
 
 @Composable
 fun HomeScreen() {
     Text(text = "HomeScreen")
+    ProductsScreen()
 }
 
 @Preview()
