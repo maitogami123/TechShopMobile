@@ -2,49 +2,8 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
-      <entry key="PreviewInput">
-        <State />
-      </entry>
-      <entry key="PreviewMainTopNavigation">
-        <State />
-      </entry>
-      <entry key="PreviewShoppingCartBtn">
-        <State />
-      </entry>
-      <entry key="PreviewSignInScreen">
-        <State />
-      </entry>
-      <entry key="PreviewUserTopNavigation">
-        <State>
-          <runningDeviceTargetSelectedWithDropDown>
-            <Target>
-              <type value="RUNNING_DEVICE_TARGET" />
-              <deviceKey>
-                <Key>
-                  <type value="SERIAL_NUMBER" />
-                  <value value="FMTSPJ49ZDPJDMLR" />
-                </Key>
-              </deviceKey>
-            </Target>
-          </runningDeviceTargetSelectedWithDropDown>
-          <timeTargetWasSelectedWithDropDown value="2024-03-05T09:34:20.409416Z" />
-        </State>
-      </entry>
       <entry key="app">
-        <State>
-          <runningDeviceTargetSelectedWithDropDown>
-            <Target>
-              <type value="RUNNING_DEVICE_TARGET" />
-              <deviceKey>
-                <Key>
-                  <type value="SERIAL_NUMBER" />
-                  <value value="FMTSPJ49ZDPJDMLR" />
-                </Key>
-              </deviceKey>
-            </Target>
-          </runningDeviceTargetSelectedWithDropDown>
-          <timeTargetWasSelectedWithDropDown value="2024-03-06T10:35:37.681001100Z" />
-        </State>
+        <State />
       </entry>
     </value>
   </component>

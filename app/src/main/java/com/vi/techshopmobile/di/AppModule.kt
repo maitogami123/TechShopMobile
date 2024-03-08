@@ -4,6 +4,7 @@ import android.app.Application
 import com.vi.techshopmobile.data.manager.LocalSessionManagerImpl
 import com.vi.techshopmobile.data.manager.LocalUserManagerImpl
 import com.vi.techshopmobile.data.remote.authenticate.AuthenticateApi
+import com.vi.techshopmobile.data.remote.products.ProductsApi
 import com.vi.techshopmobile.data.repository.AuthenticateRepositoryImpl
 import com.vi.techshopmobile.domain.manager.LocalSessionManager
 import com.vi.techshopmobile.domain.manager.LocalUserManager
@@ -17,6 +18,7 @@ import com.vi.techshopmobile.domain.usecases.app_session.DeleteSession
 import com.vi.techshopmobile.domain.usecases.app_session.GetSession
 import com.vi.techshopmobile.domain.usecases.app_session.ReadSession
 import com.vi.techshopmobile.domain.usecases.app_session.SaveSession
+import com.vi.techshopmobile.util.Constants
 import com.vi.techshopmobile.util.Constants.BASE_URL
 import dagger.Module
 import dagger.Provides
@@ -77,4 +79,14 @@ object AppModule {
     fun provideAuthenticateRepository(
         authenticateApi: AuthenticateApi,
     ): AuthenticateRepository = AuthenticateRepositoryImpl(authenticateApi)
+
+    //products
+    @Provides
+    @Singleton
+    fun provideProductsApi(): ProductsApi {
+        return Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build().create(ProductsApi::class.java)
+    }
 }
