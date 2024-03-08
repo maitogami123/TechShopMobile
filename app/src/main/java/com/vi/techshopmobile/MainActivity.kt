@@ -38,11 +38,13 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 //        WindowCompat.setDecorFitsSystemWindows(window, false);
+
         installSplashScreen().apply {
             setKeepOnScreenCondition {
                 viewModel.splashCondition
             }
         };
+
         setContent {
             TechShopMobileTheme {
                 val lifecycle = LocalLifecycleOwner.current.lifecycle

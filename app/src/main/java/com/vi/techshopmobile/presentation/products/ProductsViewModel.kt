@@ -2,10 +2,13 @@ package com.vi.techshopmobile.presentation.products
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.vi.techshopmobile.di.ProductModule
 import com.vi.techshopmobile.domain.repository.products.ProductsRepository
+import com.vi.techshopmobile.domain.usecases.products.ProductUseCases
 import com.vi.techshopmobile.util.Event
 import com.vi.techshopmobile.util.EventBus.sendEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -14,22 +17,36 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ProductsViewModel @Inject constructor(
-    private val productsRepository: ProductsRepository
+//    private val productsRepository: ProductsRepository
+    private val productUseCases: ProductUseCases
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(ProductsViewState())
     val state = _state.asStateFlow()
 
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading = _isLoading.asStateFlow()
+
     init {
         getProducts()
     }
 
+    fun onEvent(event: ProductsEvents) {
+        when(event){
+            is ProductsEvents.getOnEventProduct -> {
+                getProducts()
+            }
+        }
+    }
+
     fun getProducts() {
         viewModelScope.launch {
+            _isLoading.value = true
             _state.update {
                 it.copy(isLoading = true)
             }
-            productsRepository.getProducts()
+            delay(2000L)
+            productUseCases.getProducts()
                 .onRight { products ->
                     _state.update {
                         it.copy(
@@ -49,6 +66,7 @@ class ProductsViewModel @Inject constructor(
             _state.update {
                 it.copy(isLoading = false)
             }
+            _isLoading.value = false
         }
     }
 }
