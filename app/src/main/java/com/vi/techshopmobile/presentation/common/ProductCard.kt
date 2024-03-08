@@ -17,17 +17,21 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import com.vi.techshopmobile.domain.model.Product
+import com.vi.techshopmobile.domain.model.ProductLine
+import com.vi.techshopmobile.presentation.Dimens
+import com.vi.techshopmobile.ui.theme.Danger
+import com.vi.techshopmobile.ui.theme.DarkDanger
+import com.vi.techshopmobile.util.Constants
+import com.vi.techshopmobile.util.formatPrice
 
 @Composable
 fun ProductCard(
     modifier: Modifier = Modifier,
-    product: Product
+    product: ProductLine
 ) {
     Card(
         modifier = modifier,
@@ -37,7 +41,7 @@ fun ProductCard(
     ) {
         Column(modifier = Modifier.padding(15.dp)) {
             AsyncImage(
-                model = "",
+                model = Constants.BASE_URL + "product/get-file?filePath=" + product.thumbnailUri,
                 contentDescription = null,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -46,18 +50,24 @@ fun ProductCard(
             )
             
             Spacer(modifier = Modifier.height(5.dp))
-            Text(text = product.productName, style = MaterialTheme.typography.titleMedium )
+            Text(text = product.productName, style = TextStyle(
+                fontSize = MaterialTheme.typography.labelMedium.fontSize,
+                fontFamily = MaterialTheme.typography.labelMedium.fontFamily,
+                lineHeight = MaterialTheme.typography.labelMedium.lineHeight,
+                fontWeight = MaterialTheme.typography.labelMedium.fontWeight
+            ) )
 
             Spacer(modifier = Modifier.height(10.dp))
             Text(modifier = Modifier.fillMaxWidth(),
-                text = (product.price).toString() + " VND",
+                text = formatPrice(product.price),
                 style = TextStyle(
-                    fontSize = 16.sp,
-                    fontFamily = FontFamily.Monospace,
-                    fontWeight = FontWeight(600)
+                    fontSize = MaterialTheme.typography.displaySmall.fontSize,
+                    fontFamily = MaterialTheme.typography.displaySmall.fontFamily,
+                    lineHeight = MaterialTheme.typography.displaySmall.lineHeight,
+                    fontWeight = MaterialTheme.typography.displaySmall.fontWeight
                 )
                 ,
-                color = Color.Red
+                color = Danger
             )
         }
     }

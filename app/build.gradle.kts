@@ -117,4 +117,8 @@ dependencies {
     implementation("io.arrow-kt:arrow-fx-coroutines:$arrow_version")
 
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.2")
+
+    //Swipe down to refresh page
+    implementation ("androidx.lifecycle:lifecycle-viewmodel-compose:2.5.1")
+    implementation("com.google.accompanist:accompanist-swiperefresh:0.27.0")
 }
