@@ -1,7 +1,5 @@
 package com.vi.techshopmobile.presentation.home_navigator
 
-import android.util.Log
-import androidx.activity.viewModels
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -17,7 +15,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.vi.techshopmobile.MainViewModel
 import com.vi.techshopmobile.R
 import com.vi.techshopmobile.presentation.home.HomeScreen
 import com.vi.techshopmobile.presentation.home_navigator.component.BottomNavigationItem
@@ -27,7 +24,9 @@ import com.vi.techshopmobile.presentation.home_navigator.component.UserInformati
 import com.vi.techshopmobile.presentation.home_navigator.component.UserTopNavigation
 import com.vi.techshopmobile.presentation.navgraph.Route
 import com.vi.techshopmobile.presentation.search.SearchScreen
+import com.vi.techshopmobile.presentation.sendEvent
 import com.vi.techshopmobile.presentation.user_setting.UserSettingScreen
+import com.vi.techshopmobile.util.Event
 import com.vi.techshopmobile.util.navigateToTap
 
 @Composable
@@ -41,7 +40,6 @@ fun HomeNavigator(navGraphController: NavController) {
     }
     val viewModel: TechShopNavigatorViewModel = hiltViewModel()
     val isLoggedIn = viewModel.accessToken.isNotBlank();
-    Log.d("Token", viewModel.accessToken)
     val navController = rememberNavController();
     val backStackState = navController.currentBackStackEntryAsState().value;
     var selectedItem by rememberSaveable {
@@ -60,8 +58,15 @@ fun HomeNavigator(navGraphController: NavController) {
     Scaffold(
         topBar = {
             if (selectedItem == 2 && isLoggedIn) {
-                UserTopNavigation(userInfo = UserInformation("test", "test", "https://scontent.fhan3-3.fna.fbcdn.net/v/t39.30808-6/305108279_3380406918948385_1634056947920206356_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=5f2048&_nc_ohc=tS-Z-Hvlq1wAX9jI0iS&_nc_ht=scontent.fhan3-3.fna&oh=00_AfC9TMejNOQxjC-mEvAN4OOC-SxCU1xMXdhpjQLCQqDZDA&oe=65EE03B1"))
-            } else {
+                // TODO: Fetch user information
+                UserTopNavigation(
+                    userInfo = UserInformation(
+                        "test",
+                        "test",
+                        "https://scontent.fhan3-3.fna.fbcdn.net/v/t39.30808-6/305108279_3380406918948385_1634056947920206356_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=5f2048&_nc_ohc=tS-Z-Hvlq1wAX9jI0iS&_nc_ht=scontent.fhan3-3.fna&oh=00_AfC9TMejNOQxjC-mEvAN4OOC-SxCU1xMXdhpjQLCQqDZDA&oe=65EE03B1"
+                    )
+                )
+            } else if (selectedItem == 1) {
                 MainTopNavigation(onClick = {
                     navGraphController.navigate(Route.AuthenticateNavigation.route)
                 }, isLoggedIn = isLoggedIn)
@@ -75,7 +80,13 @@ fun HomeNavigator(navGraphController: NavController) {
                     when (index) {
                         0 -> navigateToTap(navController, Route.SearchScreen.route)
                         1 -> navigateToTap(navController, Route.HomeScreen.route)
-                        2 -> navigateToTap(navController, Route.UserSettingScreen.route)
+                        2 -> {
+                            if (isLoggedIn)
+                                navigateToTap(navController, Route.UserSettingScreen.route)
+                            else {
+                                viewModel.sendEvent(Event.Toast("Vui lòng đăng nhập"))
+                            }
+                        }
                     }
                 })
         }

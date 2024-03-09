@@ -115,7 +115,7 @@ dependencies {
     val arrow_version = "1.2.0"
     implementation("io.arrow-kt:arrow-core:$arrow_version")
     implementation("io.arrow-kt:arrow-fx-coroutines:$arrow_version")
-
+    implementation("io.arrow-kt:arrow-core-retrofit:$arrow_version")
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.2")
 
     //Swipe down to refresh page

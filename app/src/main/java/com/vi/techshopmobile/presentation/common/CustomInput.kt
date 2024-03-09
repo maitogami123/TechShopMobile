@@ -2,8 +2,10 @@ package com.vi.techshopmobile.presentation.common
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.interaction.InteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -18,6 +20,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -34,6 +37,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.vi.techshopmobile.R
 import com.vi.techshopmobile.presentation.Dimens.RadiusSmall
+import com.vi.techshopmobile.ui.theme.Danger
 import com.vi.techshopmobile.ui.theme.Gray_300
 import com.vi.techshopmobile.ui.theme.TechShopMobileTheme
 
@@ -41,22 +45,41 @@ import com.vi.techshopmobile.ui.theme.TechShopMobileTheme
 fun Input(
     modifier: Modifier = Modifier,
     labelText: String? = null,
+    errorMessage: String? = null,
     placeHolderText: String? = null,
     inputText: String,
     onChange: (changedValue: String) -> Unit
 ) {
-    if (labelText != null) {
-        Text(
-            text = labelText,
-            style = MaterialTheme.typography.labelLarge,
-            modifier = Modifier.padding(bottom = 12.dp)
-        )
+    var isFocused by rememberSaveable {
+        mutableStateOf(true);
+    }
+
+    LaunchedEffect(key1 = errorMessage) {
+        if (errorMessage != null) {
+            isFocused = false
+        }
+    }
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(bottom = 12.dp),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        if (labelText != null) {
+            Text(
+                text = labelText,
+                style = MaterialTheme.typography.labelLarge,
+            )
+        }
+        if (errorMessage != null)
+            Text(text = errorMessage, style = MaterialTheme.typography.labelLarge.copy(color = Danger))
     }
     TextField(modifier = modifier
         .clip(RoundedCornerShape(RadiusSmall))
         .border(
             width = 1.dp,
-            color = Gray_300,
+            color = if (!isFocused) Danger else Gray_300,
             shape = RoundedCornerShape(RadiusSmall)
         ),
         singleLine = true,
@@ -64,15 +87,16 @@ fun Input(
             if (placeHolderText != null)
                 Text(
                     text = placeHolderText,
-                    style = MaterialTheme.typography.displaySmall
+                    style = MaterialTheme.typography.displaySmall.copy(color = if (!isFocused) Danger else Gray_300)
                 )
         },
         colors = TextFieldDefaults.colors(
             unfocusedContainerColor = Color.White,
-            focusedContainerColor = Color.White
+            focusedContainerColor = Color.White,
         ),
         value = inputText,
         onValueChange = {
+            isFocused = true
             onChange(it)
         })
 }
@@ -81,24 +105,43 @@ fun Input(
 fun TransformableInput(
     modifier: Modifier = Modifier,
     labelText: String? = null,
+    errorMessage: String? = null,
     placeHolderText: String? = null,
     inputText: String,
     onChange: (changedValue: String) -> Unit
 ) {
     var hidden by rememberSaveable { mutableStateOf(true) }
-
-    if (labelText != null) {
-        Text(
-            text = labelText,
-            style = MaterialTheme.typography.labelLarge,
-            modifier = Modifier.padding(bottom = 12.dp)
-        )
+    var isFocused by rememberSaveable {
+        mutableStateOf(true);
     }
+
+    LaunchedEffect(key1 = errorMessage) {
+        if (errorMessage != null) {
+            isFocused = false
+        }
+    }
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(bottom = 12.dp),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        if (labelText != null) {
+            Text(
+                text = labelText,
+                style = MaterialTheme.typography.labelLarge,
+            )
+        }
+        if (errorMessage != null)
+            Text(text = errorMessage, style = MaterialTheme.typography.labelLarge.copy(color = Danger))
+    }
+
     TextField(modifier = modifier
         .clip(RoundedCornerShape(RadiusSmall))
         .border(
             width = 1.dp,
-            color = Gray_300,
+            color = if (!isFocused) Danger else Gray_300,
             shape = RoundedCornerShape(RadiusSmall)
         ),
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
@@ -120,7 +163,7 @@ fun TransformableInput(
             if (placeHolderText != null)
                 Text(
                     text = placeHolderText,
-                    style = MaterialTheme.typography.displaySmall
+                    style = MaterialTheme.typography.displaySmall.copy(color = if (!isFocused) Danger else Gray_300)
                 )
         },
         colors = TextFieldDefaults.colors(
@@ -129,6 +172,7 @@ fun TransformableInput(
         ),
         value = inputText,
         onValueChange = {
+            isFocused = true
             onChange(it)
         })
 }
@@ -139,7 +183,7 @@ fun PreviewInput() {
     TechShopMobileTheme {
 
         var testInput by remember {
-            mutableStateOf("hello")
+            mutableStateOf("khà khà")
         }
 
         Column(
@@ -160,6 +204,16 @@ fun PreviewInput() {
             Spacer(modifier = Modifier.height(20.dp))
             Input(
                 inputText = testInput,
+                labelText = "Tài khoản",
+                errorMessage = "Tài khoản đã tồn tại!",
+                placeHolderText = "Nhập tên tài khoản",
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                testInput = it
+            }
+            Spacer(modifier = Modifier.height(20.dp))
+            Input(
+                inputText = testInput,
                 placeHolderText = "Nhập tên tài khoản",
                 modifier = Modifier.fillMaxWidth()
             ) {
@@ -169,6 +223,15 @@ fun PreviewInput() {
             TransformableInput(
                 labelText = "Mật khẩu",
                 inputText = testInput,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                testInput = it
+            }
+            Spacer(modifier = Modifier.height(20.dp))
+            TransformableInput(
+                labelText = "Mật khẩu",
+                inputText = testInput,
+                errorMessage = "Mật khẩu nhập lại không khớp",
                 modifier = Modifier.fillMaxWidth()
             ) {
                 testInput = it

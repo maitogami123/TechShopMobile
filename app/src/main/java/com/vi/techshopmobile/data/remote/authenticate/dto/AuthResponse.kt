@@ -1,5 +1,5 @@
 package com.vi.techshopmobile.data.remote.authenticate.dto
 
-data class SignInResponse(
+data class AuthResponse(
     val token: String,
 )

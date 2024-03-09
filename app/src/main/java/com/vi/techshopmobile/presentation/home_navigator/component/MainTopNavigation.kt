@@ -30,6 +30,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.vi.techshopmobile.R
+import com.vi.techshopmobile.presentation.Dimens.ExtraSmallPadding2
 import com.vi.techshopmobile.presentation.Dimens.RadiusLarge
 import com.vi.techshopmobile.presentation.Dimens.SmallPadding
 import com.vi.techshopmobile.ui.theme.Danger
@@ -52,7 +53,7 @@ fun MainTopNavigation(
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight()
-            .padding(horizontal = SmallPadding, vertical = 6.dp),
+            .padding(horizontal = SmallPadding, vertical = ExtraSmallPadding2),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {

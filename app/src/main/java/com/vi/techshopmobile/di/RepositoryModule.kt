@@ -1,6 +1,8 @@
 package com.vi.techshopmobile.di
 
+import com.vi.techshopmobile.data.repository.AuthenticateRepositoryImpl
 import com.vi.techshopmobile.data.repository.ProductsRepositoryImpl
+import com.vi.techshopmobile.domain.repository.authenticate.AuthenticateRepository
 import com.vi.techshopmobile.domain.repository.products.ProductsRepository
 import dagger.Binds
 import dagger.Module
@@ -14,4 +16,5 @@ abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun bindProductsRepository(impl: ProductsRepositoryImpl): ProductsRepository
+
 }

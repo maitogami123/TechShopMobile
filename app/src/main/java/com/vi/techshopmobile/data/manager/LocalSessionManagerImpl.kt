@@ -15,9 +15,6 @@ import kotlinx.coroutines.flow.map
 class LocalSessionManagerImpl(
     private val context: Context
 ) : LocalSessionManager {
-    override suspend fun getSession(): String {
-        TODO("Not yet implemented")
-    }
 
     override suspend fun saveSession(accessToken: String) {
         context.dataStore.edit {settings ->

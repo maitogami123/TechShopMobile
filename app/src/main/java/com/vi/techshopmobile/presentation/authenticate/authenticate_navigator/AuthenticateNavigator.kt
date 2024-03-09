@@ -28,7 +28,7 @@ fun AuthenticateNavigator(navGraphController: NavController, isLoggedIn: Boolean
         composable(
             route = Route.SignUpScreen.route
         ) {
-            SignUpScreen(onNavigateUp = { navController.navigateUp() })
+            SignUpScreen(onNavigateUp = { navController.navigateUp() }, navGraphController = navGraphController)
         }
         composable(
             route = Route.ForgetPasswordScreenEmailScreen.route
