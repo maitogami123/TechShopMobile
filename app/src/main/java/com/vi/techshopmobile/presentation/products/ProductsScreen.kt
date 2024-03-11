@@ -36,34 +36,20 @@ import com.vi.techshopmobile.presentation.loading.LoadingDialog
 import kotlinx.coroutines.delay
 
 @Composable
-internal fun ProductsScreen() {
+fun ProductsScreen() {
     val viewModel: ProductsViewModel = hiltViewModel()
     val isLoading by viewModel.isLoading.collectAsState()
     val swipeRefreshState = rememberSwipeRefreshState(isRefreshing = isLoading)
 
     val state by viewModel.state.collectAsStateWithLifecycle()
-    ProductsContent(
-        state = state,
-        swipeRefreshState = swipeRefreshState,
-        viewModelRefresh = viewModel,
-    )
-}
-
-@Composable
-fun ProductsContent(
-    state: ProductsViewState,
-    swipeRefreshState: SwipeRefreshState,
-    viewModelRefresh: ProductsViewModel,
-) {
-
-    var isLoading by remember {
-        mutableStateOf(true)
-    }
-
-    LaunchedEffect(key1 = true) {
-        delay(2000)
-        isLoading = false
-    }
+//    var isLoading by remember {
+//        mutableStateOf(true)
+//    }
+//
+//    LaunchedEffect(key1 = true) {
+//        delay(2000)
+//        isLoading = false
+//    }
 
 //    DisposableEffect(key1 = true) {
 //
@@ -75,7 +61,7 @@ fun ProductsContent(
     //LoadingDialog(isLoading = state.isLoading)
     SwipeRefresh(
         state = swipeRefreshState,
-        onRefresh = { (viewModelRefresh::onEvent)(ProductsEvents.getOnEventProduct) },
+        onRefresh = { (viewModel::onEvent)(ProductsEvents.getOnEventProduct) },
         indicator = { state, refreshTrigger ->
             SwipeRefreshIndicator(
                 state = state,

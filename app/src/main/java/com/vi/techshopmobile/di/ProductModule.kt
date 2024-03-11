@@ -1,17 +1,40 @@
 package com.vi.techshopmobile.di
 
+import com.vi.techshopmobile.data.remote.categories.CategoriesApi
+import com.vi.techshopmobile.data.remote.products.ProductsApi
+import com.vi.techshopmobile.data.repository.CategoriesRepositoryImpl
+import com.vi.techshopmobile.data.repository.ProductsRepositoryImpl
+import com.vi.techshopmobile.domain.repository.category.CategoriesRepository
 import com.vi.techshopmobile.domain.repository.products.ProductsRepository
 import com.vi.techshopmobile.domain.usecases.products.GetProducts
 import com.vi.techshopmobile.domain.usecases.products.ProductUseCases
+import com.vi.techshopmobile.util.Constants
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 object ProductModule {
+    @Provides
+    @Singleton
+    fun provideProductsApi(): ProductsApi {
+        return Retrofit.Builder()
+            .baseUrl(Constants.BASE_URL + "product/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build().create(ProductsApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideProductsRepository(
+        productsApi: ProductsApi
+    ) : ProductsRepository = ProductsRepositoryImpl(productsApi)
+
     @Provides
     @Singleton
     fun provideProductsUseCases(productsRepository: ProductsRepository) = ProductUseCases(
