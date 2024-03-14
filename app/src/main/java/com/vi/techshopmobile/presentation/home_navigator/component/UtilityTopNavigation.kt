@@ -13,7 +13,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -21,7 +20,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
@@ -30,9 +28,6 @@ import androidx.compose.ui.unit.dp
 import com.vi.techshopmobile.R
 import com.vi.techshopmobile.presentation.Dimens.IconSizeMedium
 import com.vi.techshopmobile.presentation.common.SearchBar
-import com.vi.techshopmobile.ui.theme.Gray_200
-import com.vi.techshopmobile.ui.theme.Gray_400
-import com.vi.techshopmobile.ui.theme.Gray_800
 import com.vi.techshopmobile.ui.theme.Gray_900
 import com.vi.techshopmobile.ui.theme.TechShopMobileTheme
 import javax.annotation.Nullable
@@ -206,12 +201,12 @@ fun PreviewUtilityTopNavigation() {
                 title = "Title",
                 onSearch = {})
             Spacer(modifier = Modifier.fillMaxWidth().height(10.dp))
-            UtilityTopNavigation(
-                onRightBtnClick = { /*TODO*/ },
-                onLeftBtnClick = { /*TODO*/ },
-                rightBtnIcon = R.drawable.ic_filter,
-                leftBtnIcon = R.drawable.ic_left_arrow
-            )
+//            UtilityTopNavigation(
+//                onRightBtnClick = { /*TODO*/ },
+//                onLeftBtnClick = { /*TODO*/ },
+//                rightBtnIcon = R.drawable.ic_filter,
+//                leftBtnIcon = R.drawable.ic_left_arrow
+//            )
         }
     }
 }

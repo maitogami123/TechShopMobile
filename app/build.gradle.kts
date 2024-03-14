@@ -121,4 +121,7 @@ dependencies {
     //Swipe down to refresh page
     implementation ("androidx.lifecycle:lifecycle-viewmodel-compose:2.5.1")
     implementation("com.google.accompanist:accompanist-swiperefresh:0.27.0")
+
+    // Constraint Layout
+    implementation ("androidx.constraintlayout:constraintlayout-compose:1.0.1")
 }

@@ -31,7 +31,7 @@ fun LoadingDialog(isLoading: Boolean) {
                     .background(Color.White),
                 contentAlignment = Alignment.Center
             ){
-                CircularProgressIndicator(modifier = Modifier.padding(10.dp))//màn hình loading
+                CircularProgressIndicator(modifier = Modifier.padding(10.dp)) //màn hình loading
             }
         }
     }

@@ -2,13 +2,11 @@ package com.vi.techshopmobile.di
 
 import arrow.retrofit.adapter.either.EitherCallAdapterFactory
 import com.vi.techshopmobile.data.remote.categories.CategoriesApi
-import com.vi.techshopmobile.data.remote.products.ProductsApi
 import com.vi.techshopmobile.data.repository.CategoriesRepositoryImpl
-import com.vi.techshopmobile.data.repository.ProductsRepositoryImpl
 import com.vi.techshopmobile.domain.repository.category.CategoriesRepository
-import com.vi.techshopmobile.domain.repository.products.ProductsRepository
-import com.vi.techshopmobile.domain.usecases.products.GetProducts
-import com.vi.techshopmobile.domain.usecases.products.ProductUseCases
+import com.vi.techshopmobile.domain.usecases.categories.CategoriesUseCases
+import com.vi.techshopmobile.domain.usecases.categories.GetCategories
+import com.vi.techshopmobile.domain.usecases.categories.GetCategoryProducts
 import com.vi.techshopmobile.util.Constants
 import dagger.Module
 import dagger.Provides
@@ -20,26 +18,29 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object ProductModule {
+object CategoryModule {
+
     @Provides
     @Singleton
-    fun provideProductsApi(): ProductsApi {
+    fun provideCategoriesApi(): CategoriesApi {
         return Retrofit.Builder()
-            .baseUrl(Constants.BASE_URL + "product/")
+            .baseUrl(Constants.BASE_URL + "category/")
             .addConverterFactory(GsonConverterFactory.create())
             .addCallAdapterFactory(EitherCallAdapterFactory.create())
-            .build().create(ProductsApi::class.java)
+            .build().create(CategoriesApi::class.java)
     }
 
     @Provides
     @Singleton
-    fun provideProductsRepository(
-        productsApi: ProductsApi
-    ) : ProductsRepository = ProductsRepositoryImpl(productsApi)
+    fun provideCategoriesRepository(
+        categoriesApi: CategoriesApi
+    ) : CategoriesRepository = CategoriesRepositoryImpl(categoriesApi)
+
 
     @Provides
     @Singleton
-    fun provideProductsUseCases(productsRepository: ProductsRepository) = ProductUseCases(
-        getProducts = GetProducts(productsRepository)
+    fun provideCategoriesUseCase(categoriesRepository: CategoriesRepository) = CategoriesUseCases(
+        getCategories = GetCategories(categoriesRepository),
+        getCategoryProducts = GetCategoryProducts(categoriesRepository)
     )
 }

@@ -1,10 +1,14 @@
 package com.vi.techshopmobile.domain.model
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
 data class ProductLine(
     val brandName: String,
     val categoryName: String,
     val createdAt: String,
-    val deletedAt: Any,
+    val deletedAt: String,
     val discount: Double,
     val id: Int,
     val price: Double,
@@ -12,4 +16,4 @@ data class ProductLine(
     val productName: String,
     val stock: Int,
     val thumbnailUri: String
-)
+) : Parcelable

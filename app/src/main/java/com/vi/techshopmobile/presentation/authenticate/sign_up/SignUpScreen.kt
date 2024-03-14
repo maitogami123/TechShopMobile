@@ -75,25 +75,20 @@ fun SignUpScreen(navGraphController: NavController, onNavigateUp: () -> Unit) {
             usernameState.value = usernameState.value.copy(
                 error = "Tài khoản đã tồn tại"
             )
-
         } else if (registerError.value.contains("email")) {
             emailState.value = emailState.value.copy(
                 error = "Email đã được sử dụng"
             )
         }
+        Log.d("RegisterError", registerError.value)
     }
 
     LaunchedEffect(key1 = reEnterPasswordState.value.value) {
-        Log.d("LaunchEffect", "New - Running")
         delay(500L)
         reEnterPasswordState.value = reEnterPasswordState.value.copy(
             error = if (reEnterPasswordState.value.value != passwordState.value.value) "Mật khẩu không trùng khớp" else null
         )
-        Log.d("LaunchEffect", "Finished")
     }
-
-
-
 
     Scaffold(
         topBar = {
@@ -149,7 +144,8 @@ fun SignUpScreen(navGraphController: NavController, onNavigateUp: () -> Unit) {
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     usernameState.value = usernameState.value.copy(
-                        value = it
+                        value = it,
+                        error = null
                     )
                 }
                 Spacer(modifier = Modifier.height(Dimens.SmallGap))
@@ -160,9 +156,9 @@ fun SignUpScreen(navGraphController: NavController, onNavigateUp: () -> Unit) {
                     placeHolderText = "VD: email@domain.com",
                     modifier = Modifier.fillMaxWidth()
                 ) {
-
                     emailState.value = emailState.value.copy(
-                        value = it
+                        value = it,
+                        error = null
                     )
                 }
                 Spacer(modifier = Modifier.height(Dimens.SmallGap))
@@ -174,7 +170,10 @@ fun SignUpScreen(navGraphController: NavController, onNavigateUp: () -> Unit) {
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     passwordState.value = passwordState.value.copy(
-                        value = it
+                        value = it,
+                        error = if (!("""^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$""".toRegex()
+                                .matches(it))
+                        ) "Mật khẩu không hợp lệ" else null
                     )
                 }
                 Spacer(modifier = Modifier.height(Dimens.SmallGap))
@@ -186,7 +185,8 @@ fun SignUpScreen(navGraphController: NavController, onNavigateUp: () -> Unit) {
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     reEnterPasswordState.value = reEnterPasswordState.value.copy(
-                        value = it
+                        value = it,
+                        error = null
                     )
                 }
 
