@@ -11,6 +11,7 @@ sealed class Route(
     // Comment: Sub-route
     object OnBoardingScreen: Route(route = "onBoardingScreen")
     object HomeScreen: Route(route = "homeScreen")
+    object ProductDetailsScreen : Route(route = "productDetailsScreen")
     object SearchScreen: Route(route = "searchScreen")
     object UserSettingScreen: Route(route = "userSettingScreen")
     object SignInScreen: Route(route = "signInScreen")

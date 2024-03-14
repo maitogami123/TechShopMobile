@@ -31,7 +31,7 @@ fun CategoryProducts() {
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         state.categories.forEachIndexed { index, category ->
-            if (state.categoriesProduct.isNotEmpty() && state.categoriesProduct[index].products.isNotEmpty()) {
+            if (state.categoriesProduct.isNotEmpty() && state.categoriesProduct.size > index && state.categoriesProduct[index].products.isNotEmpty()) {
                 CategoriesBanner(categoryName = category.name)
                 LazyRow(
                     modifier = Modifier
