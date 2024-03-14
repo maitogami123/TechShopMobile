@@ -1,4 +1,4 @@
-package com.vi.techshopmobile.presentation.common
+package com.vi.techshopmobile.presentation.products.component
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box

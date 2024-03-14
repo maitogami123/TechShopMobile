@@ -1,7 +1,10 @@
 package com.vi.techshopmobile.presentation.categories
 
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.vi.techshopmobile.domain.model.ProductLine
 import com.vi.techshopmobile.domain.usecases.categories.CategoriesUseCases
 import com.vi.techshopmobile.util.Event
 import com.vi.techshopmobile.util.EventBus
@@ -23,14 +26,18 @@ class CategoriesViewModel @Inject constructor(
 
     private val _isLoading = MutableStateFlow(false)
     val isLoading = _isLoading.asStateFlow()
+
     init {
         getCategories()
     }
 
     fun onEvent(event: CategoriesEvents) {
         when (event) {
-            is CategoriesEvents.getOnEventCategories -> {
+            is CategoriesEvents.GetAllEventCategories -> {
                 getCategories()
+            }
+            is CategoriesEvents.GetCategoryProduct -> {
+                getProductCategory(event.categoryName)
             }
         }
     }
@@ -49,20 +56,39 @@ class CategoriesViewModel @Inject constructor(
                             categories = categories
                         )
                     }
+                    for (category in categories) {
+                        getProductCategory(category.name)
+                    }
                 }
                 .onLeft { error ->
                     _state.update {
                         it.copy(
-                            error = error.error.message
+                            error = error.detail
                         )
                     }
-                    EventBus.sendEvent(Event.Toast(error.error.message))
+                    EventBus.sendEvent(Event.Toast(error.detail))
                 }
 
             _state.update {
                 it.copy(isLoading = false)
             }
             _isLoading.value = false
+        }
+    }
+
+    fun getProductCategory(categoryName: String) {
+        viewModelScope.launch {
+            categoriesUseCases.getCategoryProducts(categoryName)
+                .onRight { response ->
+                    _state.update {categoriesViewState ->
+                        categoriesViewState.copy(
+                            categoriesProduct = categoriesViewState.categoriesProduct + CategoryProduct(response.name, response.products)
+                        )
+                    }
+                }
+                .onLeft { error ->
+                    EventBus.sendEvent(Event.Toast(error.detail))
+                }
         }
     }
 

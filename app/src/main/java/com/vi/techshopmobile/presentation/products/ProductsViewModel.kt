@@ -2,8 +2,6 @@ package com.vi.techshopmobile.presentation.products
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.vi.techshopmobile.di.ProductModule
-import com.vi.techshopmobile.domain.repository.products.ProductsRepository
 import com.vi.techshopmobile.domain.usecases.products.ProductUseCases
 import com.vi.techshopmobile.util.Event
 import com.vi.techshopmobile.util.EventBus.sendEvent
@@ -33,7 +31,7 @@ class ProductsViewModel @Inject constructor(
 
     fun onEvent(event: ProductsEvents) {
         when(event){
-            is ProductsEvents.getOnEventProduct -> {
+            is ProductsEvents.GetAllEventProduct -> {
                 getProducts()
             }
         }
@@ -49,7 +47,7 @@ class ProductsViewModel @Inject constructor(
             productUseCases.getProducts()
                 .onRight { products ->
                     _state.update {
-                        it.copy(
+                         it.copy(
                             products = products
                         )
                     }
@@ -57,10 +55,10 @@ class ProductsViewModel @Inject constructor(
                 .onLeft { error ->
                     _state.update {
                         it.copy(
-                            error = error.error.message
+                            error = error.detail
                         )
                     }
-                    sendEvent(Event.Toast(error.error.message))
+                    sendEvent(Event.Toast(error.detail))
                 }
 
             _state.update {

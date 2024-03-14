@@ -1,10 +1,12 @@
 package com.vi.techshopmobile.di
 
+import arrow.retrofit.adapter.either.EitherCallAdapterFactory
 import com.vi.techshopmobile.data.remote.categories.CategoriesApi
 import com.vi.techshopmobile.data.repository.CategoriesRepositoryImpl
 import com.vi.techshopmobile.domain.repository.category.CategoriesRepository
 import com.vi.techshopmobile.domain.usecases.categories.CategoriesUseCases
 import com.vi.techshopmobile.domain.usecases.categories.GetCategories
+import com.vi.techshopmobile.domain.usecases.categories.GetCategoryProducts
 import com.vi.techshopmobile.util.Constants
 import dagger.Module
 import dagger.Provides
@@ -24,6 +26,7 @@ object CategoryModule {
         return Retrofit.Builder()
             .baseUrl(Constants.BASE_URL + "category/")
             .addConverterFactory(GsonConverterFactory.create())
+            .addCallAdapterFactory(EitherCallAdapterFactory.create())
             .build().create(CategoriesApi::class.java)
     }
 
@@ -37,6 +40,7 @@ object CategoryModule {
     @Provides
     @Singleton
     fun provideCategoriesUseCase(categoriesRepository: CategoriesRepository) = CategoriesUseCases(
-        getCategories = GetCategories(categoriesRepository)
+        getCategories = GetCategories(categoriesRepository),
+        getCategoryProducts = GetCategoryProducts(categoriesRepository)
     )
 }

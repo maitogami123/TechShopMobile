@@ -56,7 +56,6 @@ class AuthenticateViewModel @Inject constructor(
                         signInResponse.onLeft {
                             _registerError.value = it.detail
                             sendEvent(Event.Toast("Có lỗi xảy ra!"))
-
                         }
                     }
                 }

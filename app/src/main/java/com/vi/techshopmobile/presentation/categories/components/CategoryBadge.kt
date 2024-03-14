@@ -1,10 +1,9 @@
-package com.vi.techshopmobile.presentation.categories
+package com.vi.techshopmobile.presentation.categories.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -29,7 +28,7 @@ import com.vi.techshopmobile.domain.model.Category
 import com.vi.techshopmobile.presentation.Dimens
 
 @Composable
-fun ItemCategory(modifier: Modifier = Modifier,categories: Category){
+fun CategoryBadge(modifier: Modifier = Modifier, category: Category){
     Box(
         modifier = modifier.height(92.dp).width(83.dp),
     )
@@ -49,7 +48,7 @@ fun ItemCategory(modifier: Modifier = Modifier,categories: Category){
                     .wrapContentHeight(Alignment.CenterVertically,true)
                     .fillMaxWidth()
                     .padding(10.dp).background(Color.White),
-                text = categories.name,
+                text = category.name,
                 style = MaterialTheme.typography.bodySmall,
                 textAlign = TextAlign.Center
             )
@@ -59,6 +58,4 @@ fun ItemCategory(modifier: Modifier = Modifier,categories: Category){
 
 @Preview
 @Composable
-fun ItemCategoryPreview(){
-    ItemCategory(categories = Category(name = "Computer Gaming", brands = emptyList(), id = 1))
-}
+fun ItemCategoryPreview(){}

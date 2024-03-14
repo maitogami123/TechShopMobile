@@ -1,5 +1,6 @@
 package com.vi.techshopmobile.di
 
+import arrow.retrofit.adapter.either.EitherCallAdapterFactory
 import com.vi.techshopmobile.data.remote.categories.CategoriesApi
 import com.vi.techshopmobile.data.remote.products.ProductsApi
 import com.vi.techshopmobile.data.repository.CategoriesRepositoryImpl
@@ -26,6 +27,7 @@ object ProductModule {
         return Retrofit.Builder()
             .baseUrl(Constants.BASE_URL + "product/")
             .addConverterFactory(GsonConverterFactory.create())
+            .addCallAdapterFactory(EitherCallAdapterFactory.create())
             .build().create(ProductsApi::class.java)
     }
 
