@@ -2,6 +2,7 @@ package com.vi.techshopmobile.data.repository
 
 import arrow.core.Either
 import com.vi.techshopmobile.data.remote.products.ProductsApi
+import com.vi.techshopmobile.data.remote.products.dto.ProductDetailResponse
 import com.vi.techshopmobile.domain.model.ErrorResponse
 import com.vi.techshopmobile.domain.model.ProductLine
 import com.vi.techshopmobile.domain.repository.products.ProductsRepository
@@ -13,4 +14,8 @@ class ProductsRepositoryImpl @Inject constructor(
     override suspend fun getProducts(): Either<ErrorResponse, List<ProductLine>> {
         return productsApi.getProducts()
        }
+
+    override suspend fun getProductDetail(productLine: String): Either<ErrorResponse, ProductDetailResponse> {
+        return productsApi.getProductDetail(productLine)
+    }
 }

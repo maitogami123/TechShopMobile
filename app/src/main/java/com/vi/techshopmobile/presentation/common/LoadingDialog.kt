@@ -1,4 +1,4 @@
-package com.vi.techshopmobile.presentation.loading
+package com.vi.techshopmobile.presentation.common
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
