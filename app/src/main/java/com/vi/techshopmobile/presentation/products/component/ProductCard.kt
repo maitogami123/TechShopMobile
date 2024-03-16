@@ -138,6 +138,7 @@ fun ProductCard(
                                 .fillMaxWidth(),
                             text = formatPrice(product.price),
                             style = MaterialTheme.typography.displaySmall,
+                            color = MaterialTheme.colorScheme.primary
                         )
                     }
 

@@ -23,7 +23,13 @@ class MainViewModel @Inject constructor(
         private set
     var startDestination by mutableStateOf(Route.AppStartNavigation.route)
         private set
+
+    var accessToken by mutableStateOf("")
+
     init {
+        appSessionUseCases.readSession().onEach {
+            accessToken = it
+        }.launchIn(viewModelScope)
         appEntryUseCases.readAppEntry().onEach { shouldStartFromHomeScreen ->
             if (shouldStartFromHomeScreen) {
                 startDestination = Route.TechShopNavigation.route
@@ -33,6 +39,5 @@ class MainViewModel @Inject constructor(
             delay(300)
             splashCondition = false
         }.launchIn(viewModelScope)
-
     }
 }

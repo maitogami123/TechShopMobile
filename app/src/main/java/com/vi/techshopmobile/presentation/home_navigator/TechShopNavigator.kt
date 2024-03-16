@@ -17,6 +17,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.vi.techshopmobile.LocalToken
 import com.vi.techshopmobile.R
 import com.vi.techshopmobile.presentation.home.HomeScreen
 import com.vi.techshopmobile.presentation.home_navigator.component.BottomNavigationItem
@@ -29,7 +30,9 @@ import com.vi.techshopmobile.presentation.product_details.ProductDetailsScreen
 import com.vi.techshopmobile.presentation.search.SearchScreen
 import com.vi.techshopmobile.presentation.sendEvent
 import com.vi.techshopmobile.presentation.user_setting.UserSettingScreen
+import com.vi.techshopmobile.presentation.wish_list_screen.WishListScreen
 import com.vi.techshopmobile.util.Event
+import com.vi.techshopmobile.util.decodeToken
 import com.vi.techshopmobile.util.navigateToTap
 
 val LocalNavController = compositionLocalOf<NavController> {
@@ -52,6 +55,7 @@ fun HomeNavigator(navGraphController: NavController) {
     var selectedItem by rememberSaveable {
         mutableIntStateOf(1)
     }
+    val decodedToken = decodeToken(LocalToken.current)
 
     selectedItem = remember(key1 = backStackState) {
         when (backStackState?.destination?.route) {
@@ -70,9 +74,9 @@ fun HomeNavigator(navGraphController: NavController) {
                     // TODO: Fetch user information
                     UserTopNavigation(
                         userInfo = UserInformation(
-                            "test",
-                            "test",
-                            "https://scontent.fhan3-3.fna.fbcdn.net/v/t39.30808-6/305108279_3380406918948385_1634056947920206356_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=5f2048&_nc_ohc=tS-Z-Hvlq1wAX9jI0iS&_nc_ht=scontent.fhan3-3.fna&oh=00_AfC9TMejNOQxjC-mEvAN4OOC-SxCU1xMXdhpjQLCQqDZDA&oe=65EE03B1"
+                            decodedToken.sub,
+                            "placeholder@domain.com",
+                            "https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/9d58f5a8-7784-442e-80b7-1f17231cb636/dgkoqel-0d33ec31-5bf0-4164-93e0-3d0f58913a91.jpg/v1/fit/w_808,h_808,q_70,strp/aporia_by_cogwurx_dgkoqel-414w-2x.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9ODA4IiwicGF0aCI6IlwvZlwvOWQ1OGY1YTgtNzc4NC00NDJlLTgwYjctMWYxNzIzMWNiNjM2XC9kZ2tvcWVsLTBkMzNlYzMxLTViZjAtNDE2NC05M2UwLTNkMGY1ODkxM2E5MS5qcGciLCJ3aWR0aCI6Ijw9ODA4In1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmltYWdlLm9wZXJhdGlvbnMiXX0.5P7jBM1aKS7F0a1p9aI0DuFSH5IMq84T5rACbsgFCSY"
                         )
                     )
                 } else if (selectedItem == 1) {
@@ -115,13 +119,19 @@ fun HomeNavigator(navGraphController: NavController) {
                     SearchScreen()
                 }
                 composable(route = Route.UserSettingScreen.route) {
-                    UserSettingScreen()
+                    UserSettingScreen(navController)
                 }
                 composable(route = Route.ProductDetailsScreen.route) {
                     navController.previousBackStackEntry?.savedStateHandle?.get<String?>("productLine")
                         ?.let { productLine ->
                             ProductDetailsScreen(productLine) { navController.navigateUp() }
                         }
+                }
+
+                // TODO: Move this to another nav host
+                // (suggestion: create a userSetting navHost to navigate between screens within user settings.)
+                composable(route = Route.WishListScreen.route) {
+                    WishListScreen()
                 }
             }
         }

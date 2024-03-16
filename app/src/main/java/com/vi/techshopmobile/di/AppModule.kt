@@ -1,30 +1,25 @@
 package com.vi.techshopmobile.di
 
 import android.app.Application
-import com.vi.techshopmobile.data.manager.LocalSessionManagerImpl
+import androidx.room.Room
+import com.vi.techshopmobile.data.local.TechShopDatabase
+import com.vi.techshopmobile.data.local.WishListDao
 import com.vi.techshopmobile.data.manager.LocalUserManagerImpl
-import com.vi.techshopmobile.data.remote.authenticate.AuthenticateApi
-import com.vi.techshopmobile.data.remote.categories.CategoriesApi
-import com.vi.techshopmobile.data.remote.products.ProductsApi
-import com.vi.techshopmobile.data.repository.AuthenticateRepositoryImpl
-import com.vi.techshopmobile.domain.manager.LocalSessionManager
+import com.vi.techshopmobile.data.repository.WishListRepositoryImpl
 import com.vi.techshopmobile.domain.manager.LocalUserManager
-import com.vi.techshopmobile.domain.repository.authenticate.AuthenticateRepository
+import com.vi.techshopmobile.domain.repository.wish_list.WishListRepository
 import com.vi.techshopmobile.domain.usecases.app_entry.AppEntryUseCases
 import com.vi.techshopmobile.domain.usecases.app_entry.ReadAppEntry
 import com.vi.techshopmobile.domain.usecases.app_entry.SaveAppEntry
-import com.vi.techshopmobile.domain.usecases.app_session.AppSessionUseCases
-import com.vi.techshopmobile.domain.usecases.app_session.CheckSession
-import com.vi.techshopmobile.domain.usecases.app_session.DeleteSession
-import com.vi.techshopmobile.domain.usecases.app_session.ReadSession
-import com.vi.techshopmobile.domain.usecases.app_session.SaveSession
-import com.vi.techshopmobile.util.Constants.BASE_URL
+import com.vi.techshopmobile.domain.usecases.wish_list.DeleteWishItem
+import com.vi.techshopmobile.domain.usecases.wish_list.GetWishList
+import com.vi.techshopmobile.domain.usecases.wish_list.UpsertWishItem
+import com.vi.techshopmobile.domain.usecases.wish_list.WishListUseCases
+import com.vi.techshopmobile.util.Constants.DATABASE_NAME
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
 @Module
@@ -44,5 +39,41 @@ object AppModule {
     ) = AppEntryUseCases(
         readAppEntry = ReadAppEntry(localUserManager),
         saveAppEntry = SaveAppEntry(localUserManager)
+    )
+
+    @Provides
+    @Singleton
+    fun provideTechShopDatabase(
+        application: Application
+    ): TechShopDatabase {
+        return Room.databaseBuilder(
+            context = application,
+            klass = TechShopDatabase::class.java,
+            name = DATABASE_NAME
+        )
+            .fallbackToDestructiveMigration()
+            .build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideWishListDao(
+        techShopDatabase: TechShopDatabase
+    ): WishListDao = techShopDatabase.wishListDao
+
+    @Provides
+    @Singleton
+    fun provideWishListRepository(
+        wishListDao: WishListDao
+    ) : WishListRepository = WishListRepositoryImpl(wishListDao)
+
+    @Provides
+    @Singleton
+    fun provideWishListUseCases(
+        wishListRepository: WishListRepository
+    ) : WishListUseCases = WishListUseCases(
+        UpsertWishItem(wishListRepository),
+        DeleteWishItem(wishListRepository),
+        GetWishList(wishListRepository)
     )
 }

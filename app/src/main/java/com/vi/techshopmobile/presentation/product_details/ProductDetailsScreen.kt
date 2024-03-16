@@ -1,6 +1,6 @@
 package com.vi.techshopmobile.presentation.product_details
 
-import android.widget.Space
+import android.util.Log
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.pager.HorizontalPager
@@ -20,24 +21,37 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
+import com.vi.techshopmobile.LocalToken
 import com.vi.techshopmobile.R
+import com.vi.techshopmobile.domain.model.WishItem
 import com.vi.techshopmobile.presentation.common.Accordion
 import com.vi.techshopmobile.presentation.common.FloatingBottomBar
 import com.vi.techshopmobile.presentation.common.LoadingDialog
@@ -45,9 +59,11 @@ import com.vi.techshopmobile.presentation.home_navigator.component.UtilityTopNav
 import com.vi.techshopmobile.ui.theme.Danger
 import com.vi.techshopmobile.ui.theme.TechShopMobileTheme
 import com.vi.techshopmobile.util.Constants.BASE_URL
+import com.vi.techshopmobile.util.decodeToken
 import com.vi.techshopmobile.util.formatPrice
+import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun ProductDetailsScreen(
     productLine: String,
@@ -55,6 +71,13 @@ fun ProductDetailsScreen(
 ) {
     val viewModel: ProductDetailsViewModel = hiltViewModel()
     val state by viewModel.productDetail.collectAsState();
+    val scope = rememberCoroutineScope()
+    val sheetState = rememberModalBottomSheetState()
+    var showBottomSheet by remember {
+        mutableStateOf(false)
+    }
+
+    val decodedToken = decodeToken(LocalToken.current)
 
     LaunchedEffect(key1 = productLine) {
         (viewModel::onEvent)(ProductDetailsEvent.GetDetailEvent(productLine))
@@ -63,7 +86,9 @@ fun ProductDetailsScreen(
     Scaffold(
         topBar = {
             UtilityTopNavigation(
-                onRightBtnClick = { /*TODO*/ },
+                onRightBtnClick = {
+
+                },
                 leftBtnIcon = R.drawable.ic_left_arrow,
                 rightBtnIcon = R.drawable.ic_share
             ) {
@@ -74,14 +99,24 @@ fun ProductDetailsScreen(
             FloatingBottomBar(
                 buttonText = "Mua ngay",
                 onButtonClick = {},
-                onAddToWishList = {},
-                onAddToCart = {})
+                onAddToWishList = {
+                    (viewModel::onEvent)(ProductDetailsEvent.AddItemToWishListEvent(WishItem(
+                        productLine = productLine,
+                        productName = state.productDetail!!.product.productName,
+                        username = decodedToken.sub
+                    )))
+                },
+                onAddToCart = {
+                    showBottomSheet = true
+                })
         }
     ) {
         val paddingTop = it.calculateTopPadding()
 
         Column(
-            modifier = Modifier.verticalScroll(rememberScrollState()).fillMaxSize(),
+            modifier = Modifier
+                .verticalScroll(rememberScrollState())
+                .fillMaxSize(),
             verticalArrangement = Arrangement.Top
         ) {
             if (state.isLoading) {
@@ -129,7 +164,10 @@ fun ProductDetailsScreen(
                             }
                         }
                     }
-                    Column(modifier = Modifier.padding(horizontal = 16.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
+                    Column(
+                        modifier = Modifier.padding(horizontal = 16.dp),
+                        verticalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
                         Text(
                             text = state.productDetail!!.product.productName,
                             style = MaterialTheme.typography.displayMedium
@@ -149,6 +187,90 @@ fun ProductDetailsScreen(
             }
         }
         // TODO: Product Suggestion
+    }
+    if (showBottomSheet) {
+        ModalBottomSheet(
+            onDismissRequest = {
+                showBottomSheet = false
+            },
+            sheetState = sheetState,
+        ) {
+            // Sheet content
+            Column(
+                modifier = Modifier
+                    .padding(horizontal = 16.dp)
+                    .padding(bottom = 20.dp),
+                verticalArrangement = Arrangement.spacedBy(20.dp)
+            ) {
+                // TODO - START: Make this block of code a component
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(96.dp)
+                ) {
+                    AsyncImage(
+                        model = BASE_URL + "product/get-file?filePath=" + state.productDetail!!.thumbnailUri,
+                        contentDescription = null,
+                        modifier = Modifier.size(96.dp),
+                        contentScale = ContentScale.Crop,
+                        alignment = Alignment.Center
+                    )
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(start = 16.dp),
+                        horizontalAlignment = Alignment.Start,
+                        verticalArrangement = Arrangement.SpaceEvenly
+                    ) {
+                        Text(
+                            text = state.productDetail!!.product.productName,
+                            maxLines = 2,
+                            overflow = TextOverflow.Ellipsis,
+                            style = MaterialTheme.typography.labelMedium
+                        )
+                        Text(
+                            text = "16.000.000 VND",
+                            style = MaterialTheme.typography.displaySmall,
+                            color = Danger
+                        )
+                        Text(
+                            text = "Còn lại: ${state.productDetail!!.stock}",
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                    }
+                }
+                Row(modifier = Modifier.fillMaxWidth()) {
+                    Text(text = "Số lượng", modifier = Modifier.weight(1f))
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        // TODO: Make increase and decrease quantity buttons functional, create a state to store current quantity
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_minus),
+                            contentDescription = null
+                        )
+                        Text(text = "1")
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_plus),
+                            contentDescription = null
+                        )
+                    }
+                }
+
+                // TODO - END
+                Button(modifier = Modifier.fillMaxWidth(), onClick = {
+                    // TODO: Dismiss bottom sheet box then add the product into user cart.
+                    scope.launch { sheetState.hide() }.invokeOnCompletion {
+                        if (!sheetState.isVisible) {
+                            showBottomSheet = false
+                        }
+                    }
+                }) {
+                    Text("Thêm vào giỏ hàng")
+                }
+            }
+        }
     }
 }
 
