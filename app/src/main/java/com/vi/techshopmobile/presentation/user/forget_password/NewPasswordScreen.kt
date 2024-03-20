@@ -1,4 +1,4 @@
-package com.vi.techshopmobile.presentation.authenticate.forget_password
+package com.vi.techshopmobile.presentation.user.forget_password
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background

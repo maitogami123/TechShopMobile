@@ -1,4 +1,4 @@
-package com.vi.techshopmobile.presentation.authenticate.forget_password
+package com.vi.techshopmobile.presentation.user.forget_password
 
 import android.util.Log
 import androidx.compose.foundation.Image
@@ -123,7 +123,7 @@ fun EnterEmailScreen(
                 ) {
                     email = it
                 }
-                Spacer(modifier = Modifier.height(110.dp))
+                Spacer(modifier = Modifier.height(170.dp))
                 if (loading) {
                     Button(onClick = { /*TODO*/ }, enabled = false,
                         modifier = Modifier.fillMaxWidth().align(Alignment.CenterHorizontally).height(40.dp),

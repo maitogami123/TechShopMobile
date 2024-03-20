@@ -1,6 +1,5 @@
-package com.vi.techshopmobile.presentation.wish_list_screen
+package com.vi.techshopmobile.presentation.wish_list
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Text

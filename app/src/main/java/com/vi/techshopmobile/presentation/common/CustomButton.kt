@@ -4,6 +4,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -29,20 +30,22 @@ fun CustomTextButton(
 
 @Composable
 fun CustomButton(
+    enable: Boolean = true,
     modifier: Modifier = Modifier,
     text: String,
     onClick: () -> Unit
 ) {
-    Button(
-        modifier = modifier,
-        onClick = onClick, colors = ButtonDefaults.buttonColors(
-            containerColor = MaterialTheme.colorScheme.primary,
-            contentColor = Color.White
-        ), shape = RoundedCornerShape(size = 6.dp)
-    ) {
-        Text(
-            text = text,
-            style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.SemiBold)
-        )
-    }
+        Button(
+            enabled = enable,
+            modifier = modifier,
+            onClick = onClick, colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = Color.White
+            ), shape = RoundedCornerShape(size = 6.dp)
+        ) {
+            Text(
+                text = text,
+                style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.SemiBold)
+            )
+        }
 }

@@ -1,4 +1,4 @@
-package com.vi.techshopmobile.presentation.wish_list_screen
+package com.vi.techshopmobile.presentation.wish_list
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

@@ -7,9 +7,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.vi.techshopmobile.presentation.authenticate.forget_password.EnterEmailScreen
-import com.vi.techshopmobile.presentation.authenticate.forget_password.EnterNewPasswordScreen
-import com.vi.techshopmobile.presentation.authenticate.forget_password.EnterOTPScreen
+import com.vi.techshopmobile.presentation.user.forget_password.EnterEmailScreen
+import com.vi.techshopmobile.presentation.user.forget_password.EnterNewPasswordScreen
+import com.vi.techshopmobile.presentation.user.forget_password.EnterOTPScreen
 import com.vi.techshopmobile.presentation.navgraph.Route
 import com.vi.techshopmobile.presentation.authenticate.sign_in.SignInScreen
 import com.vi.techshopmobile.presentation.authenticate.sign_up.SignUpScreen
@@ -52,24 +52,24 @@ fun AuthenticateNavigator(navGraphController: NavController) {
             EnterOTPScreen(
                 email = it.arguments?.getString("email"),
                 navController = navController,
-                onNavigateUp = { navController.navigateUp() })
+                onNavigateUp = { navController.navigate(Route.ForgetPasswordScreenEmailScreen.route) })
         }
         composable(
-            route = Route.ForgetPasswordScreenNewPasswordScreen.route + "/{email}" + "/{verificationCode}",
+            route = Route.ForgetPasswordScreenNewPasswordScreen.route + "/{email}" + "/{otpValue}",
             arguments = listOf(
                 navArgument(name = "email") {
                     type = NavType.StringType
                 },
-                navArgument(name = "verificationCode") {
+                navArgument(name = "otpValue") {
                     type = NavType.StringType
                 },
             )
         ) {
             EnterNewPasswordScreen(
                 email = it.arguments?.getString("email"),
-                verificationCode = it.arguments?.getString("verificationCode"),
+                verificationCode = it.arguments?.getString("otpValue"),
                 navController = navController,
-                onNavigateUp = { navController.navigateUp() })
+                onNavigateUp = { navController.navigate(Route.ForgetPasswordScreenOTPScreen.route) })
         }
     }
 

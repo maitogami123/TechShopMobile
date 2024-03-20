@@ -30,7 +30,7 @@ import com.vi.techshopmobile.presentation.product_details.ProductDetailsScreen
 import com.vi.techshopmobile.presentation.search.SearchScreen
 import com.vi.techshopmobile.presentation.sendEvent
 import com.vi.techshopmobile.presentation.user_setting.UserSettingScreen
-import com.vi.techshopmobile.presentation.wish_list_screen.WishListScreen
+import com.vi.techshopmobile.presentation.wish_list.WishListScreen
 import com.vi.techshopmobile.util.Event
 import com.vi.techshopmobile.util.decodeToken
 import com.vi.techshopmobile.util.navigateToTap
