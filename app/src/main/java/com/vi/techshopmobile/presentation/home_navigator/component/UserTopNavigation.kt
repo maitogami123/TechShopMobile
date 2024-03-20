@@ -67,9 +67,9 @@ fun UserTopNavigation(
  * @param avatarUrl current logged in user's avatar url
  */
 data class UserInformation(
-    val fullName: String,
-    val email: String,
-    val avatarUrl: String
+    val fullName: String = "",
+    val email: String = "",
+    val avatarUrl: String = ""
 )
 
 @Preview

@@ -8,4 +8,5 @@ class SaveSession (
     suspend operator fun invoke(accessToken: String) {
         localSessionManager.saveSession(accessToken)
     }
+
 }
