@@ -54,7 +54,6 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             CompositionLocalProvider(LocalToken provides viewModel.accessToken) {
-
                 TechShopMobileTheme {
                     val lifecycle = LocalLifecycleOwner.current.lifecycle
                     LaunchedEffect(key1 = lifecycle) {

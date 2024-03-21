@@ -1,11 +1,14 @@
 package com.vi.techshopmobile.util
 
+import androidx.compose.runtime.MutableState
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.navigation.NavController
 import com.google.gson.Gson
 import com.vi.techshopmobile.domain.model.UserToken
 import java.text.NumberFormat
 import java.util.Base64
 import java.util.Currency
+import java.util.concurrent.TimeUnit
 
 fun navigateToTap(navController: NavController, route: String) {
     navController.navigate(route) {
@@ -35,4 +38,23 @@ fun decodeToken(token: String): UserToken {
     val gson = Gson()
     return gson.fromJson(String(decoder.decode(chunks[1])), UserToken::class.java)
 
+}
+
+fun connectInputtedCode(
+    textList: List<MutableState<TextFieldValue>>,
+    onController: (() -> Unit)? = null
+) : String {
+    var code = ""
+    for (text in textList) {
+        code += text.value.text
+    }
+    return code;
+}
+
+fun convertMilisToMinus(millis: Long): String{
+    return String.format("%02d : %02d ",
+        TimeUnit.MILLISECONDS.toMinutes(millis),
+        TimeUnit.MILLISECONDS.toSeconds(millis) -
+                TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis))
+    );
 }
