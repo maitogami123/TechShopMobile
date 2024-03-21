@@ -19,6 +19,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.vi.techshopmobile.LocalToken
 import com.vi.techshopmobile.R
+import com.vi.techshopmobile.domain.model.UserToken
 import com.vi.techshopmobile.presentation.home.HomeScreen
 import com.vi.techshopmobile.presentation.home_navigator.component.BottomNavigationItem
 import com.vi.techshopmobile.presentation.home_navigator.component.MainTopNavigation
@@ -52,10 +53,10 @@ fun HomeNavigator(navGraphController: NavController) {
     val isLoggedIn = viewModel.accessToken.isNotBlank();
     val navController = rememberNavController();
     val backStackState = navController.currentBackStackEntryAsState().value;
+
     var selectedItem by rememberSaveable {
         mutableIntStateOf(1)
     }
-    val decodedToken = decodeToken(LocalToken.current)
 
     selectedItem = remember(key1 = backStackState) {
         when (backStackState?.destination?.route) {
@@ -72,6 +73,7 @@ fun HomeNavigator(navGraphController: NavController) {
             topBar = {
                 if (selectedItem == 2 && isLoggedIn) {
                     // TODO: Fetch user information
+                    val decodedToken = decodeToken(LocalToken.current)
                     UserTopNavigation(
                         userInfo = UserInformation(
                             decodedToken.sub,

@@ -123,7 +123,7 @@ fun EnterEmailScreen(
                 ) {
                     email = it
                 }
-                Spacer(modifier = Modifier.height(170.dp))
+                Spacer(modifier = Modifier.weight(.5f))
                 if (loading) {
                     Button(onClick = { /*TODO*/ }, enabled = false,
                         modifier = Modifier.fillMaxWidth().align(Alignment.CenterHorizontally).height(40.dp),

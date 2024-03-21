@@ -2,6 +2,7 @@ package com.vi.techshopmobile.presentation.user.forget_password.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -41,8 +42,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.vi.techshopmobile.presentation.authenticate.forget_password.KeyboardStatus
-import com.vi.techshopmobile.presentation.authenticate.forget_password.keyboardAsState
+import com.vi.techshopmobile.presentation.authenticate.forget_passwo.KeyboardStatus
+import com.vi.techshopmobile.presentation.authenticate.forget_passwo.keyboardAsState
 
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -53,7 +54,6 @@ fun OtpInputField(
     onOtpChanged: (String) -> Unit
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
-    // 0998779
     var otpValue by remember {
         mutableStateOf("")
     }
@@ -95,8 +95,6 @@ fun OtpInputField(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 repeat(otpLength) { index ->
-                    // 6
-                    // 4 5 2 <<< otpValue = "452
                     val char = when {
                         index >= otpValue.length -> ""
                         else -> otpValue[index].toString()
@@ -121,9 +119,8 @@ fun OtpInputField(
             imeAction = ImeAction.Done
         ),
         keyboardActions = KeyboardActions(onDone = {
-            keyboardController?.hide()
-
-        }
+                keyboardController?.hide()
+            }
         )
     )
 
@@ -153,7 +150,8 @@ fun OtpCell(
     BasicTextField(
         value = char,
         onValueChange = {},
-        modifier = Modifier
+        enabled = false,
+        modifier = modifier
             .padding(horizontal = 4.dp)
             .clip(RoundedCornerShape(4.dp))
             .background(
