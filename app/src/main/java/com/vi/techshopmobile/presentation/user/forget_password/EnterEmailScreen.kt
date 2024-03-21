@@ -57,7 +57,7 @@ fun EnterEmailScreen(
 ) {
     val viewModel: MailViewModel = hiltViewModel()
     val isSendMailState = viewModel.isSendEmail.collectAsState()
-
+    val isSendMailLoading = viewModel.isSendEmailLoading.collectAsState()
     //val gmail = viewModel.email.collectAsState()
     var email by remember {
         mutableStateOf("")
@@ -124,22 +124,26 @@ fun EnterEmailScreen(
                     email = it
                 }
                 Spacer(modifier = Modifier.weight(.5f))
-                if (loading) {
-                    Button(onClick = { /*TODO*/ }, enabled = false,
-                        modifier = Modifier.fillMaxWidth().align(Alignment.CenterHorizontally).height(40.dp),
+                if (isSendMailLoading.value) {
+                    Button(onClick = { /*TODO*/ }, enabled = !isSendMailLoading.value,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .align(Alignment.CenterHorizontally)
+                            .height(40.dp),
                         colors = ButtonDefaults.buttonColors(
                             containerColor = MaterialTheme.colorScheme.primary,
                             contentColor = Color.White
                         ), shape = RoundedCornerShape(size = 6.dp)) {
                         CircularProgressIndicator(
-                            modifier = Modifier.width(20.dp).align(Alignment.CenterVertically),
+                            modifier = Modifier
+                                .width(20.dp)
+                                .align(Alignment.CenterVertically),
                             color = MaterialTheme.colorScheme.secondary,
                             trackColor = MaterialTheme.colorScheme.surfaceVariant,
                         )
                     }
                 } else {
                     CustomButton(text = "Nhập mã xác nhận", modifier = Modifier.fillMaxWidth()) {
-                        loading = true;
                         (viewModel::onEvent)(
                             MailEvent.SendOtpByMail(
                                 SendOtpByMailData(email)
@@ -221,17 +225,22 @@ fun EnterEmailScreenPreview() {
                 ) {
                     gmail = it
                 }
-                Spacer(modifier = Modifier.height(110.dp))
+                Spacer(modifier = Modifier.weight(.5f))
 
                 if (loading) {
                     Button(onClick = { /*TODO*/ }, enabled = false,
-                        modifier = Modifier.fillMaxWidth().align(Alignment.CenterHorizontally).height(40.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .align(Alignment.CenterHorizontally)
+                            .height(40.dp),
                         colors = ButtonDefaults.buttonColors(
                             containerColor = MaterialTheme.colorScheme.primary,
                             contentColor = Color.White
                         ), shape = RoundedCornerShape(size = 6.dp)) {
                         CircularProgressIndicator(
-                            modifier = Modifier.width(20.dp).align(Alignment.CenterVertically),
+                            modifier = Modifier
+                                .width(20.dp)
+                                .align(Alignment.CenterVertically),
                             color = MaterialTheme.colorScheme.secondary,
                             trackColor = MaterialTheme.colorScheme.surfaceVariant,
                         )

@@ -19,23 +19,24 @@ class MailViewModel @Inject constructor(
     private var _isSendMail = MutableStateFlow(false)
     val isSendEmail = _isSendMail.asStateFlow()
 
-//    private var _email = MutableStateFlow("")
-//    val email = _email.asStateFlow()
+    private var _isSendMailLoading = MutableStateFlow(false)
+    val isSendEmailLoading = _isSendMailLoading.asStateFlow()
 
     fun onEvent(event: MailEvent){
         when(event){
             is MailEvent.SendOtpByMail ->{
                 viewModelScope.launch {
+                    _isSendMailLoading.value = true
                     val mailResponse = mailUseCases.sendOtpByMail(event.sendOtpByMailData)
                     if(mailResponse.isRight()){
                         mailResponse.onRight {
                             sendEvent(Event.Toast("Đã gửi mã thành công"))
-                            //appSessionUseCases.saveSession(it)
                             _isSendMail.value = true
                         }
                     } else{
                         mailResponse.onLeft {
                             sendEvent(Event.Toast(it.detail))
+                            _isSendMailLoading.value = false
                         }
                     }
                 }

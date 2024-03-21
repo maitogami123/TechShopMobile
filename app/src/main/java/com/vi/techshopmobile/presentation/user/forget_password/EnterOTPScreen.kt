@@ -195,7 +195,7 @@ fun EnterOTPScreen(
                         )
                     }
                 }
-                Spacer(modifier = Modifier.height(100.dp))
+                Spacer(modifier = Modifier.weight(.5f))
                 CustomButton(text = "Xác nhận", modifier = Modifier.fillMaxWidth(), enable = isEnableButton.value) {
                     (viewModel::onEvent)(
                         UserEvent.checkOtp(
@@ -332,7 +332,7 @@ fun EnterOTPScreenPreview() {
                         )
                     }
                 }
-                Spacer(modifier = Modifier.height(60.dp))
+                Spacer(modifier = Modifier.weight(.5f))
                 CustomButton(text = "Xác nhận", modifier = Modifier.fillMaxWidth(), enable = isEnableButton.value) {
 //                    (viewModel::onEvent)(
 //                        UserEvent.SendOtpByMail(

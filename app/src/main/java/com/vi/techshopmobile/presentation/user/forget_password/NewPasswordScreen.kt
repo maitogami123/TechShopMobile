@@ -151,7 +151,7 @@ fun EnterNewPasswordScreen(
                         error = null
                     )
                 }
-                Spacer(modifier = Modifier.height(Dimens.SmallGap))
+                Spacer(modifier = Modifier.weight(.5f))
                 CustomButton(text = "Thay đổi", modifier = Modifier.fillMaxWidth()) {
                     (viewModel::onEvent)(
                         UserEvent.updatePasswordOtp(
@@ -247,7 +247,7 @@ fun NewPasswordScreenPreview() {
                         error = null
                     )
                 }
-                Spacer(modifier = Modifier.height(Dimens.SmallGap))
+                Spacer(modifier = Modifier.weight(.5f))
                 CustomButton(text = "Thay đổi", modifier = Modifier.fillMaxWidth()) {
 //                    (viewModel::onEvent)(
 //                        MailEvent.SendOtpByMail(

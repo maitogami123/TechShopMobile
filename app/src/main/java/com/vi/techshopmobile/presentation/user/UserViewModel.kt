@@ -23,8 +23,6 @@ class UserViewModel @Inject constructor(
     private var _isConfirmDataUpdate = MutableStateFlow(false)
     val isConfirmDataUpdate = _isConfirmDataUpdate.asStateFlow()
 
-    private var _isCheckOtp = MutableStateFlow(false)
-    val isCheckOtp = _isCheckOtp.asStateFlow()
     fun onEvent(event: UserEvent) {
         when (event) {
             is UserEvent.checkOtp -> {

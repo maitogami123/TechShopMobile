@@ -30,7 +30,7 @@ fun AuthenticateNavigator(navGraphController: NavController) {
             route = Route.SignUpScreen.route
         ) {
             SignUpScreen(
-                onNavigateUp = { navController.navigateUp() },
+                onNavigateUp = { navController.navigate(Route.SignInScreen.route) },
                 navGraphController = navGraphController
             )
         }
@@ -39,7 +39,7 @@ fun AuthenticateNavigator(navGraphController: NavController) {
         ) {
             EnterEmailScreen(
                 navController = navController,
-                onNavigateUp = { navController.navigateUp() })
+                onNavigateUp = { navController.navigate(Route.SignUpScreen.route)})
         }
         composable(
             route = Route.ForgetPasswordScreenOTPScreen.route + "/{email}",
