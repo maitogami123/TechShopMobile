@@ -32,7 +32,7 @@ class CategoriesViewModel @Inject constructor(
     }
 
     fun onEvent(event: CategoriesEvents) {
-        when (event) {
+       when (event) {
             is CategoriesEvents.GetAllEventCategories -> {
                 getCategories()
             }
@@ -41,7 +41,6 @@ class CategoriesViewModel @Inject constructor(
             }
         }
     }
-
     fun getCategories(){
         viewModelScope.launch {
             _isLoading.value = true

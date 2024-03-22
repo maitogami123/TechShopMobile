@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">TechShop</string>
+    <string name="title_activity_personal_infor_screen">PersonalInforScreen</string>
     <string name="chatAI">TechShop AI</string>
 </resources>

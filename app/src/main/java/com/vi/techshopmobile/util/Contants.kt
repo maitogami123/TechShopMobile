@@ -5,7 +5,6 @@ object Constants {
 
     const val USER_SETTINGS = "userSettings"
     const val APP_ENTRY = "appEntry"
-
     const val APP_SESSION = "appSession"
     const val DATABASE_NAME = "TechShop_db"
 }
