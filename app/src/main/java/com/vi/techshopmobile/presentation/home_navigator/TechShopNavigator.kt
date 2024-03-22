@@ -1,6 +1,11 @@
 package com.vi.techshopmobile.presentation.home_navigator
 
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Face
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -20,6 +25,7 @@ import androidx.navigation.compose.rememberNavController
 import com.vi.techshopmobile.LocalToken
 import com.vi.techshopmobile.R
 import com.vi.techshopmobile.domain.model.UserToken
+import com.vi.techshopmobile.presentation.chatAI.ChatAiScreen
 import com.vi.techshopmobile.presentation.home.HomeScreen
 import com.vi.techshopmobile.presentation.home_navigator.component.BottomNavigationItem
 import com.vi.techshopmobile.presentation.home_navigator.component.MainTopNavigation
@@ -64,7 +70,7 @@ fun HomeNavigator(navGraphController: NavController) {
             Route.HomeScreen.route -> 1
             Route.UserSettingScreen.route -> 2
             Route.ProductDetailsScreen.route -> 3
-            else -> 1
+            else -> -1
         }
     }
 
@@ -88,7 +94,7 @@ fun HomeNavigator(navGraphController: NavController) {
                 }
             },
             bottomBar = {
-                if (selectedItem != 3)
+                if (selectedItem != -1 && selectedItem != 3 )
                     TechShopBottomNavigation(
                         items = bottomNavigationItem,
                         selectedItem = selectedItem,
@@ -115,7 +121,7 @@ fun HomeNavigator(navGraphController: NavController) {
                 startDestination = Route.HomeScreen.route
             ) {
                 composable(route = Route.HomeScreen.route) {
-                    HomeScreen()
+                    HomeScreen(navController)
                 }
                 composable(route = Route.SearchScreen.route) {
                     SearchScreen()
@@ -128,6 +134,10 @@ fun HomeNavigator(navGraphController: NavController) {
                         ?.let { productLine ->
                             ProductDetailsScreen(productLine) { navController.navigateUp() }
                         }
+                }
+
+                composable(route = Route.CustomerSupportScreen.route) {
+                    ChatAiScreen(onNavigateUp = {navController.navigateUp()})
                 }
 
                 // TODO: Move this to another nav host

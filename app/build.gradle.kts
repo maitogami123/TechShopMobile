@@ -124,4 +124,7 @@ dependencies {
 
     // Constraint Layout
     implementation ("androidx.constraintlayout:constraintlayout-compose:1.0.1")
+
+    implementation("androidx.compose.material:material-icons-extended:1.6.3")
+    implementation("com.google.ai.client.generativeai:generativeai:0.2.2")
 }
