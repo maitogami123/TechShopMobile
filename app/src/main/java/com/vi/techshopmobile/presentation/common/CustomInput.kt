@@ -59,46 +59,50 @@ fun Input(
             isFocused = false
         }
     }
-
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(bottom = 12.dp),
-        horizontalArrangement = Arrangement.SpaceBetween
+    Column (
+        modifier = modifier.fillMaxWidth()
     ) {
-        if (labelText != null) {
-            Text(
-                text = labelText,
-                style = MaterialTheme.typography.labelLarge,
-            )
-        }
-        if (errorMessage != null)
-            Text(text = errorMessage, style = MaterialTheme.typography.labelLarge.copy(color = Danger))
-    }
-    TextField(modifier = modifier
-        .clip(RoundedCornerShape(RadiusSmall))
-        .border(
-            width = 1.dp,
-            color = if (!isFocused) Danger else Gray_300,
-            shape = RoundedCornerShape(RadiusSmall)
-        ),
-        singleLine = true,
-        placeholder = {
-            if (placeHolderText != null)
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 12.dp),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            if (labelText != null) {
                 Text(
-                    text = placeHolderText,
-                    style = MaterialTheme.typography.displaySmall.copy(color = if (!isFocused) Danger else Gray_300)
+                    text = labelText,
+                    style = MaterialTheme.typography.labelLarge,
                 )
-        },
-        colors = TextFieldDefaults.colors(
-            unfocusedContainerColor = Color.White,
-            focusedContainerColor = Color.White,
-        ),
-        value = inputText,
-        onValueChange = {
-            isFocused = true
-            onChange(it)
-        })
+            }
+            if (errorMessage != null)
+                Text(text = errorMessage, style = MaterialTheme.typography.labelLarge.copy(color = Danger))
+        }
+        TextField(modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(RadiusSmall))
+            .border(
+                width = 1.dp,
+                color = if (!isFocused) Danger else Gray_300,
+                shape = RoundedCornerShape(RadiusSmall)
+            ),
+            singleLine = true,
+            placeholder = {
+                if (placeHolderText != null)
+                    Text(
+                        text = placeHolderText,
+                        style = MaterialTheme.typography.displaySmall.copy(color = if (!isFocused) Danger else Gray_300)
+                    )
+            },
+            colors = TextFieldDefaults.colors(
+                unfocusedContainerColor = Color.White,
+                focusedContainerColor = Color.White,
+            ),
+            value = inputText,
+            onValueChange = {
+                isFocused = true
+                onChange(it)
+            })
+    }
 }
 
 @Composable

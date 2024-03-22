@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">TechShop</string>
+    <string name="chatAI">TechShop AI</string>
 </resources>
