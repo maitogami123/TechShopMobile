@@ -188,12 +188,14 @@ Box(modifier = Modifier.fillMaxWidth()){
                     color = Color(0xFF000000),
 
                     ))
-            Address(
-                name = state.value.userDetail?.accountDetail?.firstName + state.value.userDetail?.accountDetail?.lastName,
-                phoneNumber = "0123456778",
-                addressNote ="62/53/30/7 Lâm Văn Bền",
-                address = "Quận 7 Hồ Chí Minh"
-            )
+            state.value.userDetail?.accountDetail?.let { it1 ->
+                Address(
+                    name = it1.firstName + " " + it1.lastName,
+                    phoneNumber = "(+84)" + it1.phoneNumber,
+                    addressNote =it1.detailedAddress,
+                    address = it1.district + " " + it1.city
+                )
+            }
 
 
         }
@@ -205,7 +207,7 @@ Box(modifier = Modifier.fillMaxWidth()){
             Button(
                 onClick = { /* Handle button click */ },
                 modifier = Modifier
-                    .padding(top = 600.dp)
+                    .padding(top = 800.dp)
                     .width(380.dp)
                     .height(64.dp)
             ) {

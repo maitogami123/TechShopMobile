@@ -41,11 +41,12 @@ fun Address(
     }
     Column(
         modifier = Modifier
-            .fillMaxWidth()
+
             .padding(top = 16.dp)
+
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth(),
+
             verticalAlignment = Alignment.CenterVertically
         ) {
             Image(
