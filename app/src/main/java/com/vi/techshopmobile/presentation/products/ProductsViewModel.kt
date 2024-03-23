@@ -2,6 +2,7 @@ package com.vi.techshopmobile.presentation.products
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.vi.techshopmobile.domain.repository.products.ProductsRepository
 import com.vi.techshopmobile.domain.usecases.products.ProductUseCases
 import com.vi.techshopmobile.util.Event
 import com.vi.techshopmobile.util.EventBus.sendEvent
@@ -21,7 +22,6 @@ class ProductsViewModel @Inject constructor(
 
     private val _state = MutableStateFlow(ProductsViewState())
     val state = _state.asStateFlow()
-
     private val _isLoading = MutableStateFlow(false)
     val isLoading = _isLoading.asStateFlow()
 

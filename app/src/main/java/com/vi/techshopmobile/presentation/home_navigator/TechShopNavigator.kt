@@ -33,6 +33,8 @@ import com.vi.techshopmobile.presentation.home_navigator.component.TechShopBotto
 import com.vi.techshopmobile.presentation.home_navigator.component.UserInformation
 import com.vi.techshopmobile.presentation.home_navigator.component.UserTopNavigation
 import com.vi.techshopmobile.presentation.navgraph.Route
+import com.vi.techshopmobile.presentation.personal_address.PersonalAddressScreen
+import com.vi.techshopmobile.presentation.personal_info.PersonalInfoScreen
 import com.vi.techshopmobile.presentation.product_details.ProductDetailsScreen
 import com.vi.techshopmobile.presentation.search.SearchScreen
 import com.vi.techshopmobile.presentation.sendEvent
@@ -144,6 +146,12 @@ fun HomeNavigator(navGraphController: NavController) {
                 // (suggestion: create a userSetting navHost to navigate between screens within user settings.)
                 composable(route = Route.WishListScreen.route) {
                     WishListScreen()
+                }
+                composable(route = Route.PersonalInfoScreen.route) {
+                    PersonalInfoScreen()
+                }
+                composable(route = Route.PersonalAddressScreen.route) {
+                    PersonalAddressScreen()
                 }
             }
         }

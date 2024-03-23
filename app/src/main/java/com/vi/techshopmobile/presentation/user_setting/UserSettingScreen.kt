@@ -23,7 +23,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.vi.techshopmobile.R
 import com.vi.techshopmobile.presentation.Dimens.RadiusMedium
 import com.vi.techshopmobile.presentation.navgraph.Route
@@ -45,10 +44,10 @@ fun UserSettingScreen(navController: NavController) {
 
             }
             SettingItem(R.drawable.ic_user, "Thông tin cá nhân") {
-
+                navController.navigate(Route.PersonalInfoScreen.route)
             }
             SettingItem(R.drawable.ic_location, "Địa chỉ") {
-
+                navController.navigate(Route.PersonalAddressScreen.route)
             }
             SettingItem(R.drawable.ic_heart, "Sản phẩm yêu thích") {
                 navController.navigate(Route.WishListScreen.route)

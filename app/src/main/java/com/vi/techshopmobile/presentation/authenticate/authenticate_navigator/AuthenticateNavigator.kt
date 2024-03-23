@@ -13,6 +13,7 @@ import com.vi.techshopmobile.presentation.user.forget_password.EnterOTPScreen
 import com.vi.techshopmobile.presentation.navgraph.Route
 import com.vi.techshopmobile.presentation.authenticate.sign_in.SignInScreen
 import com.vi.techshopmobile.presentation.authenticate.sign_up.SignUpScreen
+import com.vi.techshopmobile.presentation.personal_info.PersonalInfoScreen
 
 @Composable
 fun AuthenticateNavigator(navGraphController: NavController) {
