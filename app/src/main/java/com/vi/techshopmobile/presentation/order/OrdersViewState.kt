@@ -6,4 +6,4 @@ data class OrdersViewState(
     val isLoading: Boolean = true,
     val orders: List<OrderItem> = emptyList(),
     val error: String? = null
-){}
+)

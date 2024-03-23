@@ -40,6 +40,7 @@ import com.vi.techshopmobile.presentation.personal_info.PersonalInfoScreen
 import com.vi.techshopmobile.presentation.product_details.ProductDetailsScreen
 import com.vi.techshopmobile.presentation.search.SearchScreen
 import com.vi.techshopmobile.presentation.sendEvent
+import com.vi.techshopmobile.presentation.order.UserOrderScreen
 import com.vi.techshopmobile.presentation.user_setting.UserSettingScreen
 import com.vi.techshopmobile.presentation.wish_list.WishListScreen
 import com.vi.techshopmobile.util.Event
@@ -163,6 +164,13 @@ fun HomeNavigator(navGraphController: NavController) {
                 composable(route = Route.PersonalAddressScreen.route) {
                     PersonalAddressScreen()
                 }
+
+                composable(route = Route.UserOderScreen.route) {
+                    UserOrderScreen(){}
+
+
+                }
+
 
                 composable(route = Route.CartScreen.route) {
                     CartScreen {
