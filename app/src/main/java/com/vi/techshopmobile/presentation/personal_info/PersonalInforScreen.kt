@@ -64,7 +64,6 @@ fun PersonalInfoScreen() {
                     .width(412.dp)
                     .height(56.dp)
                     .background(color = Color(0xFFFFFFFF))
-//                .padding(start = 16.dp, top = 12.dp, end = 138.dp, bottom = 12.dp)
             ) {
                 UtilityTopNavigation(
                     onRightBtnClick = {

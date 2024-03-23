@@ -8,7 +8,7 @@ import retrofit2.http.GET
 import retrofit2.http.Header
 
 interface OrdersApi {
-    @GET("GetOrder")
+    @GET("getOrder")
     suspend fun getOrders(@Header("Authorization") token: String): Either<ErrorResponse, List<OrderItem>>
 
 }
