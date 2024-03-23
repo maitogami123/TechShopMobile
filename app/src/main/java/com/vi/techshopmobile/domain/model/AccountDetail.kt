@@ -1,6 +1,6 @@
 package com.vi.techshopmobile.domain.model
 
-data class UserInfo(
+data class AccountDetail(
     val city: String,
     val createdAt: String,
     val default: Boolean,

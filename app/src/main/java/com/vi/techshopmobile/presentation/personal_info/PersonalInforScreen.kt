@@ -97,7 +97,7 @@ fun PersonalInfoScreen() {
                 .padding(16.dp)
                 .padding(top = 50.dp)
         ) {
-                state.value.userDetail?.userInfo?.let { it1 ->
+                state.value.userDetail?.accountDetail?.let { it1 ->
                     Input(
                         inputText = it1.firstName ,
                         labelText = "Họ và tên lót",
@@ -107,7 +107,7 @@ fun PersonalInfoScreen() {
                     }
                 }
             Spacer(modifier = Modifier.height(Dimens.SmallGap))
-            state.value.userDetail?.userInfo?.let { it1 ->
+            state.value.userDetail?.accountDetail?.let { it1 ->
                 Input(
                     inputText = it1.lastName,
                     labelText = "Tên",
@@ -189,7 +189,7 @@ Box(modifier = Modifier.fillMaxWidth()){
 
                     ))
             Address(
-                name = state.value.userDetail?.userInfo?.firstName + state.value.userDetail?.userInfo?.lastName,
+                name = state.value.userDetail?.accountDetail?.firstName + state.value.userDetail?.accountDetail?.lastName,
                 phoneNumber = "0123456778",
                 addressNote ="62/53/30/7 Lâm Văn Bền",
                 address = "Quận 7 Hồ Chí Minh"
