@@ -41,7 +41,7 @@ fun UserSettingScreen(navController: NavController) {
     ) {
         Column {
             SettingItem(R.drawable.ic_shopping_cart, "Đơn hàng") {
-
+                navController.navigate(Route.UserOderScreen.route)
             }
             SettingItem(R.drawable.ic_user, "Thông tin cá nhân") {
                 navController.navigate(Route.PersonalInfoScreen.route)
