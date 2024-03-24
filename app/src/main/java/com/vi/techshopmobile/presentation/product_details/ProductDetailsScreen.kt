@@ -55,7 +55,7 @@ import com.vi.techshopmobile.domain.model.WishItem
 import com.vi.techshopmobile.presentation.common.Accordion
 import com.vi.techshopmobile.presentation.common.FloatingBottomBar
 import com.vi.techshopmobile.presentation.common.LoadingDialog
-import com.vi.techshopmobile.presentation.home_navigator.component.UtilityTopNavigation
+import com.vi.techshopmobile.presentation.home.home_navigator.component.UtilityTopNavigation
 import com.vi.techshopmobile.ui.theme.Danger
 import com.vi.techshopmobile.ui.theme.TechShopMobileTheme
 import com.vi.techshopmobile.util.Constants.BASE_URL
@@ -257,8 +257,8 @@ fun ProductDetailsScreen(
                         )
                     }
                 }
-
                 // TODO - END
+
                 Button(modifier = Modifier.fillMaxWidth(), onClick = {
                     // TODO: Dismiss bottom sheet box then add the product into user cart.
                     scope.launch { sheetState.hide() }.invokeOnCompletion {

@@ -39,8 +39,8 @@ import coil.compose.AsyncImage
 import com.vi.techshopmobile.R
 import com.vi.techshopmobile.domain.model.ProductLine
 import com.vi.techshopmobile.presentation.Dimens.IconSizeLarge
-import com.vi.techshopmobile.presentation.home_navigator.LocalNavController
-import com.vi.techshopmobile.presentation.home_navigator.navigateToDetails
+import com.vi.techshopmobile.presentation.home.home_navigator.LocalNavController
+import com.vi.techshopmobile.presentation.home.home_navigator.navigateToDetails
 import com.vi.techshopmobile.ui.theme.Danger
 import com.vi.techshopmobile.ui.theme.Gray_500
 import com.vi.techshopmobile.ui.theme.Info

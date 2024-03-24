@@ -40,10 +40,10 @@ fun UserSettingScreen(navController: NavController) {
             .padding(horizontal = 16.dp)
     ) {
         Column {
-            SettingItem(R.drawable.ic_shopping_cart, "Đơn hàng") {
+            SettingItem(R.drawable.ic_order, "Đơn hàng") {
 
             }
-            SettingItem(R.drawable.ic_user, "Thông tin cá nhân") {
+            SettingItem(R.drawable.ic_user_detail, "Thông tin cá nhân") {
                 navController.navigate(Route.PersonalInfoScreen.route)
             }
             SettingItem(R.drawable.ic_location, "Địa chỉ") {
@@ -60,6 +60,11 @@ fun UserSettingScreen(navController: NavController) {
         Button(
             onClick = {
                 (viewModel::onEvent)(UserSettingEvent.LogoutEvent)
+                navController.navigate(Route.HomeScreen.route) {
+                    popUpTo(Route.HomeScreen.route) {
+                        inclusive = true
+                    }
+                }
             }, modifier = Modifier
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(RadiusMedium)), colors = ButtonDefaults.buttonColors(
@@ -69,7 +74,7 @@ fun UserSettingScreen(navController: NavController) {
         ) {
             Box(Modifier.padding(18.dp, 12.dp)) {
                 Icon(
-                    painter = painterResource(id = R.drawable.ic_up_arrow),
+                    painter = painterResource(id = R.drawable.ic_logout),
                     contentDescription = null
                 )
                 Text(
@@ -88,6 +93,6 @@ fun UserSettingScreen(navController: NavController) {
 @Composable
 private fun PreviewUserSettingScreen() {
     TechShopMobileTheme {
-//        UserSettingScreen()
+
     }
 }

@@ -27,7 +27,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import com.vi.techshopmobile.presentation.home_navigator.LocalNavController
+import com.vi.techshopmobile.presentation.home.home_navigator.LocalNavController
 import com.vi.techshopmobile.presentation.navgraph.NavGraph
 import com.vi.techshopmobile.presentation.products.ProductsScreen
 import com.vi.techshopmobile.ui.theme.TechShopMobileTheme
@@ -71,8 +71,6 @@ class MainActivity : ComponentActivity() {
                             }
                         }
                     }
-                    // A surface container u
-                    // sing the 'background' color from the theme
                     Surface(
                         modifier = Modifier.fillMaxSize(),
                         color = MaterialTheme.colorScheme.background

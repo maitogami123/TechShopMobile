@@ -15,7 +15,6 @@ class PersonalAddressViewModel @Inject constructor(
     private val appSessionUseCases: AppSessionUseCases,
 ) : ViewModel(){
 
-
     fun onEvent(event: UserSettingEvent) {
         when (event) {
             is UserSettingEvent.LogoutEvent -> {

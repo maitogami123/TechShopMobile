@@ -10,18 +10,23 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
+import com.vi.techshopmobile.LocalToken
 import com.vi.techshopmobile.presentation.authenticate.authenticate_navigator.AuthenticateNavigator
 import com.vi.techshopmobile.presentation.chatAI.ChatAiScreen
-import com.vi.techshopmobile.presentation.home_navigator.HomeNavigator
-import com.vi.techshopmobile.presentation.home_navigator.TechShopNavigatorViewModel
+import com.vi.techshopmobile.presentation.home.home_navigator.HomeNavigator
+import com.vi.techshopmobile.presentation.home.home_navigator.TechShopNavigatorViewModel
 import com.vi.techshopmobile.presentation.onboarding.OnBoardingScreen
 import com.vi.techshopmobile.presentation.onboarding.OnBoardingViewModel
+import com.vi.techshopmobile.util.Event
+import com.vi.techshopmobile.util.EventBus
+import com.vi.techshopmobile.util.decodeToken
 
 @Composable
 fun NavGraph(
     startDestination: String,
 ) {
     val navController = rememberNavController()
+    val currentTime = System.currentTimeMillis()
     NavHost(
         navController = navController,
         startDestination = startDestination,

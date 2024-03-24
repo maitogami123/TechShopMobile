@@ -56,7 +56,7 @@ import com.vi.techshopmobile.presentation.Dimens
 import com.vi.techshopmobile.presentation.chatAI.component.ModelChatItem
 import com.vi.techshopmobile.presentation.chatAI.component.UserChatItem
 import com.vi.techshopmobile.presentation.common.Input
-import com.vi.techshopmobile.presentation.home_navigator.component.UtilityTopNavigation
+import com.vi.techshopmobile.presentation.home.home_navigator.component.UtilityTopNavigation
 import com.vi.techshopmobile.presentation.navgraph.Route
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
@@ -147,34 +147,6 @@ fun ChatAiScreen(onNavigateUp: () -> Unit) {
 
     }
 }
-//    Surface(
-//        modifier = Modifier.fillMaxSize(),
-//        color = MaterialTheme.colorScheme.background
-//    ) {
-//        Scaffold(
-//            topBar = {
-//                Box(
-//                    modifier = Modifier
-//                        .fillMaxWidth()
-//                        .background(MaterialTheme.colorScheme.primary)
-//                        .height(35.dp)
-//                        .padding(horizontal = 16.dp)
-//                ) {
-//                    Text(
-//                        modifier = Modifier
-//                            .align(Alignment.TopStart),
-//                        text = stringResource(id = R.string.chatAI),
-//                        fontSize = 19.sp,
-//                        color = MaterialTheme.colorScheme.onPrimary
-//                    )
-//                }
-//            }
-//        ) {
-//            ChatScreen(paddingValues = it)
-//        }
-//
-//    }
-
 
 @Preview
 @Composable

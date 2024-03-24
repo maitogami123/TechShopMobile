@@ -7,13 +7,12 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.vi.techshopmobile.presentation.user.forget_password.EnterEmailScreen
-import com.vi.techshopmobile.presentation.user.forget_password.EnterNewPasswordScreen
-import com.vi.techshopmobile.presentation.user.forget_password.EnterOTPScreen
+import com.vi.techshopmobile.presentation.forget_password.screens.EnterEmailScreen
+import com.vi.techshopmobile.presentation.forget_password.screens.EnterNewPasswordScreen
+import com.vi.techshopmobile.presentation.forget_password.screens.EnterOTPScreen
 import com.vi.techshopmobile.presentation.navgraph.Route
 import com.vi.techshopmobile.presentation.authenticate.sign_in.SignInScreen
 import com.vi.techshopmobile.presentation.authenticate.sign_up.SignUpScreen
-import com.vi.techshopmobile.presentation.personal_info.PersonalInfoScreen
 
 @Composable
 fun AuthenticateNavigator(navGraphController: NavController) {

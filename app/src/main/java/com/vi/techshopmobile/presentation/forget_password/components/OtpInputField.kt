@@ -1,4 +1,4 @@
-package com.vi.techshopmobile.presentation.user.forget_password.components
+package com.vi.techshopmobile.presentation.forget_password.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border

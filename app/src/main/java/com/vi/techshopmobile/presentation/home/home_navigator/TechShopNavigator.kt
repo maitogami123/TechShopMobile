@@ -1,4 +1,4 @@
-package com.vi.techshopmobile.presentation.home_navigator
+package com.vi.techshopmobile.presentation.home.home_navigator
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
@@ -27,11 +27,11 @@ import com.vi.techshopmobile.R
 import com.vi.techshopmobile.domain.model.UserToken
 import com.vi.techshopmobile.presentation.chatAI.ChatAiScreen
 import com.vi.techshopmobile.presentation.home.HomeScreen
-import com.vi.techshopmobile.presentation.home_navigator.component.BottomNavigationItem
-import com.vi.techshopmobile.presentation.home_navigator.component.MainTopNavigation
-import com.vi.techshopmobile.presentation.home_navigator.component.TechShopBottomNavigation
-import com.vi.techshopmobile.presentation.home_navigator.component.UserInformation
-import com.vi.techshopmobile.presentation.home_navigator.component.UserTopNavigation
+import com.vi.techshopmobile.presentation.home.home_navigator.component.BottomNavigationItem
+import com.vi.techshopmobile.presentation.home.home_navigator.component.MainTopNavigation
+import com.vi.techshopmobile.presentation.home.home_navigator.component.TechShopBottomNavigation
+import com.vi.techshopmobile.presentation.home.home_navigator.component.UserInformation
+import com.vi.techshopmobile.presentation.home.home_navigator.component.UserTopNavigation
 import com.vi.techshopmobile.presentation.navgraph.Route
 import com.vi.techshopmobile.presentation.personal_address.PersonalAddressScreen
 import com.vi.techshopmobile.presentation.personal_info.PersonalInfoScreen
@@ -148,7 +148,7 @@ fun HomeNavigator(navGraphController: NavController) {
                     WishListScreen()
                 }
                 composable(route = Route.PersonalInfoScreen.route) {
-                    PersonalInfoScreen()
+                    PersonalInfoScreen(onNavigateUp = {navController.navigateUp()})
                 }
                 composable(route = Route.PersonalAddressScreen.route) {
                     PersonalAddressScreen()
