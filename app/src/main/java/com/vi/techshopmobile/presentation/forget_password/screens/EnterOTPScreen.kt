@@ -1,4 +1,4 @@
-package com.vi.techshopmobile.presentation.user.forget_password
+package com.vi.techshopmobile.presentation.forget_password.screens
 
 import android.annotation.SuppressLint
 import android.os.CountDownTimer
@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -30,13 +29,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -46,16 +42,13 @@ import androidx.navigation.NavController
 import com.vi.techshopmobile.R
 import com.vi.techshopmobile.data.remote.mail.dto.SendOtpByMailData
 import com.vi.techshopmobile.presentation.Dimens
-import com.vi.techshopmobile.presentation.user.forget_password.components.OtpInputField
+import com.vi.techshopmobile.presentation.forget_password.components.OtpInputField
 import com.vi.techshopmobile.presentation.common.CustomButton
-import com.vi.techshopmobile.presentation.home_navigator.component.UtilityTopNavigation
-import com.vi.techshopmobile.presentation.mail.MailEvent
-import com.vi.techshopmobile.presentation.mail.MailViewModel
+import com.vi.techshopmobile.presentation.home.home_navigator.component.UtilityTopNavigation
 import com.vi.techshopmobile.presentation.navgraph.Route
-import com.vi.techshopmobile.presentation.user.UserEvent
-import com.vi.techshopmobile.presentation.user.UserViewModel
+import com.vi.techshopmobile.presentation.forget_password.ForgetPasswordEvent
+import com.vi.techshopmobile.presentation.forget_password.ForgetPasswordViewModel
 import com.vi.techshopmobile.ui.theme.Blue_100
-import com.vi.techshopmobile.util.connectInputtedCode
 import com.vi.techshopmobile.util.convertMilisToMinus
 
 
@@ -66,8 +59,7 @@ fun EnterOTPScreen(
     navController: NavController,
     onNavigateUp: () -> Unit
 ) {
-    val viewModel: UserViewModel = hiltViewModel()
-    val viewMailModel: MailViewModel = hiltViewModel()
+    val viewModel: ForgetPasswordViewModel = hiltViewModel()
     val isConfirmOtpState = viewModel.isConfirmOtp.collectAsState()
     val time: Long = 10000
     var otpValue by remember {
@@ -153,7 +145,6 @@ fun EnterOTPScreen(
                 Text(
                     modifier = Modifier
                         .fillMaxWidth(),
-                    //wrapContentWidth(align = Alignment.CenterHorizontally, unbounded = true),
                     text = "Mã xác nhận được gửi qua gmail $email",
                     style = MaterialTheme.typography.displaySmall.copy(
                         fontWeight = FontWeight(600),
@@ -161,7 +152,6 @@ fun EnterOTPScreen(
                     ),
                 )
 
-                //RowOtpCode(textList, requesterList)
                 OtpInputField(otpLength = 6, onOtpChanged = { otp ->
                     otpValue = otp
                 })
@@ -170,8 +160,8 @@ fun EnterOTPScreen(
                         .fillMaxWidth()
                         .clickable(enabled = isResendOtp) {
                             isResendOtp = !isResendOtp
-                            (viewMailModel::onEvent)(
-                                MailEvent.SendOtpByMail(
+                            (viewModel::onEvent)(
+                                ForgetPasswordEvent.SendOtpByMail(
                                     SendOtpByMailData(email.toString())
                                 )
                             )
@@ -198,7 +188,7 @@ fun EnterOTPScreen(
                 Spacer(modifier = Modifier.weight(.5f))
                 CustomButton(text = "Xác nhận", modifier = Modifier.fillMaxWidth(), enable = isEnableButton.value) {
                     (viewModel::onEvent)(
-                        UserEvent.checkOtp(
+                        ForgetPasswordEvent.CheckOtp(
                             email = email.toString(),
                             verificationCode = otpValue
                         )

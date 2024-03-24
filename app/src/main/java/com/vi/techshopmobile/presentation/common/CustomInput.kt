@@ -2,7 +2,7 @@ package com.vi.techshopmobile.presentation.common
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.interaction.InteractionSource
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -59,7 +59,7 @@ fun Input(
             isFocused = false
         }
     }
-    Column (
+    Column(
         modifier = modifier.fillMaxWidth()
     ) {
         Row(
@@ -75,7 +75,73 @@ fun Input(
                 )
             }
             if (errorMessage != null)
-                Text(text = errorMessage, style = MaterialTheme.typography.labelLarge.copy(color = Danger))
+                Text(
+                    text = errorMessage,
+                    style = MaterialTheme.typography.labelLarge.copy(color = Danger)
+                )
+        }
+        TextField(modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(RadiusSmall))
+            .border(
+                width = 1.dp,
+                color = if (!isFocused) Danger else Gray_300,
+                shape = RoundedCornerShape(RadiusSmall)
+            ),
+            singleLine = true,
+            placeholder = {
+                if (placeHolderText != null)
+                    Text(
+                        text = placeHolderText,
+                        style = MaterialTheme.typography.displaySmall.copy(color = if (!isFocused) Danger else Gray_300)
+                    )
+            },
+            colors = TextFieldDefaults.colors(
+                unfocusedContainerColor = Color.White,
+                focusedContainerColor = Color.White,
+            ),
+            value = inputText,
+            onValueChange = {
+                isFocused = true
+                onChange(it)
+            })
+    }
+}
+
+@Composable
+fun InputWithLink(
+    modifier: Modifier = Modifier,
+    labelText: String? = null,
+    linkLabel: String,
+    placeHolderText: String? = null,
+    inputText: String,
+    onChange: (changedValue: String) -> Unit,
+    onNavigate: () -> Unit
+) {
+    var isFocused by rememberSaveable {
+        mutableStateOf(true);
+    }
+
+    Column(
+        modifier = modifier.fillMaxWidth()
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 12.dp),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            if (labelText != null) {
+                Text(
+                    text = labelText,
+                    style = MaterialTheme.typography.labelLarge,
+                )
+            }
+            Text(
+                modifier = Modifier.clickable { onNavigate() },
+                text = linkLabel,
+                style = MaterialTheme.typography.labelLarge.copy(color = MaterialTheme.colorScheme.primary)
+            )
         }
         TextField(modifier = Modifier
             .fillMaxWidth()
@@ -138,7 +204,10 @@ fun TransformableInput(
             )
         }
         if (errorMessage != null)
-            Text(text = errorMessage, style = MaterialTheme.typography.labelLarge.copy(color = Danger))
+            Text(
+                text = errorMessage,
+                style = MaterialTheme.typography.labelLarge.copy(color = Danger)
+            )
     }
 
     TextField(modifier = modifier
@@ -180,6 +249,7 @@ fun TransformableInput(
             onChange(it)
         })
 }
+
 
 @Preview
 @Composable
@@ -239,6 +309,15 @@ fun PreviewInput() {
                 modifier = Modifier.fillMaxWidth()
             ) {
                 testInput = it
+            }
+            Spacer(modifier = Modifier.height(20.dp))
+            InputWithLink(
+                inputText = "Gmail",
+                onChange = {},
+                labelText = "Gmail",
+                linkLabel = "Đổi gmail"
+            ) {
+
             }
         }
 

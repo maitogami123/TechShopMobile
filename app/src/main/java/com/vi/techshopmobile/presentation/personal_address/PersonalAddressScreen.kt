@@ -31,7 +31,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.vi.techshopmobile.LocalToken
 import com.vi.techshopmobile.R
 import com.vi.techshopmobile.presentation.common.Address
-import com.vi.techshopmobile.presentation.home_navigator.component.UtilityTopNavigation
+import com.vi.techshopmobile.presentation.home.home_navigator.component.UtilityTopNavigation
 import com.vi.techshopmobile.presentation.personal_info.PersonalInfoEvent
 import com.vi.techshopmobile.presentation.personal_info.PersonalInfoViewModel
 

@@ -1,10 +1,9 @@
-package com.vi.techshopmobile.presentation.user
+package com.vi.techshopmobile.presentation.forget_password
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.vi.techshopmobile.domain.usecases.mail.MailUseCases
 import com.vi.techshopmobile.domain.usecases.user.UserUseCases
-import com.vi.techshopmobile.presentation.mail.MailEvent
 import com.vi.techshopmobile.presentation.sendEvent
 import com.vi.techshopmobile.util.Event
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -14,8 +13,9 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class UserViewModel @Inject constructor(
-    private val userUseCases: UserUseCases
+class ForgetPasswordViewModel @Inject constructor(
+    private val userUseCases: UserUseCases,
+    private val mailUseCases: MailUseCases
 ) : ViewModel() {
     private var _isConfirmOtp = MutableStateFlow(false)
     val isConfirmOtp = _isConfirmOtp.asStateFlow()
@@ -23,15 +23,21 @@ class UserViewModel @Inject constructor(
     private var _isConfirmDataUpdate = MutableStateFlow(false)
     val isConfirmDataUpdate = _isConfirmDataUpdate.asStateFlow()
 
-    fun onEvent(event: UserEvent) {
+    private var _isSendMail = MutableStateFlow(false)
+    val isSendEmail = _isSendMail.asStateFlow()
+
+    private var _isSendMailLoading = MutableStateFlow(false)
+    val isSendEmailLoading = _isSendMailLoading.asStateFlow()
+
+    fun onEvent(event: ForgetPasswordEvent) {
         when (event) {
-            is UserEvent.checkOtp -> {
+            is ForgetPasswordEvent.CheckOtp -> {
                 viewModelScope.launch {
                     val otpResponse = userUseCases.checkOtp(email = event.email, verificationCode = event.verificationCode)
                     if (otpResponse.isRight()) {
                         otpResponse.onRight {
+                            // Todo: Change this toast message to something else
                             sendEvent(Event.Toast("CheckOtp is $it"))
-                            //appSessionUseCases.saveSession(it)
                             _isConfirmOtp.value = true
                         }
                     } else {
@@ -42,7 +48,7 @@ class UserViewModel @Inject constructor(
                 }
             }
 
-            is UserEvent.updatePasswordOtp -> {
+            is ForgetPasswordEvent.UpdatePasswordOtp -> {
                 viewModelScope.launch {
                     val dataUpdateResponse = userUseCases.updatePasswordOtp(
                         email = event.email,
@@ -57,6 +63,24 @@ class UserViewModel @Inject constructor(
                     else{
                         dataUpdateResponse.onLeft {
                             sendEvent(Event.Toast(it.detail))
+                        }
+                    }
+                }
+            }
+
+            is ForgetPasswordEvent.SendOtpByMail -> {
+                viewModelScope.launch {
+                    _isSendMailLoading.value = true
+                    val mailResponse = mailUseCases.sendOtpByMail(event.sendOtpByMailData)
+                    if(mailResponse.isRight()){
+                        mailResponse.onRight {
+                            sendEvent(Event.Toast("Đã gửi mã thành công"))
+                            _isSendMail.value = true
+                        }
+                    } else{
+                        mailResponse.onLeft {
+                            sendEvent(Event.Toast(it.detail))
+                            _isSendMailLoading.value = false
                         }
                     }
                 }

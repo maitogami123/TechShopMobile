@@ -45,7 +45,7 @@ import com.vi.techshopmobile.presentation.authenticate.AuthenticateViewModel
 import com.vi.techshopmobile.presentation.common.CustomButton
 import com.vi.techshopmobile.presentation.common.Input
 import com.vi.techshopmobile.presentation.common.TransformableInput
-import com.vi.techshopmobile.presentation.home_navigator.component.UtilityTopNavigation
+import com.vi.techshopmobile.presentation.home.home_navigator.component.UtilityTopNavigation
 import com.vi.techshopmobile.presentation.navgraph.Route
 import com.vi.techshopmobile.ui.theme.Blue_100
 import com.vi.techshopmobile.ui.theme.TechShopMobileTheme

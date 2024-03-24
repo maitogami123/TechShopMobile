@@ -1,4 +1,4 @@
-package com.vi.techshopmobile.presentation.home_navigator.component
+package com.vi.techshopmobile.presentation.home.home_navigator.component
 
 import android.content.res.Configuration
 import androidx.annotation.DrawableRes

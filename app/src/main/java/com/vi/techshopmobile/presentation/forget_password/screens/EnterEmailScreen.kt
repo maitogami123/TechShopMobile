@@ -1,12 +1,9 @@
-package com.vi.techshopmobile.presentation.user.forget_password
+package com.vi.techshopmobile.presentation.forget_password.screens
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.displayCutoutPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -19,7 +16,6 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -44,10 +40,10 @@ import com.vi.techshopmobile.data.remote.mail.dto.SendOtpByMailData
 import com.vi.techshopmobile.presentation.Dimens
 import com.vi.techshopmobile.presentation.common.CustomButton
 import com.vi.techshopmobile.presentation.common.Input
-import com.vi.techshopmobile.presentation.home_navigator.component.UtilityTopNavigation
+import com.vi.techshopmobile.presentation.home.home_navigator.component.UtilityTopNavigation
 import com.vi.techshopmobile.presentation.navgraph.Route
-import com.vi.techshopmobile.presentation.mail.MailEvent
-import com.vi.techshopmobile.presentation.mail.MailViewModel
+import com.vi.techshopmobile.presentation.forget_password.ForgetPasswordEvent
+import com.vi.techshopmobile.presentation.forget_password.ForgetPasswordViewModel
 import com.vi.techshopmobile.ui.theme.Blue_100
 
 @Composable
@@ -55,15 +51,12 @@ fun EnterEmailScreen(
     navController: NavController,
     onNavigateUp: () -> Unit
 ) {
-    val viewModel: MailViewModel = hiltViewModel()
+    val viewModel: ForgetPasswordViewModel = hiltViewModel()
     val isSendMailState = viewModel.isSendEmail.collectAsState()
     val isSendMailLoading = viewModel.isSendEmailLoading.collectAsState()
-    //val gmail = viewModel.email.collectAsState()
     var email by remember {
         mutableStateOf("")
     }
-
-    var loading by remember { mutableStateOf(false) }
 
     LaunchedEffect(key1 = isSendMailState.value) {
         if (isSendMailState.value) {
@@ -145,7 +138,7 @@ fun EnterEmailScreen(
                 } else {
                     CustomButton(text = "Nhập mã xác nhận", modifier = Modifier.fillMaxWidth()) {
                         (viewModel::onEvent)(
-                            MailEvent.SendOtpByMail(
+                            ForgetPasswordEvent.SendOtpByMail(
                                 SendOtpByMailData(email)
                             )
                         )
@@ -254,17 +247,6 @@ fun EnterEmailScreenPreview() {
                         loading = true
                     }
                 }
-
-
-//                    (viewModel::onEvent)(
-//                        AuthenticateEvent.LoginEvent(
-//                            SignInData(
-//                                username,
-//                                password
-//                            )
-//                        )
-//                    )
-
             }
         }
     }

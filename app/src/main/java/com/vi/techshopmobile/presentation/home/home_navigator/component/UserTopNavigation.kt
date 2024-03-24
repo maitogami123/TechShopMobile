@@ -1,4 +1,4 @@
-package com.vi.techshopmobile.presentation.home_navigator.component
+package com.vi.techshopmobile.presentation.home.home_navigator.component
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

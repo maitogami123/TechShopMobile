@@ -31,16 +31,11 @@ class PersonalInfoViewModel @Inject constructor(
     private val _isLoading = MutableStateFlow(false)
     val isLoading = _isLoading.asStateFlow()
 
-    init {}
-
-
     fun onEvent(event: PersonalInfoEvent) {
         when (event) {
             is PersonalInfoEvent.GetAllEventPersonalInfo -> {
                 getUserDetail( "Bearer " +event.token)
             }
-
-            else -> {}
         }
     }
     fun getUserDetail(token: String){

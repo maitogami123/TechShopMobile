@@ -66,8 +66,6 @@ fun HomeScreen(navController: NavController) {
     val isLoading by viewModel.isLoading.collectAsState()
     val swipeRefreshState = rememberSwipeRefreshState(isRefreshing = isLoading)
     val state by viewModel.state.collectAsStateWithLifecycle()
-    val sheetState = rememberModalBottomSheetState()
-    val scope = rememberCoroutineScope()
 
     Scaffold(bottomBar = {}, floatingActionButton = {
         FloatingActionButton(
