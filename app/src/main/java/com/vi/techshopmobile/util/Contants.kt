@@ -1,7 +1,7 @@
 package com.vi.techshopmobile.util
 
 object Constants {
-    const val BASE_URL = "http://192.168.143.57:8080/"
+    const val BASE_URL = "http://192.168.1.187:8080/"
 
     const val USER_SETTINGS = "userSettings"
     const val APP_ENTRY = "appEntry"
