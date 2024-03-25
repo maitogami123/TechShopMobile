@@ -57,9 +57,6 @@ fun CartScreen(
     val decodedToken = decodeToken(LocalToken.current)
 
     val totalPrice = viewModel.totalPrice.collectAsState()
-//    var totalPrice: Double by remember {
-//        mutableStateOf(0.0)
-//    }
 
     LaunchedEffect(key1 = null) {
         (viewModel::onEvent)(CartEvent.GetUserCart(decodedToken.sub))
