@@ -2,6 +2,7 @@ package com.vi.techshopmobile.presentation.categories.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -26,14 +27,24 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.vi.techshopmobile.domain.model.Category
 import com.vi.techshopmobile.presentation.Dimens
+import com.vi.techshopmobile.presentation.home.home_navigator.LocalNavController
+import com.vi.techshopmobile.presentation.home.home_navigator.navigateToDetails
 
 @Composable
-fun CategoryBadge(modifier: Modifier = Modifier, category: Category){
+fun CategoryBadge(modifier: Modifier = Modifier, category: Category) {
+    val navController = LocalNavController.current;
     Box(
-        modifier = modifier.height(92.dp).width(83.dp),
+        modifier = modifier
+            .height(92.dp)
+            .width(83.dp)
+            .clickable {
+                navigateToDetails(navController, category.name)
+            },
     )
     {
-        Column(modifier = modifier.background(Color.White).fillMaxSize()) {
+        Column(modifier = modifier
+            .background(Color.White)
+            .fillMaxSize()) {
             Image(
                 Icons.Filled.Favorite, contentDescription = null,
                 colorFilter = ColorFilter.tint(color = Color(0xff1A56DB)),
@@ -45,9 +56,10 @@ fun CategoryBadge(modifier: Modifier = Modifier, category: Category){
             )
             Text(
                 modifier = Modifier
-                    .wrapContentHeight(Alignment.CenterVertically,true)
+                    .wrapContentHeight(Alignment.CenterVertically, true)
                     .fillMaxWidth()
-                    .padding(10.dp).background(Color.White),
+                    .padding(10.dp)
+                    .background(Color.White),
                 text = category.name,
                 style = MaterialTheme.typography.bodySmall,
                 textAlign = TextAlign.Center
@@ -58,4 +70,5 @@ fun CategoryBadge(modifier: Modifier = Modifier, category: Category){
 
 @Preview
 @Composable
-fun ItemCategoryPreview(){}
+fun ItemCategoryPreview() {
+}

@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -39,24 +40,32 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import com.vi.techshopmobile.LocalToken
 import com.vi.techshopmobile.R
+import com.vi.techshopmobile.domain.model.CartItem
 import com.vi.techshopmobile.domain.model.WishItem
 import com.vi.techshopmobile.presentation.common.Accordion
 import com.vi.techshopmobile.presentation.common.FloatingBottomBar
 import com.vi.techshopmobile.presentation.common.LoadingDialog
 import com.vi.techshopmobile.presentation.home.home_navigator.component.UtilityTopNavigation
+import com.vi.techshopmobile.presentation.navgraph.LocalNavGraphController
+import com.vi.techshopmobile.presentation.navgraph.Route
 import com.vi.techshopmobile.ui.theme.Danger
+import com.vi.techshopmobile.ui.theme.Gray_500
 import com.vi.techshopmobile.ui.theme.TechShopMobileTheme
 import com.vi.techshopmobile.util.Constants.BASE_URL
 import com.vi.techshopmobile.util.decodeToken
@@ -66,11 +75,17 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun ProductDetailsScreen(
+    navController: NavController,
+    isLoggedIn: Boolean = false,
     productLine: String,
     onNavigateUp: () -> Unit
 ) {
     val viewModel: ProductDetailsViewModel = hiltViewModel()
+    val navGraphController = LocalNavGraphController.current;
     val state by viewModel.productDetail.collectAsState();
+
+    val quantityToAdd by viewModel.quantityProduct.collectAsState()
+
     val scope = rememberCoroutineScope()
     val sheetState = rememberModalBottomSheetState()
     var showBottomSheet by remember {
@@ -78,6 +93,16 @@ fun ProductDetailsScreen(
     }
 
     val decodedToken = decodeToken(LocalToken.current)
+
+    var quantity: Int by remember {
+        mutableStateOf(1)
+    }
+    var statusMinusBtn: Boolean by remember {
+        mutableStateOf(true)
+    }
+    var statusPlusBtn: Boolean by remember {
+        mutableStateOf(true)
+    }
 
     LaunchedEffect(key1 = productLine) {
         (viewModel::onEvent)(ProductDetailsEvent.GetDetailEvent(productLine))
@@ -96,19 +121,30 @@ fun ProductDetailsScreen(
             }
         },
         bottomBar = {
-            FloatingBottomBar(
-                buttonText = "Mua ngay",
-                onButtonClick = {},
-                onAddToWishList = {
-                    (viewModel::onEvent)(ProductDetailsEvent.AddItemToWishListEvent(WishItem(
-                        productLine = productLine,
-                        productName = state.productDetail!!.product.productName,
-                        username = decodedToken.sub
-                    )))
-                },
-                onAddToCart = {
-                    showBottomSheet = true
-                })
+            if (isLoggedIn) {
+                FloatingBottomBar(
+                    buttonText = "Mua ngay",
+                    onButtonClick = {
+                    },
+                    onAddToWishList = {
+                        (viewModel::onEvent)(
+                            ProductDetailsEvent.AddItemToWishListEvent(
+                                WishItem(
+                                    productLine = productLine,
+                                    productName = state.productDetail!!.product.productName,
+                                    username = decodedToken.sub
+                                )
+                            )
+                        )
+                    },
+                    onAddToCart = {
+                        showBottomSheet = true
+                    })
+            } else {
+                FloatingBottomBar(buttonText = "Đăng nhập") {
+                    navGraphController.navigate(Route.AuthenticateNavigation.route)
+                }
+            }
         }
     ) {
         val paddingTop = it.calculateTopPadding()
@@ -172,10 +208,30 @@ fun ProductDetailsScreen(
                             text = state.productDetail!!.product.productName,
                             style = MaterialTheme.typography.displayMedium
                         )
-                        Text(
-                            text = formatPrice(state.productDetail!!.product.price),
-                            style = MaterialTheme.typography.displayMedium.copy(color = Danger)
-                        )
+                        if (state.productDetail!!.product.discount > 0) {
+                            Text(
+                                modifier = Modifier
+                                    .fillMaxWidth(),
+                                text = formatPrice(state.productDetail!!.product.price),
+                                style = MaterialTheme.typography.displaySmall.copy(textDecoration = TextDecoration.LineThrough),
+                                color = Gray_500
+                            )
+                            Text(
+                                modifier = Modifier
+                                    .fillMaxWidth(),
+                                text = formatPrice(
+                                    state.productDetail!!.product.price -
+                                            ((state.productDetail!!.product.price * (state.productDetail!!.product.discount / 100)))
+                                ),
+                                style = MaterialTheme.typography.displayMedium,
+                                color = Danger
+                            )
+                        } else {
+                            Text(
+                                text = formatPrice(state.productDetail!!.product.price),
+                                style = MaterialTheme.typography.displayMedium.copy(color = Danger)
+                            )
+                        }
                         Accordion(
                             heading = "Thông tin sản phẩm",
                             items = state.productDetail!!.productInfos.map { item -> item.productInformation }
@@ -248,12 +304,32 @@ fun ProductDetailsScreen(
                         // TODO: Make increase and decrease quantity buttons functional, create a state to store current quantity
                         Icon(
                             painter = painterResource(id = R.drawable.ic_minus),
-                            contentDescription = null
+                            contentDescription = null,
+                            Modifier
+                                .alpha(
+                                    if (quantity > 1) 1f else 0.4f
+                                )
+                                .clickable(
+                                    enabled = if (quantity > 1) statusMinusBtn else !statusMinusBtn
+                                ) {
+                                    quantity = quantity.minus(1)
+                                    (viewModel::quantityProduct)
+                                    (quantityToAdd.minus(1))
+                                }
                         )
-                        Text(text = "1")
+
+                        Text(text = quantity.toString())
                         Icon(
                             painter = painterResource(id = R.drawable.ic_plus),
-                            contentDescription = null
+                            contentDescription = null,
+                            Modifier
+                                .alpha(if (state.productDetail?.stock!! > quantity) 1f else 0.4f)
+                                .clickable(enabled = if (state.productDetail?.stock!! > quantity) statusPlusBtn else !statusPlusBtn) {
+                                    quantity = quantity.plus(1)
+                                    (viewModel::onEvent)(
+                                        ProductDetailsEvent.IncreaseQuantity(1)
+                                    )
+                                }
                         )
                     }
                 }
@@ -264,6 +340,24 @@ fun ProductDetailsScreen(
                     scope.launch { sheetState.hide() }.invokeOnCompletion {
                         if (!sheetState.isVisible) {
                             showBottomSheet = false
+                            (viewModel::onEvent)(
+                                ProductDetailsEvent.AddItemToCart(
+                                    CartItem(
+                                        brandName = state.productDetail!!.brandName,
+                                        categoryName = state.productDetail!!.categoryName,
+                                        thumbnailUri = state.productDetail!!.thumbnailUri,
+                                        price = (
+                                                state.productDetail!!.product.price -
+                                                        ((state.productDetail!!.product.price * (state.productDetail!!.product.discount / 100)))
+                                                ),
+                                        productName = state.productDetail!!.product.productName,
+                                        productLine = productLine,
+                                        username = decodedToken.sub,
+                                        quantity = quantity,
+                                        stock = state.productDetail!!.stock
+                                    )
+                                )
+                            )
                         }
                     }
                 }) {
@@ -278,7 +372,7 @@ fun ProductDetailsScreen(
 @Composable
 private fun PreviewProductDetails() {
     TechShopMobileTheme {
-        ProductDetailsScreen(productLine = "Next level") {
+        ProductDetailsScreen(productLine = "Next level", navController = rememberNavController()) {
         }
     }
 }
