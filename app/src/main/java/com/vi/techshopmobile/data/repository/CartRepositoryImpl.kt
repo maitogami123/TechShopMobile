@@ -21,4 +21,9 @@ class CartRepositoryImpl @Inject constructor(
         return cartDao.getCart(username)
     }
 
+    override fun getCartItem(productLine: String): Flow<CartItem> {
+        return cartDao.getCartITem(productLine)
+    }
+
+
 }

@@ -5,7 +5,7 @@ import androidx.room.RoomDatabase
 import com.vi.techshopmobile.domain.model.CartItem
 import com.vi.techshopmobile.domain.model.WishItem
 
-@Database(entities = [WishItem::class, CartItem::class], version = 3)
+@Database(entities = [WishItem::class, CartItem::class], version = 4)
 abstract class TechShopDatabase : RoomDatabase() {
     abstract val wishListDao : WishListDao
     abstract val cartDao: CartDao

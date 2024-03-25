@@ -7,4 +7,6 @@ interface CartRepository {
     suspend fun upsertCart(cartItem: CartItem)
     suspend fun deleteCart(cartItem: CartItem)
     fun getCart(username: String): Flow<List<CartItem>>
+
+    fun getCartItem(productLine: String): Flow<CartItem>
 }
