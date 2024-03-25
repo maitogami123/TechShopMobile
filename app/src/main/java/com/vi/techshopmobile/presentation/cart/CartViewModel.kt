@@ -26,25 +26,31 @@ class CartViewModel @Inject constructor(
     private val _totalPrice = MutableStateFlow(0.0)
     val totalPrice = _totalPrice.asStateFlow()
 
+
     fun onEvent(event: CartEvent) {
         when (event) {
             is CartEvent.GetUserCart -> {
                 cartUseCases.getCart(event.username).onEach {
                     _state.value = it.reversed()
-
+                    calculateTotal()
                 }.launchIn(viewModelScope)
             }
 
             is CartEvent.DeleteCart -> {
                 viewModelScope.launch {
                     cartUseCases.deleteCart(event.cartItem)
+                    calculateTotal()
                     EventBus.sendEvent(Event.Toast("Đã xóa sản phẩm khỏi giỏ hàng"))
                 }
             }
         }
+    }
 
+    fun calculateTotal() {
+        var totalPrice = 0.0
         _state.value.forEach {
-                _totalPrice.value += it.price
+            totalPrice += it.price
         }
+        _totalPrice.value = totalPrice
     }
 }
