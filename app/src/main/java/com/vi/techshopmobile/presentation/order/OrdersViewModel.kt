@@ -61,4 +61,37 @@ class OrdersViewModel @Inject constructor(
         }
     }
 
+    fun filterOrdersByStatus(status: String) {
+        viewModelScope.launch {
+            _isLoading.value = true
+            _state.update {
+                it.copy(isLoading = true)
+            }
+            delay(2000L)
+            val token = "your_token_here" // Thay token của bạn ở đây
+            try {
+                val orders = when (status) {
+                    "Tất cả" -> ordersUseCases.getOrders(token)
+                    "Đang xử lý" -> ordersUseCases.getOrders(token)
+                    "Đã xử lý" -> ordersUseCases.getOrders(token)
+                    "Đang giao hàng" -> ordersUseCases.getOrders(token)
+                    "Hoàn thành" -> ordersUseCases.getOrders(token)
+                    "Đã hủy" -> ordersUseCases.getOrders(token)
+                    else -> ordersUseCases.getOrders(token)
+                }
+                _state.update {
+                    it.copy(orders = it.orders)
+                }
+            } catch (e: Exception) {
+                _state.update {
+                    it.copy(error = e.message)
+                }
+            } finally {
+                _state.update {
+                    it.copy(isLoading = false)
+                }
+            }
+        }
+    }
+
 }
