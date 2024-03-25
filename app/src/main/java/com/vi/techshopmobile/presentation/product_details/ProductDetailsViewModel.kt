@@ -29,6 +29,9 @@ class ProductDetailsViewModel @Inject constructor(
     private val _productDetail = MutableStateFlow(ProductDetailsViewState())
     val productDetail = _productDetail.asStateFlow();
 
+    private val _quantityProduct = MutableStateFlow(1)
+    val quantityProduct = _quantityProduct.asStateFlow()
+
     fun onEvent(event: ProductDetailsEvent) {
         when (event) {
             is ProductDetailsEvent.GetDetailEvent -> {
@@ -48,12 +51,25 @@ class ProductDetailsViewModel @Inject constructor(
                         if (it == null) {
                             cartUseCases.upsertCart(event.cartItem)
                         } else {
-                            cartUseCases.upsertCart(event.cartItem.copy(quantity = it.quantity?.plus(1)))
+                            cartUseCases.upsertCart(
+                                event.cartItem.copy(
+                                    quantity = it.quantity?.plus(
+                                        _quantityProduct.value
+                                    )
+                                )
+                            )
                         }
                         EventBus.sendEvent(Event.Toast("Đã thêm vào giỏ hàng"))
                         this.cancel();
                     }
 
+                }
+            }
+
+            is ProductDetailsEvent.IncreaseQuantity -> {
+                viewModelScope.launch {
+                    _quantityProduct.value = quantityProduct.value.plus(event.quantity)
+                    this.cancel()
                 }
             }
         }

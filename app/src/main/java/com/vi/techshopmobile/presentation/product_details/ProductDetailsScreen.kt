@@ -83,6 +83,9 @@ fun ProductDetailsScreen(
     val viewModel: ProductDetailsViewModel = hiltViewModel()
     val navGraphController = LocalNavGraphController.current;
     val state by viewModel.productDetail.collectAsState();
+
+    val quantityToAdd by viewModel.quantityProduct.collectAsState()
+
     val scope = rememberCoroutineScope()
     val sheetState = rememberModalBottomSheetState()
     var showBottomSheet by remember {
@@ -137,8 +140,8 @@ fun ProductDetailsScreen(
                     onAddToCart = {
                         showBottomSheet = true
                     })
-            } else{
-                FloatingBottomBar(buttonText = "Đăng nhập"){
+            } else {
+                FloatingBottomBar(buttonText = "Đăng nhập") {
                     navGraphController.navigate(Route.AuthenticateNavigation.route)
                 }
             }
@@ -310,6 +313,8 @@ fun ProductDetailsScreen(
                                     enabled = if (quantity > 1) statusMinusBtn else !statusMinusBtn
                                 ) {
                                     quantity = quantity.minus(1)
+                                    (viewModel::quantityProduct)
+                                    (quantityToAdd.minus(1))
                                 }
                         )
 
@@ -321,6 +326,9 @@ fun ProductDetailsScreen(
                                 .alpha(if (state.productDetail?.stock!! > quantity) 1f else 0.4f)
                                 .clickable(enabled = if (state.productDetail?.stock!! > quantity) statusPlusBtn else !statusPlusBtn) {
                                     quantity = quantity.plus(1)
+                                    (viewModel::onEvent)(
+                                        ProductDetailsEvent.IncreaseQuantity(1)
+                                    )
                                 }
                         )
                     }
