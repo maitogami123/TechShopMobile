@@ -5,5 +5,6 @@ data class CartResponse(
     val productLine: String,
     val productName: String,
     val thumbnailUri: String,
-    val quantity: Int? = 0
+    val quantity: Int? = 0,
+    val stock: Int? =0
 )

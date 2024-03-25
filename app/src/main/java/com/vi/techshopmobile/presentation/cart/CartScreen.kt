@@ -43,6 +43,8 @@ import com.vi.techshopmobile.presentation.cart.components.RowPriceDelivery
 import com.vi.techshopmobile.presentation.cart.components.RowTotalPrice
 import com.vi.techshopmobile.presentation.common.FloatingBottomBar
 import com.vi.techshopmobile.presentation.home.home_navigator.component.UtilityTopNavigation
+import com.vi.techshopmobile.presentation.product_details.ProductDetailsViewModel
+import com.vi.techshopmobile.presentation.products.ProductsViewModel
 import com.vi.techshopmobile.presentation.products.component.ProductCard
 import com.vi.techshopmobile.presentation.wish_list.WishListEvents
 import com.vi.techshopmobile.presentation.wish_list.WishListViewModel
@@ -55,6 +57,9 @@ fun CartScreen(
     val viewModel: CartViewModel = hiltViewModel()
     val state = viewModel.state.collectAsState()
     val decodedToken = decodeToken(LocalToken.current)
+
+    val viewModelProduct: ProductsViewModel = hiltViewModel()
+    val stateProduct by viewModelProduct.state.collectAsState()
 
     val totalPrice = viewModel.totalPrice.collectAsState()
 
@@ -78,9 +83,10 @@ fun CartScreen(
         }
     )
     {
-        Column(modifier = Modifier
-            .fillMaxHeight()
-            .padding(it),
+        Column(
+            modifier = Modifier
+                .fillMaxHeight()
+                .padding(it),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
             LazyColumn(
@@ -91,8 +97,12 @@ fun CartScreen(
             ) {
                 itemsIndexed(state.value) { index, item ->
                     ProductCart(
-                        onPlusQuantity = {},
-                        onMinusQuantity = {},
+                        onPlusQuantity = {
+                                (viewModel::onEvent)(CartEvent.IncreaseItemToCart(item))
+                        },
+                        onMinusQuantity = {
+                            (viewModel::onEvent)(CartEvent.DecreaseItemToCart(item))
+                        },
                         onDeleteProduct = {
                             (viewModel::onEvent)(CartEvent.DeleteCart(item))
                         },
@@ -101,7 +111,8 @@ fun CartScreen(
                             price = item.price,
                             productName = item.productName,
                             productLine = item.productLine,
-                            quantity = item.quantity
+                            quantity = item.quantity,
+                            stock = item.stock
                         )
                     )
                     Spacer(modifier = Modifier.height(16.dp))
