@@ -2,7 +2,16 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
+      <entry key="CartScreenPreview">
+        <State />
+      </entry>
       <entry key="EnterEmailScreenPreview (1)">
+        <State />
+      </entry>
+      <entry key="PreviewProductDetails">
+        <State />
+      </entry>
+      <entry key="ProductCartPreview">
         <State />
       </entry>
       <entry key="app">

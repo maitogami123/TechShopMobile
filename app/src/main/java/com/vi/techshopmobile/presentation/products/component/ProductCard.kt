@@ -128,7 +128,7 @@ fun ProductCard(
                         Text(
                             modifier = Modifier
                                 .fillMaxWidth(),
-                            text = formatPrice(product.price),
+                            text = formatPrice(product.price - (product.price*(product.discount/100))),
                             style = MaterialTheme.typography.displaySmall,
                             color = Danger
                         )

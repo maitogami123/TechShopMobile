@@ -3,6 +3,7 @@ package com.vi.techshopmobile.presentation.product_details
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.vi.techshopmobile.data.remote.products.dto.ProductDetailResponse
+import com.vi.techshopmobile.domain.usecases.cart.CartUseCases
 import com.vi.techshopmobile.domain.usecases.products.ProductUseCases
 import com.vi.techshopmobile.domain.usecases.wish_list.WishListUseCases
 import com.vi.techshopmobile.presentation.categories.CategoriesEvents
@@ -21,7 +22,8 @@ import javax.inject.Inject
 @HiltViewModel
 class ProductDetailsViewModel @Inject constructor(
     private val productUseCases: ProductUseCases,
-    private val wishListUseCases: WishListUseCases
+    private val wishListUseCases: WishListUseCases,
+    private val cartUseCases: CartUseCases
 ) : ViewModel() {
     private val _productDetail = MutableStateFlow(ProductDetailsViewState())
     val productDetail = _productDetail.asStateFlow();
@@ -35,6 +37,12 @@ class ProductDetailsViewModel @Inject constructor(
                 viewModelScope.launch {
                     wishListUseCases.upsertWishItem(event.wishItem)
                     EventBus.sendEvent(Event.Toast("Đã thêm vào danh sách yêu thích"))
+                }
+            }
+            is ProductDetailsEvent.AddItemToCart -> {
+                viewModelScope.launch {
+                    cartUseCases.upsertCart(event.cartItem)
+                    EventBus.sendEvent(Event.Toast("Đã thêm vào giỏ hàng"))
                 }
             }
         }

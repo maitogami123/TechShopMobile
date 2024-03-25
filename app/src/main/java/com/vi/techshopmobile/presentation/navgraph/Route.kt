@@ -21,8 +21,8 @@ sealed class Route(
     object ForgetPasswordScreenEmailScreen: Route(route = "forgetPasswordScreenEmailScreen")
     object ForgetPasswordScreenOTPScreen: Route(route = "forgetPasswordScreenOTPScreen")
     object ForgetPasswordScreenNewPasswordScreen: Route(route = "forgetPasswordScreenNewPasswordScreen")
-
     object PersonalInfoScreen: Route(route = "personalInfoScreen")
     object PersonalAddressScreen: Route(route = "personalAddressScreen")
+    object CartScreen: Route(route = "cartScreen")
 
 }
