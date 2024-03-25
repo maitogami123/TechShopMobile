@@ -51,6 +51,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import com.vi.techshopmobile.LocalToken
 import com.vi.techshopmobile.R
@@ -60,6 +62,8 @@ import com.vi.techshopmobile.presentation.common.Accordion
 import com.vi.techshopmobile.presentation.common.FloatingBottomBar
 import com.vi.techshopmobile.presentation.common.LoadingDialog
 import com.vi.techshopmobile.presentation.home.home_navigator.component.UtilityTopNavigation
+import com.vi.techshopmobile.presentation.navgraph.LocalNavGraphController
+import com.vi.techshopmobile.presentation.navgraph.Route
 import com.vi.techshopmobile.ui.theme.Danger
 import com.vi.techshopmobile.ui.theme.Gray_500
 import com.vi.techshopmobile.ui.theme.TechShopMobileTheme
@@ -71,10 +75,13 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun ProductDetailsScreen(
+    navController: NavController,
+    isLoggedIn: Boolean = false,
     productLine: String,
     onNavigateUp: () -> Unit
 ) {
     val viewModel: ProductDetailsViewModel = hiltViewModel()
+    val navGraphController = LocalNavGraphController.current;
     val state by viewModel.productDetail.collectAsState();
     val scope = rememberCoroutineScope()
     val sheetState = rememberModalBottomSheetState()
@@ -111,24 +118,30 @@ fun ProductDetailsScreen(
             }
         },
         bottomBar = {
-            FloatingBottomBar(
-                buttonText = "Mua ngay",
-                onButtonClick = {
-                },
-                onAddToWishList = {
-                    (viewModel::onEvent)(
-                        ProductDetailsEvent.AddItemToWishListEvent(
-                            WishItem(
-                                productLine = productLine,
-                                productName = state.productDetail!!.product.productName,
-                                username = decodedToken.sub
+            if (isLoggedIn) {
+                FloatingBottomBar(
+                    buttonText = "Mua ngay",
+                    onButtonClick = {
+                    },
+                    onAddToWishList = {
+                        (viewModel::onEvent)(
+                            ProductDetailsEvent.AddItemToWishListEvent(
+                                WishItem(
+                                    productLine = productLine,
+                                    productName = state.productDetail!!.product.productName,
+                                    username = decodedToken.sub
+                                )
                             )
                         )
-                    )
-                },
-                onAddToCart = {
-                    showBottomSheet = true
-                })
+                    },
+                    onAddToCart = {
+                        showBottomSheet = true
+                    })
+            } else{
+                FloatingBottomBar(buttonText = "Đăng nhập"){
+                    navGraphController.navigate(Route.AuthenticateNavigation.route)
+                }
+            }
         }
     ) {
         val paddingTop = it.calculateTopPadding()
@@ -307,7 +320,7 @@ fun ProductDetailsScreen(
                             Modifier
                                 .alpha(if (state.productDetail?.stock!! > quantity) 1f else 0.4f)
                                 .clickable(enabled = if (state.productDetail?.stock!! > quantity) statusPlusBtn else !statusPlusBtn) {
-                                        quantity = quantity.plus(1)
+                                    quantity = quantity.plus(1)
                                 }
                         )
                     }
@@ -332,7 +345,8 @@ fun ProductDetailsScreen(
                                         productName = state.productDetail!!.product.productName,
                                         productLine = productLine,
                                         username = decodedToken.sub,
-                                        quantity = quantity
+                                        quantity = quantity,
+                                        stock = state.productDetail!!.stock
                                     )
                                 )
                             )
@@ -350,7 +364,7 @@ fun ProductDetailsScreen(
 @Composable
 private fun PreviewProductDetails() {
     TechShopMobileTheme {
-        ProductDetailsScreen(productLine = "Next level") {
+        ProductDetailsScreen(productLine = "Next level", navController = rememberNavController()) {
         }
     }
 }

@@ -140,7 +140,11 @@ fun HomeNavigator(navGraphController: NavController) {
                 composable(route = Route.ProductDetailsScreen.route) {
                     navController.previousBackStackEntry?.savedStateHandle?.get<String?>("productLine")
                         ?.let { productLine ->
-                            ProductDetailsScreen(productLine) { navController.navigateUp() }
+                            ProductDetailsScreen(
+                                navController = navController,
+                                productLine = productLine,
+                                isLoggedIn = isLoggedIn
+                            ) { navController.navigateUp() }
                         }
                 }
 
