@@ -25,6 +25,7 @@ import androidx.navigation.compose.rememberNavController
 import com.vi.techshopmobile.LocalToken
 import com.vi.techshopmobile.R
 import com.vi.techshopmobile.domain.model.UserToken
+import com.vi.techshopmobile.presentation.cart.CartScreen
 import com.vi.techshopmobile.presentation.chatAI.ChatAiScreen
 import com.vi.techshopmobile.presentation.home.HomeScreen
 import com.vi.techshopmobile.presentation.home.home_navigator.component.BottomNavigationItem
@@ -92,12 +93,16 @@ fun HomeNavigator(navGraphController: NavController) {
                     )
                 } else if (selectedItem == 1) {
                     MainTopNavigation(onClick = {
-                        navGraphController.navigate(Route.AuthenticateNavigation.route)
+                        if (isLoggedIn) {
+                            navController.navigate(Route.CartScreen.route)
+                        } else {
+                            navGraphController.navigate(Route.AuthenticateNavigation.route)
+                        }
                     }, isLoggedIn = isLoggedIn)
                 }
             },
             bottomBar = {
-                if (selectedItem != -1 && selectedItem != 3 )
+                if (selectedItem != -1 && selectedItem != 3)
                     TechShopBottomNavigation(
                         items = bottomNavigationItem,
                         selectedItem = selectedItem,
@@ -140,7 +145,7 @@ fun HomeNavigator(navGraphController: NavController) {
                 }
 
                 composable(route = Route.CustomerSupportScreen.route) {
-                    ChatAiScreen(onNavigateUp = {navController.navigateUp()})
+                    ChatAiScreen(onNavigateUp = { navController.navigateUp() })
                 }
 
                 // TODO: Move this to another nav host
@@ -149,10 +154,16 @@ fun HomeNavigator(navGraphController: NavController) {
                     WishListScreen()
                 }
                 composable(route = Route.PersonalInfoScreen.route) {
-                    PersonalInfoScreen(onNavigateUp = {navController.navigateUp()})
+                    PersonalInfoScreen(onNavigateUp = { navController.navigateUp() })
                 }
                 composable(route = Route.PersonalAddressScreen.route) {
                     PersonalAddressScreen()
+                }
+
+                composable(route = Route.CartScreen.route) {
+                    CartScreen {
+                        navController.navigateUp()
+                    }
                 }
 
                 composable(route = Route.OderScreen.route) {

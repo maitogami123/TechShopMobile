@@ -26,7 +26,6 @@ import com.vi.techshopmobile.presentation.categories.components.CategoryBadge
 fun CategoriesSection(modifier: Modifier = Modifier) {
     val viewModel: CategoriesViewModel = hiltViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
-
     Column(
         modifier = modifier
             .fillMaxWidth()

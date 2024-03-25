@@ -12,6 +12,7 @@ import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import com.vi.techshopmobile.LocalToken
 import com.vi.techshopmobile.presentation.authenticate.authenticate_navigator.AuthenticateNavigator
+import com.vi.techshopmobile.presentation.cart.CartScreen
 import com.vi.techshopmobile.presentation.chatAI.ChatAiScreen
 import com.vi.techshopmobile.presentation.home.home_navigator.HomeNavigator
 import com.vi.techshopmobile.presentation.home.home_navigator.TechShopNavigatorViewModel

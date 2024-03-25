@@ -20,6 +20,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -29,12 +30,19 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+import com.vi.techshopmobile.LocalToken
 import com.vi.techshopmobile.R
 import com.vi.techshopmobile.presentation.Dimens.ExtraSmallPadding2
 import com.vi.techshopmobile.presentation.Dimens.RadiusLarge
 import com.vi.techshopmobile.presentation.Dimens.SmallPadding
+import com.vi.techshopmobile.presentation.cart.CartViewModel
+import com.vi.techshopmobile.presentation.navgraph.Route
 import com.vi.techshopmobile.ui.theme.Danger
 import com.vi.techshopmobile.ui.theme.TechShopMobileTheme
+import com.vi.techshopmobile.util.decodeToken
 
 /**
  * Main top-bar for TechShop Mobile application.
@@ -49,6 +57,9 @@ fun MainTopNavigation(
     isLoggedIn: Boolean = false,
     onClick: () -> Unit,
 ) {
+    val decodedToken = decodeToken(LocalToken.current)
+    val viewModel: CartViewModel = hiltViewModel()
+    val state = viewModel.state.collectAsState()
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -73,7 +84,9 @@ fun MainTopNavigation(
                 style = MaterialTheme.typography.displaySmall
             )
         else
-            ShoppingCartButton(items = 5, onClick)
+            ShoppingCartButton(items = 5) {
+                onClick()
+            }
         // TODO: Create a table in room to store user cart item.
     }
 }
