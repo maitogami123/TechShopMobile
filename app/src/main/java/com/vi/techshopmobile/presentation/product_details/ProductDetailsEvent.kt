@@ -9,4 +9,5 @@ sealed class ProductDetailsEvent {
     data class GetDetailEvent(val productLine: String) : ProductDetailsEvent()
     data class AddItemToWishListEvent(val wishItem: WishItem) : ProductDetailsEvent()
     data class AddItemToCart(val cartItem: CartItem): ProductDetailsEvent()
+    data class IncreaseQuantity(val quantity: Int): ProductDetailsEvent()
 }

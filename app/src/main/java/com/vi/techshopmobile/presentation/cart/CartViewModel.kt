@@ -53,7 +53,7 @@ class CartViewModel @Inject constructor(
                     if (it == null) {
                         cartUseCases.upsertCart(event.cartItem)
                     } else {
-                        cartUseCases.upsertCart(event.cartItem.copy(quantity = it.quantity?.plus(1)))
+                        cartUseCases.upsertCart(event.cartItem.copy(quantity = it.quantity?.plus(event.cartItem.quantity!!)))
                     }
                     EventBus.sendEvent(Event.Toast("Đã thêm vào giỏ hàng"))
                     this.cancel();
