@@ -1,11 +1,6 @@
 package com.vi.techshopmobile.presentation.home.home_navigator
 
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Face
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -24,7 +19,6 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.vi.techshopmobile.LocalToken
 import com.vi.techshopmobile.R
-import com.vi.techshopmobile.domain.model.UserToken
 import com.vi.techshopmobile.presentation.cart.CartScreen
 import com.vi.techshopmobile.presentation.chatAI.ChatAiScreen
 import com.vi.techshopmobile.presentation.home.HomeScreen
@@ -34,12 +28,12 @@ import com.vi.techshopmobile.presentation.home.home_navigator.component.TechShop
 import com.vi.techshopmobile.presentation.home.home_navigator.component.UserInformation
 import com.vi.techshopmobile.presentation.home.home_navigator.component.UserTopNavigation
 import com.vi.techshopmobile.presentation.navgraph.Route
+import com.vi.techshopmobile.presentation.order.UserOrdersScreen
 import com.vi.techshopmobile.presentation.personal_address.PersonalAddressScreen
 import com.vi.techshopmobile.presentation.personal_info.PersonalInfoScreen
 import com.vi.techshopmobile.presentation.product_details.ProductDetailsScreen
 import com.vi.techshopmobile.presentation.search.SearchScreen
 import com.vi.techshopmobile.presentation.sendEvent
-import com.vi.techshopmobile.presentation.order.UserOrderScreen
 import com.vi.techshopmobile.presentation.user_setting.UserSettingScreen
 import com.vi.techshopmobile.presentation.wish_list.WishListScreen
 import com.vi.techshopmobile.util.Event
@@ -152,8 +146,6 @@ fun HomeNavigator(navGraphController: NavController) {
                     ChatAiScreen(onNavigateUp = { navController.navigateUp() })
                 }
 
-                // TODO: Move this to another nav host
-                // (suggestion: create a userSetting navHost to navigate between screens within user settings.)
                 composable(route = Route.WishListScreen.route) {
                     WishListScreen()
                 }
@@ -165,22 +157,13 @@ fun HomeNavigator(navGraphController: NavController) {
                 }
 
                 composable(route = Route.UserOderScreen.route) {
-                    UserOrderScreen(){}
-
-
+                    UserOrdersScreen(onNavigateUp = {navController.navigateUp()})
                 }
-
-
                 composable(route = Route.CartScreen.route) {
                     CartScreen {
                         navController.navigateUp()
                     }
                 }
-
-                composable(route = Route.OderScreen.route) {
-                    OrderScreen(onNavigateUp = {navController.navigateUp()})
-                }
-
             }
         }
     }
