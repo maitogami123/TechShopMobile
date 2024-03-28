@@ -29,6 +29,7 @@ import com.vi.techshopmobile.presentation.home.home_navigator.component.UserInfo
 import com.vi.techshopmobile.presentation.home.home_navigator.component.UserTopNavigation
 import com.vi.techshopmobile.presentation.navgraph.Route
 import com.vi.techshopmobile.presentation.order.UserOrdersScreen
+import com.vi.techshopmobile.presentation.order_details.OrderDetailsScreen
 import com.vi.techshopmobile.presentation.personal_address.PersonalAddressScreen
 import com.vi.techshopmobile.presentation.personal_info.PersonalInfoScreen
 import com.vi.techshopmobile.presentation.product_details.ProductDetailsScreen
@@ -147,7 +148,7 @@ fun HomeNavigator(navGraphController: NavController) {
                 }
 
                 composable(route = Route.WishListScreen.route) {
-                    WishListScreen()
+                    WishListScreen(onNavigateUp = { navController.navigateUp() })
                 }
                 composable(route = Route.PersonalInfoScreen.route) {
                     PersonalInfoScreen(onNavigateUp = { navController.navigateUp() })
@@ -157,7 +158,10 @@ fun HomeNavigator(navGraphController: NavController) {
                 }
 
                 composable(route = Route.UserOderScreen.route) {
-                    UserOrdersScreen(onNavigateUp = {navController.navigateUp()})
+                    UserOrdersScreen(onNavigateUp = {navController.navigateUp()},navController)
+                }
+                composable(route = Route.OderDetailsScreen.route) {
+                    OrderDetailsScreen(onNavigateUp = { navController.navigateUp() })
                 }
                 composable(route = Route.CartScreen.route) {
                     CartScreen {

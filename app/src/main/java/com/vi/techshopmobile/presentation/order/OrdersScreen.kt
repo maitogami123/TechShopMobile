@@ -1,10 +1,13 @@
 package com.vi.techshopmobile.presentation.order
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -21,20 +24,24 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
 import com.vi.techshopmobile.LocalToken
 import com.vi.techshopmobile.R
 import com.vi.techshopmobile.presentation.Dimens.SmallPadding
 import com.vi.techshopmobile.presentation.common.LoadingDialog
 import com.vi.techshopmobile.presentation.home.home_navigator.component.UtilityTopNavigation
+import com.vi.techshopmobile.presentation.navgraph.Route
 import com.vi.techshopmobile.presentation.order.component.OrdersItem
 import com.vi.techshopmobile.ui.theme.Blue_500
 
 @Composable
 fun UserOrdersScreen(
     onNavigateUp: () -> Unit,
+    navController: NavController
 ) {
     val viewModel: OrdersViewModel = hiltViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -43,6 +50,7 @@ fun UserOrdersScreen(
         listOf(
             mapOf("ALL" to "Tất cả"),
             mapOf("PENDING" to "Đang xử lý"),
+            mapOf("CONFIRMED" to "Đang xử lý"),
             mapOf("DELIVERING" to "Đang giao hàng"),
             mapOf("SUCCESS" to "Hoàn thành"),
             mapOf("CANCELED" to "Đã hủy"),
@@ -103,12 +111,12 @@ fun UserOrdersScreen(
                 items(state.orders) { order ->
                     if (selectedItem.value == "ALL") {
                         OrdersItem(order = order) {
-
+                            navController.navigate(Route.OderDetailsScreen.route)
                         }
                         counter += 1;
                     } else if (order.status == selectedItem.value) {
                         OrdersItem(order = order) {
-
+                            navController.navigate(Route.OderDetailsScreen.route)
                         }
                         counter += 1;
                     }
@@ -120,13 +128,23 @@ fun UserOrdersScreen(
                     }
                 }
 
-                if (counter == 0 && !state.isLoading) {
+                if (state.orders.isEmpty() && !state.isLoading) {
                     item {
                         Box(
-                            modifier = Modifier.fillMaxSize(),
-                            contentAlignment = Alignment.Center
+                            modifier = Modifier
+                                .padding(top = it.calculateTopPadding())
+                                .fillMaxSize(),
+                            contentAlignment = Alignment.BottomCenter
                         ) {
-                            Text(text = "Hiện không có đơn hàng")
+                            Image(
+                                painter = painterResource(id = R.drawable.cart_illustartion),
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .padding(bottom = 40.dp)
+                                    .width(272.dp)
+                                    .height(262.dp)
+                            )
+                            Text(text = "Hiện tại không có đơn hàng")
                         }
                     }
                 }
@@ -134,63 +152,4 @@ fun UserOrdersScreen(
         }
     }
     LoadingDialog(isLoading = state.isLoading)
-
-//    Scaffold(
-//        topBar = {
-//            UtilityTopNavigation(
-//                onLeftBtnClick = {},
-//                onRightBtnClick = {
-//                },
-//                leftBtnIcon = R.drawable.ic_left_arrow,
-//                title = "Đơn hàng",
-//            )
-//            {
-////                onNavigateUp()
-//            }
-//        }
-//
-//    ) {
-//        val topPadding = it.calculateTopPadding()
-//
-//        fun onStatusClick(status: String) {
-//            viewModel.filterOrdersByStatus(status)
-//        }
-//        Column (
-//            modifier = Modifier
-//                .padding(top = topPadding)
-//                .verticalScroll(rememberScrollState())
-//                .fillMaxSize(),
-//            verticalArrangement = Arrangement.Center
-//
-//        ) {
-//            LazyRow(
-//                modifier = Modifier
-//                    .padding(bottom = topPadding)
-//                    .fillMaxWidth(),
-//                horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.Start),
-//                verticalAlignment = Alignment.Top,
-//                ){
-//                    items(statusList) { status ->
-//                        OutlinedButton(onClick ={ onStatusClick(status) }){Text(text = status)}
-//                }
-//            }
-//            Box(
-//                modifier = Modifier
-//                    .padding(top = topPadding)
-//                    .fillMaxSize(),
-//                contentAlignment = Alignment.BottomCenter
-//            ) {
-//                Image(
-//                    painter = painterResource(id = R.drawable.cart_illustartion),
-//                    contentDescription = null,
-//                    modifier = Modifier
-//                        .padding(bottom = 50.dp)
-//                        .width(272.dp)
-//                        .height(262.dp)
-//                )
-//
-//                Text(text = "Hiện không có đơn hàng")
-//            }
-//        }
-//    }
 }
