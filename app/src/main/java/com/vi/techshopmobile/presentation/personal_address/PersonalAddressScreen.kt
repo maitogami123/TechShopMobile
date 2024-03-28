@@ -37,7 +37,7 @@ import com.vi.techshopmobile.presentation.personal_info.PersonalInfoViewModel
 
 @Composable
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-fun PersonalAddressScreen(){
+fun PersonalAddressScreen() {
     val viewModel: PersonalInfoViewModel = hiltViewModel()
     val token = LocalToken.current
     val state = viewModel.state.collectAsState()
@@ -72,7 +72,6 @@ fun PersonalAddressScreen(){
                 ) {}
 
                 Text(
-
                     text = "Địa chỉ nhận hàng",
                     modifier = Modifier
                         .fillMaxWidth()
@@ -90,60 +89,23 @@ fun PersonalAddressScreen(){
             }
 
         }
-    ){
+    ) {
 
-        Column(modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = 48.dp, start = 16.dp, end = 16.dp)
-            .background(color = Color(0xEBF5FF))
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 48.dp, start = 16.dp, end = 16.dp)
+                .background(color = Color(0xEBF5FF))
         ) {
             state.value.userDetail?.accountDetail?.let {
-              Box(  modifier = Modifier.fillMaxWidth()
-              ){
-                  Address(
-                      name = it.firstName + " "+  it.lastName,
-                      phoneNumber = "(+84 )" + it.phoneNumber,
-                      addressNote = it.detailedAddress,
-                      address = it.district+ " " + it.city
-                  )
-                  Text(
-                      text = "Sửa",
-                      style = TextStyle(
-                          fontSize = 14.sp,
-                          lineHeight = 18.sp,
-                          fontFamily = FontFamily(Font(R.font.roboto_medium)),
-                          fontWeight = FontWeight(400),
-                          color = Color(0xFF3F83F8),
-                      ),
-                      modifier = Modifier.align(Alignment.TopEnd)
-                          .padding(top = 16.dp)
-                  )            }
-
-              }
-                Text(
-                    text = "Mặc định",
-                    style = TextStyle(
-                        fontSize = 14.sp,
-                        lineHeight = 18.sp,
-                        fontFamily = FontFamily(Font(R.font.roboto_medium)),
-                        fontWeight = FontWeight(400),
-                        color = Color(0xFFFFBB32),
-
-                        ),
-                    modifier = Modifier.padding(top = 16.dp)
-                )
-                Divider(
-                    modifier = Modifier.padding(top = 16.dp)
-
-                )
-            state.value.userDetail?.accountDetail?.let {
-                Box(  modifier = Modifier.fillMaxWidth()
-                ){
+                Box(
+                    modifier = Modifier.fillMaxWidth()
+                ) {
                     Address(
-                        name = it.firstName + " "+  it.lastName,
+                        name = it.firstName + " " + it.lastName,
                         phoneNumber = "(+84 )" + it.phoneNumber,
                         addressNote = it.detailedAddress,
-                        address = it.district+ " " + it.city
+                        address = it.district + " " + it.city
                     )
                     Text(
                         text = "Sửa",
@@ -154,9 +116,53 @@ fun PersonalAddressScreen(){
                             fontWeight = FontWeight(400),
                             color = Color(0xFF3F83F8),
                         ),
-                        modifier = Modifier.align(Alignment.TopEnd)
+                        modifier = Modifier
+                            .align(Alignment.TopEnd)
                             .padding(top = 16.dp)
-                    )            }
+                    )
+                }
+
+            }
+            Text(
+                text = "Mặc định",
+                style = TextStyle(
+                    fontSize = 14.sp,
+                    lineHeight = 18.sp,
+                    fontFamily = FontFamily(Font(R.font.roboto_medium)),
+                    fontWeight = FontWeight(400),
+                    color = Color(0xFFFFBB32),
+
+                    ),
+                modifier = Modifier.padding(top = 16.dp)
+            )
+            Divider(
+                modifier = Modifier.padding(top = 16.dp)
+
+            )
+            state.value.userDetail?.accountDetail?.let {
+                Box(
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Address(
+                        name = it.firstName + " " + it.lastName,
+                        phoneNumber = "(+84 )" + it.phoneNumber,
+                        addressNote = it.detailedAddress,
+                        address = it.district + " " + it.city
+                    )
+                    Text(
+                        text = "Sửa",
+                        style = TextStyle(
+                            fontSize = 14.sp,
+                            lineHeight = 18.sp,
+                            fontFamily = FontFamily(Font(R.font.roboto_medium)),
+                            fontWeight = FontWeight(400),
+                            color = Color(0xFF3F83F8),
+                        ),
+                        modifier = Modifier
+                            .align(Alignment.TopEnd)
+                            .padding(top = 16.dp)
+                    )
+                }
 
             }
             Divider(
@@ -164,13 +170,14 @@ fun PersonalAddressScreen(){
 
             )
             state.value.userDetail?.accountDetail?.let {
-                Box(  modifier = Modifier.fillMaxWidth()
-                ){
+                Box(
+                    modifier = Modifier.fillMaxWidth()
+                ) {
                     Address(
-                        name = it.firstName + " "+  it.lastName,
+                        name = it.firstName + " " + it.lastName,
                         phoneNumber = "(+84 )" + it.phoneNumber,
                         addressNote = it.detailedAddress,
-                        address = it.district+ " " + it.city
+                        address = it.district + " " + it.city
                     )
                     Text(
                         text = "Sửa",
@@ -181,12 +188,13 @@ fun PersonalAddressScreen(){
                             fontWeight = FontWeight(400),
                             color = Color(0xFF3F83F8),
                         ),
-                        modifier = Modifier.align(Alignment.TopEnd)
+                        modifier = Modifier
+                            .align(Alignment.TopEnd)
                             .padding(top = 16.dp)
-                    )            }
+                    )
+                }
 
             }
-
 
 
         }
@@ -212,6 +220,6 @@ fun PersonalAddressScreen(){
             }
         }
 
-        }
+    }
 
 }

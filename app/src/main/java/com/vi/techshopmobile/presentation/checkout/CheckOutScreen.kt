@@ -1,14 +1,13 @@
-package com.vi.techshopmobile.presentation.cart
+package com.vi.techshopmobile.presentation.checkout
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.Divider
@@ -17,59 +16,63 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.vi.techshopmobile.LocalToken
 import com.vi.techshopmobile.R
 import com.vi.techshopmobile.data.remote.cart.CartResponse
-import com.vi.techshopmobile.data.remote.products.dto.Product
-import com.vi.techshopmobile.domain.model.ProductLine
+import com.vi.techshopmobile.domain.model.CartItem
 import com.vi.techshopmobile.presentation.Dimens
+import com.vi.techshopmobile.presentation.cart.CartViewModel
 import com.vi.techshopmobile.presentation.cart.components.CartEvent
 import com.vi.techshopmobile.presentation.cart.components.ProductCart
+import com.vi.techshopmobile.presentation.cart.components.RowPaymentGateNavigate
+import com.vi.techshopmobile.presentation.cart.components.RowPaymentNavigate
 import com.vi.techshopmobile.presentation.cart.components.RowPrice
 import com.vi.techshopmobile.presentation.cart.components.RowPriceDelivery
 import com.vi.techshopmobile.presentation.cart.components.RowTotalPrice
+import com.vi.techshopmobile.presentation.common.AddressTitle
 import com.vi.techshopmobile.presentation.common.FloatingBottomBar
 import com.vi.techshopmobile.presentation.home.home_navigator.component.UtilityTopNavigation
-import com.vi.techshopmobile.presentation.navgraph.Route
-import com.vi.techshopmobile.presentation.product_details.ProductDetailsViewModel
-import com.vi.techshopmobile.presentation.products.ProductsViewModel
-import com.vi.techshopmobile.presentation.products.component.ProductCard
-import com.vi.techshopmobile.presentation.wish_list.WishListEvents
-import com.vi.techshopmobile.presentation.wish_list.WishListViewModel
+import com.vi.techshopmobile.presentation.personal_info.PersonalInfoEvent
+import com.vi.techshopmobile.presentation.personal_info.PersonalInfoViewModel
+import com.vi.techshopmobile.ui.theme.TechShopMobileTheme
+import com.vi.techshopmobile.util.FormatPhoneNumber
 import com.vi.techshopmobile.util.decodeToken
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
 @Composable
-fun CartScreen(
+fun CheckOutScreen(
+    navGraphController: NavController,
     navController: NavController,
-    onNavigateUp: () -> Unit
-) {
+    onNavigateUp: () -> Unit) {
     val viewModel: CartViewModel = hiltViewModel()
     val state = viewModel.state.collectAsState()
     val decodedToken = decodeToken(LocalToken.current)
 
-    val viewModelProduct: ProductsViewModel = hiltViewModel()
-    val stateProduct by viewModelProduct.state.collectAsState()
-
     val totalPrice = viewModel.totalPrice.collectAsState()
 
-    LaunchedEffect(key1 = null) {
-        (viewModel::onEvent)(CartEvent.GetUserCart(decodedToken.sub))
-    }
+
+    val viewModelPersonalInfo: PersonalInfoViewModel = hiltViewModel()
+    val token = LocalToken.current
+    val statePersonalInfo = viewModelPersonalInfo.state.collectAsState()
+
+//    LaunchedEffect(key1 = null) {
+//        (viewModelPersonalInfo::onEvent)(PersonalInfoEvent.GetAllEventPersonalInfo(token))
+//    }
+//    LaunchedEffect(key1 = null) {
+//        (viewModel::onEvent)(CartEvent.GetUserCart(decodedToken.sub))
+//    }
+
 
     Scaffold(
         topBar = {
@@ -79,72 +82,77 @@ fun CartScreen(
                     onNavigateUp()
                 },
                 leftBtnIcon = R.drawable.ic_left_arrow,
-                title = "Giỏ hàng",
+                title = "Thanh Toán",
                 onSearch = {})
         },
         bottomBar = {
-            FloatingBottomBar(buttonText = "Thanh Toán", onButtonClick = {
-                if (state.value.isNotEmpty()) {
-                    navController.navigate(Route.CheckOutScreenNavigation.route)
-                }
-            })
+            FloatingBottomBar(buttonText = "Thanh Toán", onButtonClick = {})
         }
     )
     {
         Column(
             modifier = Modifier
                 .fillMaxHeight()
+                .padding(Dimens.SmallPadding)
                 .padding(it),
-            verticalArrangement = Arrangement.SpaceBetween
+            verticalArrangement = Arrangement.SpaceBetween,
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             LazyColumn(
                 modifier = Modifier
-                    .weight(.7f)
-                    .padding(Dimens.SmallPadding),
+                    .weight(.7f),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 itemsIndexed(state.value) { index, item ->
                     ProductCart(
-                        onPlusQuantity = {
-                            (viewModel::onEvent)(CartEvent.IncreaseItemToCart(item))
-                        },
-                        onMinusQuantity = {
-                            (viewModel::onEvent)(CartEvent.DecreaseItemToCart(item))
-                        },
-                        onDeleteProduct = {
-                            (viewModel::onEvent)(CartEvent.DeleteCart(item))
-                        },
                         cartResponse = CartResponse(
                             thumbnailUri = item.thumbnailUri,
                             price = item.price,
                             productName = item.productName,
                             productLine = item.productLine,
                             quantity = item.quantity,
-                            stock = item.stock
                         )
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                     Divider()
                 }
             }
+            Spacer(modifier = Modifier.height(Dimens.SmallPadding))
+            Divider()
+            Spacer(modifier = Modifier.height(Dimens.SmallPadding))
+
+            val PersonalInfo = statePersonalInfo.value.userDetail!!.accountDetail
+            AddressTitle(
+                title = "Địa chỉ nhận hàng",
+                name = PersonalInfo.firstName + PersonalInfo.lastName,
+                phoneNumber = FormatPhoneNumber(PersonalInfo.phoneNumber),
+                addressNote = PersonalInfo.detailedAddress,
+                address = PersonalInfo.district,
+                onEdit = {}
+            )
+
+            Spacer(modifier = Modifier.height(Dimens.SmallPadding))
+            Divider()
+            Spacer(modifier = Modifier.height(Dimens.SmallPadding))
+
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(Dimens.SmallPadding)
             ) {
-                Text(
-                    text = "Chi tiết thanh toán",
-                    style = MaterialTheme.typography.displaySmall.copy(
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight(600)
-                    )
-                )
                 Column(
-                    modifier = Modifier.padding(Dimens.SmallPadding),
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    RowPrice(textLeft = "Tổng tiền hàng", textRight = totalPrice.value)
-                    RowPriceDelivery(textLeft = "Tổng tiền hàng", textRight = "Miễn Phí")
+                    RowPaymentNavigate(
+                        textLeft = "Phương thức thanh toán",
+                        textRight = "Thanh toán online"
+                    )
+                    RowPaymentGateNavigate(
+                        textLeft = "Cổng thanh toán", textRight = "VN PAY", painterResource(
+                            id = R.drawable.ic_bell
+                        )
+                    )
                     RowTotalPrice(textLeft = "Tổng thanh toán", textRight = totalPrice.value)
                 }
             }
@@ -154,6 +162,10 @@ fun CartScreen(
 
 @Preview
 @Composable
-fun CartScreenPreview() {
-    CartScreen(navController = rememberNavController()) {}
+fun CheckOutScreenPreview() {
+    TechShopMobileTheme {
+//        CheckOutScreen {
+//
+//        }
+    }
 }

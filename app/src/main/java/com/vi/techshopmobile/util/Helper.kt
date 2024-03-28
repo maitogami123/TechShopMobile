@@ -1,16 +1,8 @@
 package com.vi.techshopmobile.util
 
-import androidx.compose.runtime.MutableState
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.navigation.NavController
 import com.google.gson.Gson
-import com.vi.techshopmobile.LocalToken
 import com.vi.techshopmobile.domain.model.UserToken
-import com.vi.techshopmobile.domain.usecases.app_session.AppSessionUseCases
-import okhttp3.Interceptor
-import okhttp3.Request
-import okhttp3.Response
-import java.io.IOException
 import java.text.NumberFormat
 import java.util.Base64
 import java.util.Currency
@@ -47,21 +39,19 @@ fun decodeToken(token: String): UserToken {
 
 }
 
-fun connectInputtedCode(
-    textList: List<MutableState<TextFieldValue>>,
-    onController: (() -> Unit)? = null
-) : String {
-    var code = ""
-    for (text in textList) {
-        code += text.value.text
-    }
-    return code;
-}
-
 fun convertMilisToMinus(millis: Long): String{
     return String.format("%02d : %02d ",
         TimeUnit.MILLISECONDS.toMinutes(millis),
         TimeUnit.MILLISECONDS.toSeconds(millis) -
                 TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis))
     );
+}
+
+fun FormatPhoneNumber(phoneNumber: String): String {
+    return String.format(
+        "+84 {0}-{1}-{2}",
+        phoneNumber.toString().substring(0, 3),
+        phoneNumber.toString().substring(3, 6),
+        phoneNumber.toString().substring(6)
+    )
 }

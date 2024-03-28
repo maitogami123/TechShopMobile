@@ -17,6 +17,7 @@ import com.vi.techshopmobile.LocalToken
 import com.vi.techshopmobile.presentation.authenticate.authenticate_navigator.AuthenticateNavigator
 import com.vi.techshopmobile.presentation.cart.CartScreen
 import com.vi.techshopmobile.presentation.chatAI.ChatAiScreen
+import com.vi.techshopmobile.presentation.checkout.checkout_navigator.CheckOutNavigator
 import com.vi.techshopmobile.presentation.home.home_navigator.HomeNavigator
 import com.vi.techshopmobile.presentation.home.home_navigator.TechShopNavigatorViewModel
 import com.vi.techshopmobile.presentation.onboarding.OnBoardingScreen
@@ -69,6 +70,15 @@ fun NavGraph(
             ) {
                 composable(route = Route.SignInScreen.route) {
                     AuthenticateNavigator(navController)
+                }
+            }
+
+            navigation(
+                route = Route.CheckOutScreenNavigation.route,
+                startDestination = Route.CheckOutScreen.route
+            ) {
+                composable(route = Route.CheckOutScreen.route) {
+                   CheckOutNavigator(navController)
                 }
             }
         }

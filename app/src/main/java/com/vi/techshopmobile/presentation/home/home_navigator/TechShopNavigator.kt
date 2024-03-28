@@ -164,7 +164,7 @@ fun HomeNavigator(navGraphController: NavController) {
                 }
 
                 composable(route = Route.CartScreen.route) {
-                    CartScreen {
+                    CartScreen(navController = navGraphController) {
                         navController.navigateUp()
                     }
                 }
