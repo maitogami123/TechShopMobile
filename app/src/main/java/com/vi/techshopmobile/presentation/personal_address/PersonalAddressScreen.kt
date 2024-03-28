@@ -2,8 +2,10 @@ package com.vi.techshopmobile.presentation.personal_address
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -30,14 +32,16 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.vi.techshopmobile.LocalToken
 import com.vi.techshopmobile.R
+import com.vi.techshopmobile.presentation.Dimens
 import com.vi.techshopmobile.presentation.common.Address
+import com.vi.techshopmobile.presentation.common.CustomButton
 import com.vi.techshopmobile.presentation.home.home_navigator.component.UtilityTopNavigation
 import com.vi.techshopmobile.presentation.personal_info.PersonalInfoEvent
 import com.vi.techshopmobile.presentation.personal_info.PersonalInfoViewModel
 
 @Composable
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-fun PersonalAddressScreen(){
+fun PersonalAddressScreen(onNavigateUp: () -> Unit){
     val viewModel: PersonalInfoViewModel = hiltViewModel()
     val token = LocalToken.current
     val state = viewModel.state.collectAsState()
@@ -47,55 +51,20 @@ fun PersonalAddressScreen(){
     }
     Scaffold(
         topBar = {
-            Box(
-                modifier = Modifier
-                    .shadow(
-                        elevation = 6.dp,
-                        spotColor = Color(0x26000000),
-                        ambientColor = Color(0x26000000)
-                    )
-                    .shadow(
-                        elevation = 2.dp,
-                        spotColor = Color(0x4D000000),
-                        ambientColor = Color(0x4D000000)
-                    )
-                    .width(412.dp)
-                    .height(56.dp)
-                    .background(color = Color(0xFFFFFFFF))
-//                .padding(start = 16.dp, top = 12.dp, end = 138.dp, bottom = 12.dp)
-            ) {
-                UtilityTopNavigation(
-                    onRightBtnClick = {
-
-                    },
-                    leftBtnIcon = R.drawable.ic_left_arrow,
-                ) {}
-
-                Text(
-
-                    text = "Địa chỉ nhận hàng",
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .align(Alignment.Center),
-                    style = TextStyle(
-                        fontSize = 18.sp,
-                        fontFamily = FontFamily(Font(R.font.roboto_medium)),
-                        fontWeight = FontWeight(600),
-                        color = Color(0xFF212121),
-                        textAlign = TextAlign.Center,
-                    )
-                )
-
-
-            }
+            UtilityTopNavigation(
+                onRightBtnClick = { /*TODO*/ },
+                onLeftBtnClick = { onNavigateUp() },
+                title = "Địa chỉ nhận hàng", leftBtnIcon = R.drawable.ic_back_arrow
+            ) { }
 
         }
     ){
+        val topPadding = it.calculateTopPadding()
 
-        Column(modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = 48.dp, start = 16.dp, end = 16.dp)
-            .background(color = Color(0xEBF5FF))
+        Column( modifier = Modifier
+            .padding(top = topPadding + Dimens.SmallPadding)
+            .padding(horizontal = Dimens.SmallPadding),
+            verticalArrangement = Arrangement.spacedBy(Dimens.SmallPadding)
         ) {
             state.value.userDetail?.accountDetail?.let {
               Box(  modifier = Modifier.fillMaxWidth()
@@ -116,7 +85,6 @@ fun PersonalAddressScreen(){
                           color = Color(0xFF3F83F8),
                       ),
                       modifier = Modifier.align(Alignment.TopEnd)
-                          .padding(top = 16.dp)
                   )            }
 
               }
@@ -130,12 +98,8 @@ fun PersonalAddressScreen(){
                         color = Color(0xFFFFBB32),
 
                         ),
-                    modifier = Modifier.padding(top = 16.dp)
                 )
-                Divider(
-                    modifier = Modifier.padding(top = 16.dp)
-
-                )
+                Divider()
             state.value.userDetail?.accountDetail?.let {
                 Box(  modifier = Modifier.fillMaxWidth()
                 ){
@@ -155,14 +119,10 @@ fun PersonalAddressScreen(){
                             color = Color(0xFF3F83F8),
                         ),
                         modifier = Modifier.align(Alignment.TopEnd)
-                            .padding(top = 16.dp)
                     )            }
 
             }
-            Divider(
-                modifier = Modifier.padding(top = 16.dp)
-
-            )
+            Divider()
             state.value.userDetail?.accountDetail?.let {
                 Box(  modifier = Modifier.fillMaxWidth()
                 ){
@@ -182,34 +142,13 @@ fun PersonalAddressScreen(){
                             color = Color(0xFF3F83F8),
                         ),
                         modifier = Modifier.align(Alignment.TopEnd)
-                            .padding(top = 16.dp)
                     )            }
 
             }
 
+            Spacer(modifier = Modifier.weight(1f))
+            CustomButton(modifier = Modifier.fillMaxWidth(), text = "+ Thêm địa chỉ mới") {}
 
-
-        }
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) {
-
-            Button(
-                onClick = { /* Handle button click */ },
-                modifier = Modifier
-                    .padding(top = 800.dp)
-                    .width(380.dp)
-                    .height(64.dp)
-            ) {
-                Text(
-                    text = " + Thêm địa chỉ mới",
-                    style = TextStyle(
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                )
-            }
         }
 
         }

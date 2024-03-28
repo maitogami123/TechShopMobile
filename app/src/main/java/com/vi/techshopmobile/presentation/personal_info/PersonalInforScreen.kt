@@ -14,6 +14,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.vi.techshopmobile.LocalToken
 import com.vi.techshopmobile.R
 import com.vi.techshopmobile.presentation.Dimens.SmallGap
@@ -23,10 +24,11 @@ import com.vi.techshopmobile.presentation.common.CustomButton
 import com.vi.techshopmobile.presentation.common.Input
 import com.vi.techshopmobile.presentation.common.InputWithLink
 import com.vi.techshopmobile.presentation.home.home_navigator.component.UtilityTopNavigation
+import com.vi.techshopmobile.presentation.navgraph.Route
 
 
 @Composable
-fun PersonalInfoScreen(onNavigateUp: () -> Unit) {
+fun PersonalInfoScreen(onNavigateUp: () -> Unit, navController: NavController) {
     val viewModel: PersonalInfoViewModel = hiltViewModel()
     val token = LocalToken.current
     val state = viewModel.state.collectAsState()
@@ -40,7 +42,7 @@ fun PersonalInfoScreen(onNavigateUp: () -> Unit) {
             UtilityTopNavigation(
                 onRightBtnClick = { /*TODO*/ },
                 onLeftBtnClick = { onNavigateUp() },
-                title = "Thông tin", leftBtnIcon = R.drawable.ic_back_arrow
+                title = "Thông tin cá nhân", leftBtnIcon = R.drawable.ic_back_arrow
             ) { }
         }
     ) {
@@ -75,7 +77,10 @@ fun PersonalInfoScreen(onNavigateUp: () -> Unit) {
                 }
             }
 
-            CustomButton(modifier = Modifier.fillMaxWidth(), text = "Đổi mật khẩu") {}
+            CustomButton(modifier = Modifier.fillMaxWidth(), text = "Đổi mật khẩu") {
+                navController.navigate(Route.ChangePasswordScreen.route)
+
+            }
             Divider(
                 modifier = Modifier
                     .fillMaxWidth()
