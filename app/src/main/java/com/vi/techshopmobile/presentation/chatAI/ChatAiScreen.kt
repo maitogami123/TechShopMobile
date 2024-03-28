@@ -53,6 +53,7 @@ import coil.request.ImageRequest
 import coil.size.Size
 import com.vi.techshopmobile.R
 import com.vi.techshopmobile.presentation.Dimens
+import com.vi.techshopmobile.presentation.Dimens.SmallPadding
 import com.vi.techshopmobile.presentation.chatAI.component.ModelChatItem
 import com.vi.techshopmobile.presentation.chatAI.component.UserChatItem
 import com.vi.techshopmobile.presentation.common.Input
@@ -62,15 +63,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 
 private val uriState = MutableStateFlow("")
-
-//private val imagePicker =
-//    registerForActivityResult<PickVisualMediaRequest, Uri>(
-//        ActivityResultContracts.PickVisualMedia()
-//    ) { uri ->
-//        uri?.let {
-//            uriState.update { uri.toString() }
-//        }
-//    }
 
 @Composable
 fun ChatAiScreen(onNavigateUp: () -> Unit) {
@@ -117,7 +109,7 @@ fun ChatAiScreen(onNavigateUp: () -> Unit) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 16.dp, start = 4.dp, end = 4.dp),
+                    .padding(bottom = SmallPadding, start = 4.dp, end = 4.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center
             ) {

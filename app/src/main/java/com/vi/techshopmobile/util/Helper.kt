@@ -47,7 +47,9 @@ fun convertMilisToMinus(millis: Long): String{
     );
 }
 
-fun FormatPhoneNumber(phoneNumber: String): String {
+fun formatPhoneNumber(phoneNumber: String): String {
+    if  (phoneNumber.length < 11)
+        return phoneNumber
     return String.format(
         "+84 {0}-{1}-{2}",
         phoneNumber.toString().substring(0, 3),

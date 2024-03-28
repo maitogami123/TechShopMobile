@@ -55,7 +55,7 @@ fun AddressTitle(
     address: String,
     onEdit: () -> Unit
 ) {
-    Column(modifier = Modifier.fillMaxWidth()) {
+    Column(modifier = modifier.fillMaxWidth()) {
         Row(
             modifier = Modifier.fillMaxWidth().padding(bottom = Dimens.SmallGap),
             horizontalArrangement = Arrangement.SpaceBetween,

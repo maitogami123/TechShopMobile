@@ -1,13 +1,13 @@
-package com.vi.techshopmobile.presentation.checkout.payment_error
+package com.vi.techshopmobile.presentation.checkout.screens
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
 
 @Composable
-fun PaymentErrorScreen(
+fun PaymentOptionScreen(
     navGraphController: NavController,
     onNavigateUp: () -> Unit
 ) {
-    Text(text = "Payment Error")
+    Text(text = "Payment Option Screen")
 }

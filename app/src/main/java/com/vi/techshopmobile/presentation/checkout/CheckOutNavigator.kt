@@ -1,18 +1,15 @@
-package com.vi.techshopmobile.presentation.checkout.checkout_navigator
+package com.vi.techshopmobile.presentation.checkout
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.vi.techshopmobile.presentation.authenticate.sign_in.SignInScreen
-import com.vi.techshopmobile.presentation.authenticate.sign_up.SignUpScreen
-import com.vi.techshopmobile.presentation.checkout.CheckOutScreen
-import com.vi.techshopmobile.presentation.checkout.checkout_done.CheckOutDoneScreen
-import com.vi.techshopmobile.presentation.checkout.list_information.ListInfoScreen
-import com.vi.techshopmobile.presentation.checkout.paymen_option.PaymentOptionScreen
-import com.vi.techshopmobile.presentation.checkout.payment_error.PaymentErrorScreen
-import com.vi.techshopmobile.presentation.checkout.payment_success.PaymentSuccessScreen
+import com.vi.techshopmobile.presentation.checkout.screens.CheckOutDoneScreen
+import com.vi.techshopmobile.presentation.checkout.screens.ListInfoScreen
+import com.vi.techshopmobile.presentation.checkout.screens.PaymentErrorScreen
+import com.vi.techshopmobile.presentation.checkout.screens.PaymentOptionScreen
+import com.vi.techshopmobile.presentation.checkout.screens.PaymentSuccessScreen
 import com.vi.techshopmobile.presentation.navgraph.Route
 
 @Composable

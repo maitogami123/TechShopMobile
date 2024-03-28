@@ -1,4 +1,4 @@
-package com.vi.techshopmobile.presentation.checkout.payment_success
+package com.vi.techshopmobile.presentation.checkout.screens
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable

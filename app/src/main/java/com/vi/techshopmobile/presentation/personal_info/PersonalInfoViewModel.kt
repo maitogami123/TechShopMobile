@@ -34,7 +34,7 @@ class PersonalInfoViewModel @Inject constructor(
     fun onEvent(event: PersonalInfoEvent) {
         when (event) {
             is PersonalInfoEvent.GetAllEventPersonalInfo -> {
-                getUserDetail( "Bearer " +event.token)
+                getUserDetail( "Bearer " + event.token)
             }
         }
     }
