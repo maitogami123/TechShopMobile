@@ -20,6 +20,7 @@ import androidx.navigation.compose.rememberNavController
 import com.vi.techshopmobile.LocalToken
 import com.vi.techshopmobile.R
 import com.vi.techshopmobile.presentation.cart.CartScreen
+import com.vi.techshopmobile.presentation.change_password.ChangePasswordScreen
 import com.vi.techshopmobile.presentation.chatAI.ChatAiScreen
 import com.vi.techshopmobile.presentation.home.HomeScreen
 import com.vi.techshopmobile.presentation.home.home_navigator.component.BottomNavigationItem
@@ -40,6 +41,7 @@ import com.vi.techshopmobile.presentation.wish_list.WishListScreen
 import com.vi.techshopmobile.util.Event
 import com.vi.techshopmobile.util.decodeToken
 import com.vi.techshopmobile.util.navigateToTap
+import android.content.Context as s
 
 val LocalNavController = compositionLocalOf<NavController> {
     error("No LocalNavController provided")
@@ -151,10 +153,13 @@ fun HomeNavigator(navGraphController: NavController) {
                     WishListScreen(onNavigateUp = { navController.navigateUp() })
                 }
                 composable(route = Route.PersonalInfoScreen.route) {
-                    PersonalInfoScreen(onNavigateUp = { navController.navigateUp() })
+                    PersonalInfoScreen(onNavigateUp = { navController.navigateUp() }, navController)
                 }
                 composable(route = Route.PersonalAddressScreen.route) {
-                    PersonalAddressScreen()
+                    PersonalAddressScreen(onNavigateUp = {navController.navigateUp()})
+                }
+                composable(route = Route.ChangePasswordScreen.route) {
+                    ChangePasswordScreen(onNavigateUp = { navController.navigateUp() })
                 }
 
                 composable(route = Route.UserOderScreen.route) {
