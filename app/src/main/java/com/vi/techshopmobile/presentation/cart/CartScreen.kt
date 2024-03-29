@@ -1,9 +1,7 @@
 package com.vi.techshopmobile.presentation.cart
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,14 +15,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -35,8 +28,6 @@ import androidx.navigation.compose.rememberNavController
 import com.vi.techshopmobile.LocalToken
 import com.vi.techshopmobile.R
 import com.vi.techshopmobile.data.remote.cart.CartResponse
-import com.vi.techshopmobile.data.remote.products.dto.Product
-import com.vi.techshopmobile.domain.model.ProductLine
 import com.vi.techshopmobile.presentation.Dimens
 import com.vi.techshopmobile.presentation.cart.components.CartEvent
 import com.vi.techshopmobile.presentation.cart.components.ProductCart
@@ -48,9 +39,6 @@ import com.vi.techshopmobile.presentation.home.home_navigator.component.UtilityT
 import com.vi.techshopmobile.presentation.navgraph.Route
 import com.vi.techshopmobile.presentation.product_details.ProductDetailsViewModel
 import com.vi.techshopmobile.presentation.products.ProductsViewModel
-import com.vi.techshopmobile.presentation.products.component.ProductCard
-import com.vi.techshopmobile.presentation.wish_list.WishListEvents
-import com.vi.techshopmobile.presentation.wish_list.WishListViewModel
 import com.vi.techshopmobile.util.decodeToken
 
 @Composable
