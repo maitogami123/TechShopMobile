@@ -8,6 +8,7 @@ sealed class Route(
     object AppStartNavigation : Route(route = "appStartNavigation")
     object TechShopNavigation : Route(route = "techShopNavigation")
     object AuthenticateNavigation : Route(route = "authenticateNavigation")
+    object CheckOutScreenNavigation: Route(route = "checkoutScreenNavigation")
     // Comment: Sub-route
     object OnBoardingScreen: Route(route = "onBoardingScreen")
     object HomeScreen: Route(route = "homeScreen")
@@ -26,5 +27,10 @@ sealed class Route(
     object PersonalInfoScreen: Route(route = "personalInfoScreen")
     object PersonalAddressScreen: Route(route = "personalAddressScreen")
     object CartScreen: Route(route = "cartScreen")
-
+    object CheckOutScreen: Route(route = "checkoutScreen")
+    object CheckOutDoneScreen: Route(route = "checkoutDoneScreen")
+    object ListInfoScreen: Route(route = "listInfoScreen")
+    object PaymentOptionScreen: Route(route = "paymentOptionScreen")
+    object PaymentSuccessnScreen: Route(route = "paymentSuccessScreen")
+    object PaymentErrorScreen: Route(route = "paymentErrorScreen")
 }
