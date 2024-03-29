@@ -27,6 +27,9 @@ class CartViewModel @Inject constructor(
     private var _state = MutableStateFlow(emptyList<CartItem>())
     val state = _state.asStateFlow()
 
+    private var _isPayment = MutableStateFlow(false)
+    val isPayment = _isPayment.asStateFlow()
+
     private val _totalPrice = MutableStateFlow(0.0)
     val totalPrice = _totalPrice.asStateFlow()
 

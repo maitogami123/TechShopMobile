@@ -1,6 +1,5 @@
 package com.vi.techshopmobile.presentation.product_details
 
-import android.util.Log
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background

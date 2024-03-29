@@ -101,13 +101,14 @@ fun PersonalAddressScreen(onNavigateUp: () -> Unit){
                 )
                 Divider()
             state.value.userDetail?.accountDetail?.let {
-                Box(  modifier = Modifier.fillMaxWidth()
-                ){
+                Box(
+                    modifier = Modifier.fillMaxWidth()
+                ) {
                     Address(
-                        name = it.firstName + " "+  it.lastName,
+                        name = it.firstName + " " + it.lastName,
                         phoneNumber = "(+84 )" + it.phoneNumber,
                         addressNote = it.detailedAddress,
-                        address = it.district+ " " + it.city
+                        address = it.district + " " + it.city
                     )
                     Text(
                         text = "Sửa",
@@ -120,17 +121,17 @@ fun PersonalAddressScreen(onNavigateUp: () -> Unit){
                         ),
                         modifier = Modifier.align(Alignment.TopEnd)
                     )            }
-
             }
             Divider()
             state.value.userDetail?.accountDetail?.let {
-                Box(  modifier = Modifier.fillMaxWidth()
-                ){
+                Box(
+                    modifier = Modifier.fillMaxWidth()
+                ) {
                     Address(
-                        name = it.firstName + " "+  it.lastName,
+                        name = it.firstName + " " + it.lastName,
                         phoneNumber = "(+84 )" + it.phoneNumber,
                         addressNote = it.detailedAddress,
-                        address = it.district+ " " + it.city
+                        address = it.district + " " + it.city
                     )
                     Text(
                         text = "Sửa",
@@ -148,9 +149,8 @@ fun PersonalAddressScreen(onNavigateUp: () -> Unit){
 
             Spacer(modifier = Modifier.weight(1f))
             CustomButton(modifier = Modifier.fillMaxWidth(), text = "+ Thêm địa chỉ mới") {}
-
         }
 
-        }
+    }
 
 }

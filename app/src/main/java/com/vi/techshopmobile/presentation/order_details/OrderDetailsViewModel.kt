@@ -1,27 +1,22 @@
-package com.vi.techshopmobile.presentation.personal_info
+package com.vi.techshopmobile.presentation.order_details
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.vi.techshopmobile.LocalToken
-import com.vi.techshopmobile.domain.usecases.app_session.AppSessionUseCases
-import com.vi.techshopmobile.domain.usecases.authenticate.AuthenticateUseCases
+import com.vi.techshopmobile.domain.model.OrderItem
 import com.vi.techshopmobile.domain.usecases.userDetail.UserDetailsUseCases
-import com.vi.techshopmobile.presentation.categories.CategoriesEvents
-import com.vi.techshopmobile.presentation.categories.CategoriesViewState
-import com.vi.techshopmobile.presentation.user_setting.UserSettingEvent
+import com.vi.techshopmobile.presentation.personal_info.PersonalInfoEvent
+import com.vi.techshopmobile.presentation.personal_info.PersonalInfoViewState
 import com.vi.techshopmobile.util.Event
 import com.vi.techshopmobile.util.EventBus
-import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-@HiltViewModel
-class PersonalInfoViewModel @Inject constructor(
+class OrderDetailsViewModel @Inject constructor(
     private val userDetailsUseCases: UserDetailsUseCases,
 ) : ViewModel(){
 
@@ -31,10 +26,17 @@ class PersonalInfoViewModel @Inject constructor(
     private val _isLoading = MutableStateFlow(false)
     val isLoading = _isLoading.asStateFlow()
 
+//    private val _selectedOrder = MutableStateFlow<OrderItem?>(null)
+//    val selectedOrder: StateFlow<OrderItem?> = _selectedOrder
+//
+//    fun selectOrder(order: OrderItem) {
+//        _selectedOrder.value = order
+//    }
+
     fun onEvent(event: PersonalInfoEvent) {
         when (event) {
             is PersonalInfoEvent.GetAllEventPersonalInfo -> {
-                getUserDetail( "Bearer " + event.token)
+                getUserDetail( "Bearer " +event.token)
             }
         }
     }

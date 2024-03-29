@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.vi.techshopmobile.LocalToken
@@ -106,5 +107,10 @@ fun PersonalInfoScreen(onNavigateUp: () -> Unit, navController: NavController) {
     }
 }
 
+@Preview
+@Composable
+fun PersonalInfoScreenPreview() {
+    PersonalInfoScreen {
 
-
+    }
+}
