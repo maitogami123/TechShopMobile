@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "412891400706",
-    "project_id": "techshopmobile-a901c",
-    "storage_bucket": "techshopmobile-a901c.appspot.com"
+    "project_number": "990819816783",
+    "project_id": "techshopmoblie",
+    "storage_bucket": "techshopmoblie.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:412891400706:android:886eadf5a55cb280c1f51b",
+        "mobilesdk_app_id": "1:990819816783:android:aef06539987fd1f3efa13a",
         "android_client_info": {
           "package_name": "com.vi.techshopmobile"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyBTB7OPea5iUlVPoC6YxWpf9UTicKjCayM"
+          "current_key": "AIzaSyDXRNDj8-SqYpCLRF9h-EsGi2DxPI1k5e0"
         }
       ],
       "services": {
