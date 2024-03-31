@@ -129,14 +129,10 @@ fun AddNewAddressScreen(
                             return@forEach;
                         }
                         if (state.value.value.isBlank()) {
-                            state.value = state.value.copy(error = "Vui lòng điền thông tin")
-                            city.value = city.value.copy(error ="Vui lòng chọn tỉnh/thành")
-                            district.value = district.value.copy(error ="Vui lòng chọn quận/huyện")
+                            state.value = state.value.copy(error = "Vui lòng nhập/chọn thông tin đầy đủ")
                             hasError = true;
                         } else {
                             state.value = state.value.copy(error = null)
-                            city.value = city.value.copy(error ="")
-                            district.value = district.value.copy(error ="")
                         }
                     }
                     if (!hasError) {
@@ -217,8 +213,8 @@ fun AddNewAddressScreen(
                                 .matches(it)
                         ) null else
                             if ("^(?!\\s*\$).+".toRegex()
-                                .matches(it)
-                        ) "Vui lòng điền chính xác thông tin mail" else "Vui lòng điền thông tin"
+                                    .matches(it)
+                            ) "Vui lòng điền chính xác thông tin mail" else "Vui lòng điền thông tin"
                     )
                 }
                 InputInfoNoUnder(
@@ -256,7 +252,7 @@ fun AddNewAddressScreen(
                         value = it,
                         error = if ("^(?!\\s*\$).+".toRegex()
                                 .matches(it)
-                        ) null else "Vui chọn tỉnh/thành"
+                        ) null else "Vui lòng chọn tỉnh/thành"
                     )
                     district.value.value
                 }
@@ -271,7 +267,7 @@ fun AddNewAddressScreen(
                         value = it,
                         error = if ("^(?!\\s*\$).+".toRegex()
                                 .matches(it)
-                        ) null else "Vui chọn quận/huyện"
+                        ) null else "Vui lòng chọn quận/huyện"
                     )
                 }
                 InputInfoNoUnder(

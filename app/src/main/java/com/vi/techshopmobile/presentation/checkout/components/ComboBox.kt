@@ -92,10 +92,6 @@ fun ComboBox(
         TextField(
             enabled = false,
             value = mSelectedText,
-            onValueChange = {
-                //mSelectedText = it
-                onChange(it)
-            },
             modifier = Modifier
                 .fillMaxWidth()
                 .onGloballyPositioned { coordinates ->
@@ -113,6 +109,11 @@ fun ComboBox(
                         )
                     )
                 }
+            },
+            onValueChange = {
+                isFocused = true
+                //mSelectedText = it
+                onChange(it)
             },
             trailingIcon = {
                 Icon(
@@ -147,6 +148,7 @@ fun ComboBox(
                         Text(text = label.name, textAlign = TextAlign.Center)
                     },
                     onClick = {
+                        isFocused = true
                         //mSelectedText = label.name
                         onChange(label.name)
                         mExpanded = false
@@ -215,6 +217,7 @@ fun ComboBoxDistrict(
             value = mSelectedText,
             onValueChange = {
                 //mSelectedText = it
+                isFocused = true
                 onChange(it)
             },
             modifier = Modifier
@@ -272,6 +275,7 @@ fun ComboBoxDistrict(
                         )
                     },
                     onClick = {
+                        isFocused = true
                         onChange(label.name)
                         //mSelectedText = label.name
                         mExpanded = false
