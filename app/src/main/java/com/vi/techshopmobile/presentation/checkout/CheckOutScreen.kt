@@ -133,7 +133,7 @@ fun CheckOutScreen(
                     onButtonClick = {
                         if (paymentMethodState.intValue == 1) {
                             (viewModel::onEvent)(
-                                CheckOutEvent.createOrders(
+                                CheckOutEvent.CreateOrders(
                                     token = token,
                                     requestCheckOut = RequestCheckOut(
                                         email = personalInfo.email,

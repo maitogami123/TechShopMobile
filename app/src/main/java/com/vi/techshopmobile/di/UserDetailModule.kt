@@ -4,6 +4,7 @@ import arrow.retrofit.adapter.either.EitherCallAdapterFactory
 import com.vi.techshopmobile.data.remote.userDetails.UserDetailsApi
 import com.vi.techshopmobile.data.repository.UserDetailsRepositoryImpl
 import com.vi.techshopmobile.domain.repository.userDetail.UserDetailsRepository
+import com.vi.techshopmobile.domain.usecases.userDetail.CreateUserDetail
 import com.vi.techshopmobile.domain.usecases.userDetail.GetListUserDetail
 import com.vi.techshopmobile.domain.usecases.userDetail.GetUserDetails
 import com.vi.techshopmobile.domain.usecases.userDetail.UserDetailsUseCases
@@ -42,6 +43,7 @@ object UserDetailModule {
     fun provideUserDetailsUseCase(userDetailsRepository: UserDetailsRepository) =
         UserDetailsUseCases(
             getUserDetails = GetUserDetails(userDetailsRepository),
-            getListUserDetail = GetListUserDetail(userDetailsRepository)
+            getListUserDetail = GetListUserDetail(userDetailsRepository),
+            createUserDetail = CreateUserDetail(userDetailsRepository)
         )
 }

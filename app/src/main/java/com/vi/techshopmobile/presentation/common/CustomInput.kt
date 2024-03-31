@@ -145,17 +145,18 @@ fun InputInfo(
             }
             if (errorMessage != null)
                 Text(
+                    modifier = Modifier.padding(top = 12.dp),
                     text = errorMessage,
                     style = MaterialTheme.typography.labelLarge.copy(color = Danger)
                 )
         }
         TextField(modifier = Modifier
             .fillMaxWidth()
-            .background(Color(0xffFFFFFF)),
-//            .border(
-//                width = 1.dp,
-//                color = if (!isFocused) Danger else Gray_300,
-//            ),
+            .background(Color(0xffFFFFFF))
+            .border(
+                width = if (!isFocused) 1.dp else 0.dp,
+                color = if (!isFocused) Danger else Gray_300,
+            ),
             singleLine = true,
             placeholder = {
                 if (placeHolderText != null)
@@ -186,6 +187,7 @@ fun InputInfoNoUnder(
     errorMessage: String? = null,
     placeHolderText: String? = null,
     inputText: String,
+    keyboardType: KeyboardType = KeyboardType.Text,
     onChange: (changedValue: String) -> Unit
 ) {
     var isFocused by rememberSaveable {
@@ -214,17 +216,18 @@ fun InputInfoNoUnder(
             }
             if (errorMessage != null)
                 Text(
+                    modifier = Modifier.padding(top = 12.dp),
                     text = errorMessage,
                     style = MaterialTheme.typography.labelLarge.copy(color = Danger)
                 )
         }
         TextField(modifier = Modifier
             .fillMaxWidth()
-            .background(Color(0xffFFFFFF)),
-//            .border(
-//                width = 1.dp,
-//                color = if (!isFocused) Danger else Gray_300,
-//            ),
+            .background(Color(0xffFFFFFF))
+            .border(
+                width = if (!isFocused) 1.dp else 0.dp,
+                color = if (!isFocused) Danger else Gray_300,
+            ),
             singleLine = true,
             placeholder = {
                 if (placeHolderText != null)
@@ -247,7 +250,11 @@ fun InputInfoNoUnder(
             onValueChange = {
                 isFocused = true
                 onChange(it)
-            })
+            },
+            keyboardOptions = KeyboardOptions.Default.copy(
+                keyboardType = keyboardType
+            )
+        )
     }
 }
 

@@ -42,6 +42,12 @@ class CheckOutViewModel @Inject constructor(
 
     private var _isCreateOrder = MutableStateFlow(false)
     val isCreateOrder = _isCreateOrder.asStateFlow()
+
+    private var _isCreateUserDetail = MutableStateFlow(false)
+    val isCreateUserDetail = _isCreateUserDetail.asStateFlow()
+
+    private var _createUserDetailError = MutableStateFlow("");
+    val createUserDetailError = _createUserDetailError.asStateFlow();
     fun onEvent(event: CheckOutEvent) {
         when (event) {
             is CheckOutEvent.GetUserCart -> {
@@ -59,7 +65,7 @@ class CheckOutViewModel @Inject constructor(
                 getListUserDetail("Bearer " + event.token)
             }
 
-            is CheckOutEvent.createOrders -> {
+            is CheckOutEvent.CreateOrders -> {
                 viewModelScope.launch {
                     val orderResponse = ordersUseCases.createOrders(
                         token = "Bearer " + event.token,
@@ -68,11 +74,33 @@ class CheckOutViewModel @Inject constructor(
                     if (orderResponse.isRight()) {
                         orderResponse.onRight {
                             sendEvent(Event.Toast("Tạo đơn hàng thành công"))
+                            delay(600)
                             _isCreateOrder.value = true
                         }
                     } else {
                         orderResponse.onLeft {
                             sendEvent(Event.Toast(it.detail))
+                        }
+                    }
+                }
+            }
+
+            is CheckOutEvent.CreateUserDetail -> {
+                viewModelScope.launch {
+                    val userDetailRes = userDetailsUseCases.createUserDetail(
+                        token = "Bearer " + event.token,
+                        userDetailRequest = event.userDetailRequest
+                    )
+                    if (userDetailRes.isRight()) {
+                        userDetailRes.onRight {
+                            sendEvent(Event.Toast("Tạo thông tin người dùng ${statePerson.value.userDetail.username} thành công"))
+                            delay(600)
+                            _isCreateUserDetail.value = true
+                        }
+                    } else {
+                        userDetailRes.onLeft {
+                            _createUserDetailError.value = it.detail
+                            sendEvent(Event.Toast(it.detail + "Có lỗi xảy ra"))
                         }
                     }
                 }

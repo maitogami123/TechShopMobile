@@ -54,9 +54,9 @@ fun formatPhoneNumber(phoneNumber: String): String {
     if (phoneNumber.length < 11)
         return phoneNumber
     return String.format(
-        "+84 {0}-{1}-{2}",
-        phoneNumber.substring(0, 3),
-        phoneNumber.substring(3, 6),
-        phoneNumber.substring(6)
+        "+84 %s-%s-%s",
+        phoneNumber.substring(1, 4),
+        phoneNumber.substring(4, 7),
+        phoneNumber.substring(7)
     )
 }
