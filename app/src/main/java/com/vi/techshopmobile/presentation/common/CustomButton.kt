@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.vi.techshopmobile.ui.theme.WhiteGray
 
@@ -48,4 +49,12 @@ fun CustomButton(
                 style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.SemiBold)
             )
         }
+}
+
+@Preview
+@Composable
+fun CustomButtonPreview() {
+    CustomButton(
+        text = "Thêm địa chỉ mới"
+    ){}
 }

@@ -251,17 +251,6 @@ fun     ProductCart(
                 )
             }
         }
-        Box(
-            modifier = Modifier
-                .fillMaxHeight()
-                .weight(.2f), contentAlignment = Alignment.TopEnd
-        ) {
-            Image(
-                painterResource(id = R.drawable.ic_cross),
-                contentDescription = null,
-                modifier = Modifier.size(IconSizeMedium)
-            )
-        }
     }
 }
 

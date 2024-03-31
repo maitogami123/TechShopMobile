@@ -28,8 +28,8 @@ class PersonalInfoViewModel @Inject constructor(
     private val _state = MutableStateFlow(PersonalInfoViewState())
     val state = _state.asStateFlow()
 
-    private val _isLoading = MutableStateFlow(false)
-    val isLoading = _isLoading.asStateFlow()
+//    private val _isLoading = MutableStateFlow(false)
+//    val isLoading = _isLoading.asStateFlow()
 
     fun onEvent(event: PersonalInfoEvent) {
         when (event) {
@@ -40,7 +40,7 @@ class PersonalInfoViewModel @Inject constructor(
     }
     fun getUserDetail(token: String){
         viewModelScope.launch {
-            _isLoading.value = true
+           // _isLoading.value = true
             _state.update {
                 it.copy(isLoading = true)
             }
@@ -66,7 +66,7 @@ class PersonalInfoViewModel @Inject constructor(
             _state.update {
                 it.copy(isLoading = false)
             }
-            _isLoading.value = false
+           // _isLoading.value = false
         }
     }
 

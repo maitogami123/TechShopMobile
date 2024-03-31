@@ -30,11 +30,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.vi.techshopmobile.R
 import com.vi.techshopmobile.presentation.Dimens.RadiusSmall
 import com.vi.techshopmobile.ui.theme.Danger
@@ -99,6 +101,147 @@ fun Input(
             colors = TextFieldDefaults.colors(
                 unfocusedContainerColor = Color.White,
                 focusedContainerColor = Color.White,
+            ),
+            value = inputText,
+            onValueChange = {
+                isFocused = true
+                onChange(it)
+            })
+    }
+}
+
+@Composable
+fun InputInfo(
+    modifier: Modifier = Modifier,
+    labelText: String? = null,
+    errorMessage: String? = null,
+    placeHolderText: String? = null,
+    inputText: String,
+    onChange: (changedValue: String) -> Unit
+) {
+    var isFocused by rememberSaveable {
+        mutableStateOf(true);
+    }
+
+    LaunchedEffect(key1 = errorMessage) {
+        if (errorMessage != null) {
+            isFocused = false
+        }
+    }
+    Column(
+        modifier = modifier.fillMaxWidth()
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 12.dp),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            if (labelText != null) {
+                Text(
+                    text = labelText,
+                    style = MaterialTheme.typography.labelLarge,
+                )
+            }
+            if (errorMessage != null)
+                Text(
+                    text = errorMessage,
+                    style = MaterialTheme.typography.labelLarge.copy(color = Danger)
+                )
+        }
+        TextField(modifier = Modifier
+            .fillMaxWidth()
+            .background(Color(0xffFFFFFF)),
+//            .border(
+//                width = 1.dp,
+//                color = if (!isFocused) Danger else Gray_300,
+//            ),
+            singleLine = true,
+            placeholder = {
+                if (placeHolderText != null)
+                    Text(
+                        text = placeHolderText,
+                        style = MaterialTheme.typography.displaySmall.copy(
+                            fontSize = 16.sp,
+                            color = if (!isFocused) Danger else Gray_300
+                        )
+                    )
+            },
+            colors = TextFieldDefaults.colors(
+                unfocusedContainerColor = Color.White,
+                focusedContainerColor = Color.White,
+            ),
+            value = inputText,
+            onValueChange = {
+                isFocused = true
+                onChange(it)
+            })
+    }
+}
+
+@Composable
+fun InputInfoNoUnder(
+    modifier: Modifier = Modifier,
+    labelText: String? = null,
+    errorMessage: String? = null,
+    placeHolderText: String? = null,
+    inputText: String,
+    onChange: (changedValue: String) -> Unit
+) {
+    var isFocused by rememberSaveable {
+        mutableStateOf(true);
+    }
+
+    LaunchedEffect(key1 = errorMessage) {
+        if (errorMessage != null) {
+            isFocused = false
+        }
+    }
+    Column(
+        modifier = modifier.fillMaxWidth()
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 12.dp),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            if (labelText != null) {
+                Text(
+                    text = labelText,
+                    style = MaterialTheme.typography.labelLarge,
+                )
+            }
+            if (errorMessage != null)
+                Text(
+                    text = errorMessage,
+                    style = MaterialTheme.typography.labelLarge.copy(color = Danger)
+                )
+        }
+        TextField(modifier = Modifier
+            .fillMaxWidth()
+            .background(Color(0xffFFFFFF)),
+//            .border(
+//                width = 1.dp,
+//                color = if (!isFocused) Danger else Gray_300,
+//            ),
+            singleLine = true,
+            placeholder = {
+                if (placeHolderText != null)
+                    Text(
+                        text = placeHolderText,
+                        style = MaterialTheme.typography.displaySmall.copy(
+                            color = if (!isFocused) Danger else Gray_300,
+                            fontSize = 16.sp
+                        )
+                    )
+            },
+            colors = TextFieldDefaults.colors(
+                unfocusedContainerColor = Color.White,
+                focusedContainerColor = Color.White,
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent,
+                disabledIndicatorColor = Color.Transparent
             ),
             value = inputText,
             onValueChange = {
@@ -318,6 +461,24 @@ fun PreviewInput() {
                 linkLabel = "Đổi gmail"
             ) {
 
+            }
+
+            InputInfo(
+                labelText = "Liên hệ",
+                inputText = testInput,
+                placeHolderText = "Nhập tên tài khoản",
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                testInput = it
+            }
+
+            InputInfoNoUnder(
+                labelText = "Liên hệ",
+                inputText = testInput,
+                placeHolderText = "Nhập tên tài khoản",
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                testInput = it
             }
         }
 

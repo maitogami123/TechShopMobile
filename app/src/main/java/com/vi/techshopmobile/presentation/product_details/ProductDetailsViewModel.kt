@@ -53,7 +53,7 @@ class ProductDetailsViewModel @Inject constructor(
                         } else {
                             cartUseCases.upsertCart(
                                 event.cartItem.copy(
-                                    quantity = it.quantity?.plus(
+                                    quantity = it.quantity.plus(
                                         _quantityProduct.value
                                     )
                                 )

@@ -7,4 +7,5 @@ import com.vi.techshopmobile.domain.model.UserDetail
 interface UserDetailsRepository {
     suspend fun getUserDetail(token: String): Either<ErrorResponse, UserDetail>
 
+    suspend fun getListUserDetail(token: String): Either<ErrorResponse, List<UserDetail>>
 }

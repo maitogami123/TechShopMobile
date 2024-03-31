@@ -9,6 +9,9 @@ import retrofit2.http.GET
 import retrofit2.http.Header
 
 interface UserDetailsApi {
+    @GET("all")
+    suspend fun getListUserDetails(@Header("Authorization") token: String): Either<ErrorResponse, List<UserDetail>>
     @GET("default")
     suspend fun getUserDetails(@Header("Authorization") token: String): Either<ErrorResponse, UserDetail>
+
 }

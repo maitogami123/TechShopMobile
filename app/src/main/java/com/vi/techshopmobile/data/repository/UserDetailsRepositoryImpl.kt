@@ -15,4 +15,8 @@ class UserDetailsRepositoryImpl @Inject constructor(
         return userDetailsApi.getUserDetails(token = token)
     }
 
+    override suspend fun getListUserDetail(token: String): Either<ErrorResponse, List<UserDetail>> {
+        return userDetailsApi.getListUserDetails(token = token)
+    }
+
 }

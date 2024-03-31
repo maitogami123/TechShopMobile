@@ -4,6 +4,7 @@ import arrow.retrofit.adapter.either.EitherCallAdapterFactory
 import com.vi.techshopmobile.data.remote.orders.OrdersApi
 import com.vi.techshopmobile.data.repository.OrdersRepositoryImpl
 import com.vi.techshopmobile.domain.repository.orders.OrdersRepository
+import com.vi.techshopmobile.domain.usecases.orders.CreateOrders
 import com.vi.techshopmobile.domain.usecases.orders.GetOrders
 import com.vi.techshopmobile.domain.usecases.orders.OrdersUseCases
 import com.vi.techshopmobile.util.Constants
@@ -33,11 +34,12 @@ object OrderModule {
     @Singleton
     fun provideOrdersRepository(
         ordersApi: OrdersApi
-    ) : OrdersRepository = OrdersRepositoryImpl(ordersApi)
+    ): OrdersRepository = OrdersRepositoryImpl(ordersApi)
 
     @Provides
     @Singleton
     fun provideOrdersUseCase(ordersRepository: OrdersRepository) = OrdersUseCases(
         getOrders = GetOrders(ordersRepository),
+        createOrders = CreateOrders(ordersRepository)
     )
 }

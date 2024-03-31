@@ -1,6 +1,7 @@
 package com.vi.techshopmobile.presentation.cart.components
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -91,9 +92,9 @@ fun RowTotalPrice(textLeft: String, textRight: Double, modifier: Modifier = Modi
 }
 
 @Composable
-fun RowPaymentNavigate(textLeft: String, textRight: String, modifier: Modifier = Modifier) {
+fun RowPaymentNavigate(textLeft: String, textRight: String, modifier: Modifier = Modifier, onClick: () -> Unit) {
     Row(
-        Modifier.fillMaxWidth(),
+        Modifier.fillMaxWidth().clickable { onClick() },
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -128,10 +129,11 @@ fun RowPaymentGateNavigate(
     textLeft: String,
     textRight: String,
     headIconGate: Painter,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
 ) {
     Row(
-        Modifier.fillMaxWidth(),
+        Modifier.fillMaxWidth().clickable { onClick() },
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -177,12 +179,12 @@ fun RowPricePreview() {
             RowPrice(textLeft = "Tổng tiền hàng", textRight = 12312314.000)
             RowPriceDelivery(textLeft = "Tổng tiền hàng", textRight = "Miễn Phí")
             RowTotalPrice(textLeft = "Tổng thanh toán", textRight = 2.129e+07)
-            RowPaymentNavigate(textLeft = "Phương thức thanh toán", textRight = "Thanh toán online")
+            RowPaymentNavigate(textLeft = "Phương thức thanh toán", textRight = "Thanh toán online"){}
             RowPaymentGateNavigate(
                 textLeft = "Cổng thanh toán", textRight = "VN PAY", painterResource(
                     id = R.drawable.ic_bell
                 )
-            )
+            ){}
         }
     }
 

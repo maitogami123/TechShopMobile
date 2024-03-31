@@ -17,6 +17,9 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.compositionLocalOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalLifecycleOwner
@@ -33,14 +36,17 @@ import com.vi.techshopmobile.presentation.products.ProductsScreen
 import com.vi.techshopmobile.ui.theme.TechShopMobileTheme
 import com.vi.techshopmobile.util.Event
 import com.vi.techshopmobile.util.EventBus
+import com.vi.techshopmobile.util.ReadJSONFromAssets
 import dagger.hilt.android.AndroidEntryPoint
 
 val LocalToken = compositionLocalOf<String> {
     error("No LocalToken provided")
 }
+
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     private val viewModel by viewModels<MainViewModel>()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,7 +59,9 @@ class MainActivity : ComponentActivity() {
         };
 
         setContent {
-            CompositionLocalProvider(LocalToken provides viewModel.accessToken) {
+            CompositionLocalProvider(
+                LocalToken provides viewModel.accessToken,
+            ) {
                 TechShopMobileTheme {
                     val lifecycle = LocalLifecycleOwner.current.lifecycle
                     LaunchedEffect(key1 = lifecycle) {

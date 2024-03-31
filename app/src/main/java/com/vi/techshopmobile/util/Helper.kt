@@ -1,7 +1,9 @@
 package com.vi.techshopmobile.util
 
+import android.content.res.AssetManager
 import androidx.navigation.NavController
 import com.google.gson.Gson
+import com.vi.techshopmobile.domain.model.Provinces
 import com.vi.techshopmobile.domain.model.UserToken
 import java.text.NumberFormat
 import java.util.Base64
@@ -25,7 +27,7 @@ fun formatPrice(price: Double): String {
     val format: NumberFormat = NumberFormat.getCurrencyInstance()
     format.setMaximumFractionDigits(0)
     format.currency = Currency.getInstance("VND")
-    val formatedStr = format.format(price).replace(",",".")
+    val formatedStr = format.format(price).replace(",", ".")
     return formatedStr.substring(1, formatedStr.length) + " VNĐ"
 }
 
@@ -39,8 +41,9 @@ fun decodeToken(token: String): UserToken {
 
 }
 
-fun convertMilisToMinus(millis: Long): String{
-    return String.format("%02d : %02d ",
+fun convertMilisToMinus(millis: Long): String {
+    return String.format(
+        "%02d : %02d ",
         TimeUnit.MILLISECONDS.toMinutes(millis),
         TimeUnit.MILLISECONDS.toSeconds(millis) -
                 TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis))
@@ -48,12 +51,12 @@ fun convertMilisToMinus(millis: Long): String{
 }
 
 fun formatPhoneNumber(phoneNumber: String): String {
-    if  (phoneNumber.length < 11)
+    if (phoneNumber.length < 11)
         return phoneNumber
     return String.format(
         "+84 {0}-{1}-{2}",
-        phoneNumber.toString().substring(0, 3),
-        phoneNumber.toString().substring(3, 6),
-        phoneNumber.toString().substring(6)
+        phoneNumber.substring(0, 3),
+        phoneNumber.substring(3, 6),
+        phoneNumber.substring(6)
     )
 }

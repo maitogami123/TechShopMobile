@@ -1,7 +1,6 @@
-package com.vi.techshopmobile.presentation.cart.components
+package com.vi.techshopmobile.presentation.cart
 
 import com.vi.techshopmobile.domain.model.CartItem
-import com.vi.techshopmobile.presentation.product_details.ProductDetailsEvent
 
 sealed class CartEvent {
     data class GetUserCart(val username: String) : CartEvent()
