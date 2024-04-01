@@ -48,15 +48,14 @@ class ProductDetailsViewModel @Inject constructor(
             is ProductDetailsEvent.AddItemToCart -> {
                 viewModelScope.launch {
                     cartUseCases.getCartItem(event.cartItem.productLine).collect {
-                        if (it == null) {
+                        if (it == null || it.username != event.cartItem.username) {
                             cartUseCases.upsertCart(event.cartItem)
                         } else {
-                            cartUseCases.upsertCart(
-                                event.cartItem.copy(
-                                    quantity = it.quantity.plus(
-                                        _quantityProduct.value
-                                    )
-                                )
+                            var quantity = it.quantity.plus(
+                                _quantityProduct.value
+                            )
+                            cartUseCases.updateCart(
+                                quantity, id = it.id
                             )
                         }
                         EventBus.sendEvent(Event.Toast("Đã thêm vào giỏ hàng"))

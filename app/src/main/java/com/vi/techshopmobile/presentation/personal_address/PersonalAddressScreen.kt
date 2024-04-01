@@ -30,18 +30,20 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.vi.techshopmobile.LocalToken
 import com.vi.techshopmobile.R
 import com.vi.techshopmobile.presentation.Dimens
 import com.vi.techshopmobile.presentation.common.Address
 import com.vi.techshopmobile.presentation.common.CustomButton
 import com.vi.techshopmobile.presentation.home.home_navigator.component.UtilityTopNavigation
+import com.vi.techshopmobile.presentation.navgraph.Route
 import com.vi.techshopmobile.presentation.personal_info.PersonalInfoEvent
 import com.vi.techshopmobile.presentation.personal_info.PersonalInfoViewModel
 
 @Composable
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-fun PersonalAddressScreen(onNavigateUp: () -> Unit){
+fun PersonalAddressScreen(onNavigateUp: () -> Unit, navController: NavController){
     val viewModel: PersonalInfoViewModel = hiltViewModel()
     val token = LocalToken.current
     val state = viewModel.state.collectAsState()
@@ -148,7 +150,9 @@ fun PersonalAddressScreen(onNavigateUp: () -> Unit){
             }
 
             Spacer(modifier = Modifier.weight(1f))
-            CustomButton(modifier = Modifier.fillMaxWidth(), text = "+ Thêm địa chỉ mới") {}
+            CustomButton(modifier = Modifier.fillMaxWidth(), text = "+ Thêm địa chỉ mới") {
+                navController.navigate(Route.AddNewAddressScreen.route)
+            }
         }
 
     }

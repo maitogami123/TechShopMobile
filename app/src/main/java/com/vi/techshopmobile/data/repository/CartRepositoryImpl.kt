@@ -8,7 +8,7 @@ import javax.inject.Inject
 
 class CartRepositoryImpl @Inject constructor(
     private val cartDao: CartDao
-): CartRepository{
+) : CartRepository {
     override suspend fun upsertCart(cartItem: CartItem) {
         return cartDao.upsert(cartItem)
     }
@@ -23,6 +23,10 @@ class CartRepositoryImpl @Inject constructor(
 
     override fun getCartItem(productLine: String): Flow<CartItem> {
         return cartDao.getCartITem(productLine)
+    }
+
+    override fun updateCart(quantity: Int, id: Int) {
+        return cartDao.updateCartItem(quantity, id)
     }
 
 

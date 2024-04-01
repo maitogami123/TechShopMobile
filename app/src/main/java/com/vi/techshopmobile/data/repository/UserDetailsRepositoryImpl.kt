@@ -28,4 +28,11 @@ class UserDetailsRepositoryImpl @Inject constructor(
         return userDetailsApi.createUserDetails(token, userDetailRequest)
     }
 
+    override suspend fun updateAllUserDetailsToNotDefault(
+        id: String,
+        token: String
+    ): Either<ErrorResponse, UserDetailResponse> {
+        return userDetailsApi.updateAllUserDetailsToNotDefault(id, token)
+    }
+
 }

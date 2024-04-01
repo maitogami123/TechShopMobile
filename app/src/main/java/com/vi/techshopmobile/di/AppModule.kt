@@ -18,6 +18,7 @@ import com.vi.techshopmobile.domain.usecases.cart.CartUseCases
 import com.vi.techshopmobile.domain.usecases.cart.DeleteCart
 import com.vi.techshopmobile.domain.usecases.cart.GetCart
 import com.vi.techshopmobile.domain.usecases.cart.GetCartItem
+import com.vi.techshopmobile.domain.usecases.cart.UpdateCart
 import com.vi.techshopmobile.domain.usecases.cart.UpsertCart
 import com.vi.techshopmobile.domain.usecases.wish_list.DeleteWishItem
 import com.vi.techshopmobile.domain.usecases.wish_list.GetWishList
@@ -105,6 +106,7 @@ object AppModule {
         UpsertCart(cartRepository),
         DeleteCart(cartRepository),
         GetCart(cartRepository),
-        GetCartItem(cartRepository)
+        GetCartItem(cartRepository),
+        UpdateCart(cartRepository)
     )
 }

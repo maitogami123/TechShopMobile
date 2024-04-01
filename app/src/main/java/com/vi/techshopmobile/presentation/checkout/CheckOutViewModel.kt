@@ -105,6 +105,25 @@ class CheckOutViewModel @Inject constructor(
                     }
                 }
             }
+
+            is CheckOutEvent.UpdateAllUserDetailsToNotDefault -> {
+                viewModelScope.launch {
+                    delay(500)
+                    val updateRes = userDetailsUseCases.updateAllUserDetailsToNotDefault(
+                        id = event.id,
+                        token = "Bearer " + event.token
+                    )
+                    if (updateRes.isRight()) {
+                        updateRes.onRight {
+                            sendEvent(Event.Toast("Đã đặt địa chỉ thành mặc định"))
+                        }
+                    } else {
+                        updateRes.onLeft {
+                            sendEvent(Event.Toast(it.detail + "Có lỗi xảy ra"))
+                        }
+                    }
+                }
+            }
         }
     }
 

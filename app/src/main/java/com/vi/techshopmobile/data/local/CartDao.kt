@@ -5,6 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
 import com.vi.techshopmobile.domain.model.CartItem
 import com.vi.techshopmobile.domain.model.ProductLine
 import kotlinx.coroutines.flow.Flow
@@ -15,6 +16,9 @@ interface CartDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsert(cartItem: CartItem)
+
+    @Query("Update CartItem set quantity=:quantity Where id=:id")
+    fun updateCartItem(quantity: Int, id: Int)
 
     @Query("SELECT * FROM CartItem WHERE productLine=:productLine")
     fun getCartITem(productLine: String): Flow<CartItem>

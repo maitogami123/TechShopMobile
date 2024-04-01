@@ -83,7 +83,7 @@ fun ListInfoScreen(
                     onNavigateUp()
                 },
                 leftBtnIcon = R.drawable.ic_left_arrow,
-                title = "Đìa chỉ nhận hàng",
+                title = "Địa chỉ nhận hàng",
                 onSearch = {})
         },
         bottomBar = {

@@ -12,6 +12,9 @@ sealed class CheckOutEvent {
     data class GetListUserDetail(val token: String) : CheckOutEvent()
     data class CreateOrders(val token: String, val requestCheckOut: RequestCheckOut) :
         CheckOutEvent()
+
     data class CreateUserDetail(val token: String, val userDetailRequest: UserDetailRequest) :
         CheckOutEvent()
+
+    data class UpdateAllUserDetailsToNotDefault(val id: String, val token: String) : CheckOutEvent()
 }

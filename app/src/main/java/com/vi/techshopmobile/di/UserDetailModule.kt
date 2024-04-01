@@ -7,6 +7,7 @@ import com.vi.techshopmobile.domain.repository.userDetail.UserDetailsRepository
 import com.vi.techshopmobile.domain.usecases.userDetail.CreateUserDetail
 import com.vi.techshopmobile.domain.usecases.userDetail.GetListUserDetail
 import com.vi.techshopmobile.domain.usecases.userDetail.GetUserDetails
+import com.vi.techshopmobile.domain.usecases.userDetail.UpdateAllUserDetailsToNotDefault
 import com.vi.techshopmobile.domain.usecases.userDetail.UserDetailsUseCases
 import com.vi.techshopmobile.util.Constants
 import dagger.Module
@@ -44,6 +45,9 @@ object UserDetailModule {
         UserDetailsUseCases(
             getUserDetails = GetUserDetails(userDetailsRepository),
             getListUserDetail = GetListUserDetail(userDetailsRepository),
-            createUserDetail = CreateUserDetail(userDetailsRepository)
+            createUserDetail = CreateUserDetail(userDetailsRepository),
+            updateAllUserDetailsToNotDefault = UpdateAllUserDetailsToNotDefault(
+                userDetailsRepository
+            )
         )
 }

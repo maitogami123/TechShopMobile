@@ -38,11 +38,13 @@ import com.vi.techshopmobile.LocalProvinces
 import com.vi.techshopmobile.LocalToken
 import com.vi.techshopmobile.R
 import com.vi.techshopmobile.data.remote.userDetails.dto.UserDetailRequest
+import com.vi.techshopmobile.domain.model.AccountDetail
 import com.vi.techshopmobile.domain.model.District
 import com.vi.techshopmobile.domain.model.Provinces
 import com.vi.techshopmobile.presentation.Dimens
 import com.vi.techshopmobile.presentation.checkout.CheckOutEvent
 import com.vi.techshopmobile.presentation.checkout.CheckOutViewModel
+import com.vi.techshopmobile.presentation.checkout.LocalSelectedIndex
 import com.vi.techshopmobile.presentation.checkout.components.CheckBoxText
 import com.vi.techshopmobile.presentation.checkout.components.ComboBox
 import com.vi.techshopmobile.presentation.checkout.components.ComboBoxDistrict
@@ -57,6 +59,7 @@ import com.vi.techshopmobile.ui.theme.Blue_100
 import com.vi.techshopmobile.ui.theme.Blue_200
 import com.vi.techshopmobile.ui.theme.Blue_50
 import com.vi.techshopmobile.util.formatPhoneNumber
+import kotlinx.coroutines.delay
 
 @Composable
 fun AddNewAddressScreen(
@@ -65,6 +68,7 @@ fun AddNewAddressScreen(
 ) {
     val viewModel: CheckOutViewModel = hiltViewModel()
     val isCreateUserDetail = viewModel.isCreateUserDetail.collectAsState()
+    val state = viewModel.statePerson.collectAsState()
     val createUserDetailError = viewModel.createUserDetailError.collectAsState()
     val token = LocalToken.current
 
@@ -105,6 +109,26 @@ fun AddNewAddressScreen(
             navController.navigate(Route.ListInfoScreen.route)
         }
     }
+    var personalInfo by remember {
+        mutableStateOf<AccountDetail>(
+            AccountDetail(
+                id = 0,
+                city = "",
+                detailedAddress = "",
+                phoneNumber = "",
+                district = "",
+                email = "",
+                lastName = "",
+                firstName = "",
+                default = false
+            )
+        )
+    }
+    if (state.value.listUserDetail.isNotEmpty()) {
+        personalInfo =
+            state.value.listUserDetail[LocalSelectedIndex.current.intValue].accountDetail
+    }
+
 
     Scaffold(
         topBar = {
@@ -129,7 +153,8 @@ fun AddNewAddressScreen(
                             return@forEach;
                         }
                         if (state.value.value.isBlank()) {
-                            state.value = state.value.copy(error = "Vui lòng nhập/chọn thông tin đầy đủ")
+                            state.value =
+                                state.value.copy(error = "Vui lòng nhập/chọn thông tin đầy đủ")
                             hasError = true;
                         } else {
                             state.value = state.value.copy(error = null)
@@ -150,6 +175,15 @@ fun AddNewAddressScreen(
                                 )
                             )
                         )
+
+                        if (isCheckedBox) {
+                            (viewModel::onEvent)(
+                                CheckOutEvent.UpdateAllUserDetailsToNotDefault(
+                                    id = personalInfo.id.toString(),
+                                    token = token
+                                )
+                            )
+                        }
                     }
                 }
             )
