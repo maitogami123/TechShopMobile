@@ -22,6 +22,7 @@ import com.vi.techshopmobile.R
 import com.vi.techshopmobile.presentation.cart.CartScreen
 import com.vi.techshopmobile.presentation.change_password.ChangePasswordScreen
 import com.vi.techshopmobile.presentation.chatAI.ChatAiScreen
+import com.vi.techshopmobile.presentation.checkout.screens.AddNewAddressScreen
 import com.vi.techshopmobile.presentation.home.HomeScreen
 import com.vi.techshopmobile.presentation.home.home_navigator.component.BottomNavigationItem
 import com.vi.techshopmobile.presentation.home.home_navigator.component.MainTopNavigation
@@ -156,7 +157,12 @@ fun HomeNavigator(navGraphController: NavController) {
                     PersonalInfoScreen(onNavigateUp = { navController.navigateUp() }, navController)
                 }
                 composable(route = Route.PersonalAddressScreen.route) {
-                    PersonalAddressScreen(onNavigateUp = {navController.navigateUp()})
+                    PersonalAddressScreen(onNavigateUp = {navController.navigateUp()}, navController)
+                }
+                composable(route = Route.AddNewAddressScreen.route) {
+                    AddNewAddressScreen(navController = navController) {
+
+                    }
                 }
                 composable(route = Route.ChangePasswordScreen.route) {
                     ChangePasswordScreen(onNavigateUp = { navController.navigateUp() })

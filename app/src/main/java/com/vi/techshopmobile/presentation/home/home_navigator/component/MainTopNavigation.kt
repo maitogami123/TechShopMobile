@@ -20,6 +20,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,7 +39,9 @@ import com.vi.techshopmobile.R
 import com.vi.techshopmobile.presentation.Dimens.ExtraSmallPadding2
 import com.vi.techshopmobile.presentation.Dimens.RadiusLarge
 import com.vi.techshopmobile.presentation.Dimens.SmallPadding
+import com.vi.techshopmobile.presentation.cart.CartEvent
 import com.vi.techshopmobile.presentation.cart.CartViewModel
+import com.vi.techshopmobile.presentation.home.home_navigator.TechShopNavigatorViewModel
 import com.vi.techshopmobile.presentation.navgraph.Route
 import com.vi.techshopmobile.ui.theme.Danger
 import com.vi.techshopmobile.ui.theme.TechShopMobileTheme
@@ -60,6 +63,10 @@ fun MainTopNavigation(
     val decodedToken = decodeToken(LocalToken.current)
     val viewModel: CartViewModel = hiltViewModel()
     val state = viewModel.state.collectAsState()
+
+    LaunchedEffect(key1 = null) {
+        (viewModel::onEvent)(CartEvent.GetUserCart(decodedToken.sub))
+    }
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -84,7 +91,7 @@ fun MainTopNavigation(
                 style = MaterialTheme.typography.displaySmall
             )
         else
-            ShoppingCartButton(items = 5) {
+            ShoppingCartButton(items = state.value.size) {
                 onClick()
             }
         // TODO: Create a table in room to store user cart item.

@@ -29,7 +29,6 @@ import com.vi.techshopmobile.LocalToken
 import com.vi.techshopmobile.R
 import com.vi.techshopmobile.data.remote.cart.CartResponse
 import com.vi.techshopmobile.presentation.Dimens
-import com.vi.techshopmobile.presentation.cart.components.CartEvent
 import com.vi.techshopmobile.presentation.cart.components.ProductCart
 import com.vi.techshopmobile.presentation.cart.components.RowPrice
 import com.vi.techshopmobile.presentation.cart.components.RowPriceDelivery
@@ -37,7 +36,6 @@ import com.vi.techshopmobile.presentation.cart.components.RowTotalPrice
 import com.vi.techshopmobile.presentation.common.FloatingBottomBar
 import com.vi.techshopmobile.presentation.home.home_navigator.component.UtilityTopNavigation
 import com.vi.techshopmobile.presentation.navgraph.Route
-import com.vi.techshopmobile.presentation.product_details.ProductDetailsViewModel
 import com.vi.techshopmobile.presentation.products.ProductsViewModel
 import com.vi.techshopmobile.util.decodeToken
 

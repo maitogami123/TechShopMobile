@@ -51,6 +51,7 @@ import com.vi.techshopmobile.presentation.Dimens.SmallGap
 import com.vi.techshopmobile.ui.theme.Gray_200
 import com.vi.techshopmobile.ui.theme.Roboto
 import com.vi.techshopmobile.ui.theme.TechShopMobileTheme
+
 /**
  * A Address contain info about user's address.
  *
@@ -324,7 +325,8 @@ fun AddressSelected(
     address: String,
     isDefault: Boolean = false,
     onEdit: () -> Unit,
-    isSelected: Boolean = false
+    isSelected: Boolean = false,
+    onClick: () -> Unit
 ) {
     val colors = RadioButtonDefaults.colors(
         selectedColor = Color(0xff3F83F8),
@@ -336,7 +338,7 @@ fun AddressSelected(
         horizontalArrangement = Arrangement.spacedBy(ExtraSmallGap),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        RadioButton(colors = colors, selected = isSelected, onClick = { /*TODO*/ })
+        RadioButton(colors = colors, selected = isSelected, onClick = { onClick() })
         Column(
             modifier = Modifier
                 .drawWithContent {
@@ -449,10 +451,6 @@ fun AddressSelected(
 @Preview(showSystemUi = true)
 @Composable
 fun AddressPreview() {
-    val radioButtons = listOf(0, 1, 2)
-    val (selectedButton, onOptionSelected) = remember {
-        mutableStateOf(radioButtons[0])
-    }
     TechShopMobileTheme {
         Column(
             modifier = Modifier.padding(Dimens.SmallPadding),
@@ -506,6 +504,7 @@ fun AddressPreview() {
                 address = "phường Hiệp Bình Phước, thành phố Thủ Đức",
                 isDefault = false,
                 isSelected = false,
+                onClick = {},
                 onEdit = {},
             )
 
@@ -517,6 +516,7 @@ fun AddressPreview() {
                 address = "phường Hiệp Bình Phước, thành phố Thủ Đức",
                 isDefault = true,
                 isSelected = true,
+                onClick = {},
                 onEdit = {},
             )
         }

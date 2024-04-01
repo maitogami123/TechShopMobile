@@ -6,7 +6,7 @@ import com.vi.techshopmobile.domain.model.UserDetail
 data class OrderDetailsViewState(
     val isLoading: Boolean = true,
     val userDetail: UserDetail? = UserDetail(
-        accountDetail = AccountDetail("", "", true, "", "", "", "", "", 99999, "", "", ""),
+        accountDetail = AccountDetail("", true, "", "", "", "", 0, "", ""),
         email = "",
         username = ""
     ),

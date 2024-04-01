@@ -11,8 +11,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
@@ -20,30 +18,34 @@ import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalLifecycleOwner
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.core.view.WindowCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.navigation.NavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import com.vi.techshopmobile.presentation.home.home_navigator.LocalNavController
 import com.vi.techshopmobile.presentation.navgraph.NavGraph
-import com.vi.techshopmobile.presentation.products.ProductsScreen
 import com.vi.techshopmobile.ui.theme.TechShopMobileTheme
 import com.vi.techshopmobile.util.Event
 import com.vi.techshopmobile.util.EventBus
+import com.vi.techshopmobile.util.ReadJSONFromAssets
 import dagger.hilt.android.AndroidEntryPoint
 
 val LocalToken = compositionLocalOf<String> {
     error("No LocalToken provided")
 }
+
+val LocalProvinces = compositionLocalOf<String> {
+    error("No LocalProvinces provided")
+}
+
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     private val viewModel by viewModels<MainViewModel>()
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val data = ReadJSONFromAssets(context = baseContext, "provinces.json")
+
 //        WindowCompat.setDecorFitsSystemWindows(window, false);
 
         installSplashScreen().apply {
@@ -53,7 +55,10 @@ class MainActivity : ComponentActivity() {
         };
 
         setContent {
-            CompositionLocalProvider(LocalToken provides viewModel.accessToken) {
+            CompositionLocalProvider(
+                LocalToken provides viewModel.accessToken,
+                LocalProvinces provides data
+            ) {
                 TechShopMobileTheme {
                     val lifecycle = LocalLifecycleOwner.current.lifecycle
                     LaunchedEffect(key1 = lifecycle) {

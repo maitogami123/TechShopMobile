@@ -22,12 +22,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.vi.techshopmobile.R
 import com.vi.techshopmobile.presentation.Dimens.SmallPadding
+import com.vi.techshopmobile.ui.theme.Blue_200
 import com.vi.techshopmobile.ui.theme.Blue_500
 import com.vi.techshopmobile.ui.theme.Gray_700
 import com.vi.techshopmobile.ui.theme.TechShopMobileTheme
@@ -194,6 +196,39 @@ fun FloatingBottomBar(
     }
 }
 
+@Composable
+fun FloatingOnBottomBar(
+    modifier: Modifier = Modifier,
+    buttonText: String,
+    onButtonClick: () -> Unit,
+) {
+    Row(
+        modifier = modifier
+            .padding(SmallPadding)
+            .fillMaxWidth()
+            .height(64.dp)
+            .clip(RoundedCornerShape(24.dp))
+            .background(MaterialTheme.colorScheme.primary)
+    ) {
+        Button(
+            onClick = { onButtonClick() }, modifier = Modifier
+                .fillMaxHeight()
+                .padding(0.dp)
+                .weight(1f),
+            shape = RoundedCornerShape(0),
+            colors = ButtonDefaults.buttonColors(containerColor = Blue_200)
+        ) {
+            Text(
+                text = buttonText,
+                style = MaterialTheme.typography.headlineMedium.copy(
+                    color = Color(0xff2B2B2B)
+                ),
+                textAlign = TextAlign.Center
+            )
+        }
+    }
+}
+
 @Preview
 @Composable
 fun PreviewFloatingBottomBar() {
@@ -202,6 +237,8 @@ fun PreviewFloatingBottomBar() {
             FloatingBottomBar(buttonText = "Mua ngay", onButtonClick = {}, onAddToWishList = {}, onAddToCart = {})
             FloatingBottomBar(buttonText = "Liên hệ", onButtonClick = {}, onAddToWishList = {}, itemInWishList = true)
             FloatingBottomBar(buttonText = "Xác nhận", onButtonClick = {})
+            FloatingOnBottomBar(buttonText = "+ Thêm dịa chỉ mới", onButtonClick = {})
+
         }
     }
 }

@@ -1,6 +1,6 @@
 package com.vi.techshopmobile.domain.usecases.orders
 
-data class OrdersUseCases (
+data class OrdersUseCases(
     val getOrders: GetOrders,
-
+    val createOrders: CreateOrders
 )

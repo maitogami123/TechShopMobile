@@ -39,7 +39,7 @@ class CategoriesViewModel @Inject constructor(
             is CategoriesEvents.GetCategoryProduct -> {
                 getProductCategory(event.categoryName)
             }
-        }
+       }
     }
     fun getCategories(){
         viewModelScope.launch {

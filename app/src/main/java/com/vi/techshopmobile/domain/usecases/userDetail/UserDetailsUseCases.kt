@@ -1,5 +1,8 @@
 package com.vi.techshopmobile.domain.usecases.userDetail
 
-class UserDetailsUseCases(
-    val getUserDetails: GetUserDetails
+data class UserDetailsUseCases(
+    val getUserDetails: GetUserDetails,
+    val getListUserDetail: GetListUserDetail,
+    val createUserDetail: CreateUserDetail,
+    val updateAllUserDetailsToNotDefault: UpdateAllUserDetailsToNotDefault
 )

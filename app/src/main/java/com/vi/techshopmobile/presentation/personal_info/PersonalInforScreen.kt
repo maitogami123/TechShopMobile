@@ -110,7 +110,7 @@ fun PersonalInfoScreen(onNavigateUp: () -> Unit, navController: NavController) {
 @Preview
 @Composable
 fun PersonalInfoScreenPreview() {
-    PersonalInfoScreen {
-
-    }
+//    PersonalInfoScreen {
+//
+//    }
 }
