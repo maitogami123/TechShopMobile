@@ -42,7 +42,7 @@ class OrderDetailsViewModel @Inject constructor(
     fun onEvent(event: OrderDetailsEvent) {
         when (event) {
             is OrderDetailsEvent.GetAllEventPersonalInfo -> TODO()
-            is OrderDetailsEvent.GetOrderDetail -> getOrderDetail(event.token, event.id)
+            is OrderDetailsEvent.GetOrderDetail -> getOrderDetail("Bearer " + event.token, event.id)
         }
     }
 

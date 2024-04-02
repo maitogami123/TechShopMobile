@@ -20,7 +20,7 @@ interface OrdersApi {
     @GET("getOrderDetail")
     suspend fun getOrderDetail(
         @Header("Authorization") token: String,
-        @Query("id") id: String
+        @Query(value = "id", encoded = true) id: String
     ): Either<ErrorResponse, OrderDetailResponse>
 
     @POST("create")

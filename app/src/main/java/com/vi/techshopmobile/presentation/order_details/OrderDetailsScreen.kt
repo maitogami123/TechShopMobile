@@ -30,6 +30,7 @@ import com.vi.techshopmobile.R
 import com.vi.techshopmobile.data.remote.cart.CartResponse
 import com.vi.techshopmobile.presentation.Dimens
 import com.vi.techshopmobile.presentation.cart.components.ProductCart
+import com.vi.techshopmobile.presentation.cart.components.ProductCartOrderDetail
 import com.vi.techshopmobile.presentation.cart.components.RowPaymentGateNavigate
 import com.vi.techshopmobile.presentation.cart.components.RowPaymentNavigate
 import com.vi.techshopmobile.presentation.cart.components.RowTotalPrice
@@ -82,13 +83,14 @@ fun OrderDetailsScreen(id: String, navController: NavController, onNavigateUp: (
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     itemsIndexed(state.value.orderDetailResponse!!.orderItems) { index, item ->
-                        ProductCart(
+                        ProductCartOrderDetail(
                             cartResponse = CartResponse(
-                                quantity = 1,
+                                productSN = item.productSN,
+                                warrantyDate = item.warrantyDate,
                                 productLine = item.productLine,
                                 productName = item.productName,
                                 price = item.price,
-                                thumbnailUri = item.productLine + "/" + item.productLine + ".jpg"
+                                thumbnailUri = "thumbnails/" + item.productLine + "/" + item.productLine + ".jpg"
                             ),
                         )
                         Spacer(modifier = Modifier.height(16.dp))
@@ -108,7 +110,7 @@ fun OrderDetailsScreen(id: String, navController: NavController, onNavigateUp: (
                     title = "Địa chỉ nhận hàng",
                     name = orderInfo.fullname,
                     phoneNumber = formatPhoneNumber(orderInfo.phoneNumber),
-                    addressNote = orderInfo.note,
+                    addressNote = "",
                     address = orderInfo.address,
                 )
             }
