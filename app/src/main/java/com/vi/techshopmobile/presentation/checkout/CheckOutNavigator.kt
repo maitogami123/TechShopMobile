@@ -11,10 +11,12 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.vi.techshopmobile.presentation.checkout.screens.AddNewAddressScreen
+import com.vi.techshopmobile.presentation.checkout.screens.DetailAddressScreen
 import com.vi.techshopmobile.presentation.checkout.screens.ListInfoScreen
 import com.vi.techshopmobile.presentation.checkout.screens.PaymentErrorScreen
 import com.vi.techshopmobile.presentation.checkout.screens.PaymentSuccessScreen
 import com.vi.techshopmobile.presentation.navgraph.Route
+import com.vi.techshopmobile.presentation.order_details.OrderDetailsScreen
 
 val LocalSelectedIndex = compositionLocalOf<MutableIntState> {
     error("No LocalSelectedIndex provided")
@@ -26,7 +28,7 @@ fun CheckOutNavigator(navGraphController: NavController) {
     val selectedAddress = remember {
         mutableIntStateOf(0)
     }
-    
+
     CompositionLocalProvider(LocalSelectedIndex provides selectedAddress) {
         NavHost(
             navController = navController,
@@ -54,11 +56,15 @@ fun CheckOutNavigator(navGraphController: NavController) {
             composable(
                 route = Route.PaymentSuccessnScreen.route
             ) {
-                PaymentSuccessScreen(
-                    navGraphController= navGraphController,
-                    onNavigateUp = { navController.navigateUp() },
-                    navController = navController
-                )
+                navController.previousBackStackEntry?.savedStateHandle?.get<String?>("id")
+                    ?.let { id ->
+                        PaymentSuccessScreen(
+                            id = id,
+                            navGraphController = navGraphController,
+                            onNavigateUp = { navController.navigateUp() },
+                            navController = navController
+                        )
+                    }
             }
             composable(
                 route = Route.PaymentErrorScreen.route
@@ -76,6 +82,45 @@ fun CheckOutNavigator(navGraphController: NavController) {
                     navController = navController
                 )
             }
+
+            composable(
+                route = Route.DetailAddressScreen.route
+            ) {
+                navController.previousBackStackEntry?.savedStateHandle?.get<String?>("id")
+                    ?.let { id ->
+                        DetailAddressScreen(
+                            onNavigateUp = { navController.navigateUp() },
+                            id = id,
+                            navController = navController
+                        )
+                    }
+            }
+
+            composable(route = Route.OderDetailsScreen.route) {
+                navController.previousBackStackEntry?.savedStateHandle?.get<String?>("id")
+                    ?.let { id ->
+                        OrderDetailsScreen(
+                            onNavigateUp = { navController.navigateUp() },
+                            id = id,
+                            navController = navController
+                        )
+                    }
+            }
         }
     }
+}
+
+fun navigateToDetailAddress(navController: NavController, id: String) {
+    navController.currentBackStackEntry?.savedStateHandle?.set("id", id)
+    navController.navigate(Route.DetailAddressScreen.route);
+}
+
+fun navigateToDetailOrder(navController: NavController, id: String) {
+    navController.currentBackStackEntry?.savedStateHandle?.set("id", id)
+    navController.navigate(Route.OderDetailsScreen.route);
+}
+
+fun navigateToPaymentSuccess(navController: NavController, id: String) {
+    navController.currentBackStackEntry?.savedStateHandle?.set("id", id)
+    navController.navigate(Route.OderDetailsScreen.route);
 }

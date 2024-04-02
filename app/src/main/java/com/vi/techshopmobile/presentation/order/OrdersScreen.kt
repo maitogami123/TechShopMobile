@@ -32,6 +32,7 @@ import androidx.navigation.NavController
 import com.vi.techshopmobile.LocalToken
 import com.vi.techshopmobile.R
 import com.vi.techshopmobile.presentation.Dimens.SmallPadding
+import com.vi.techshopmobile.presentation.checkout.navigateToDetailOrder
 import com.vi.techshopmobile.presentation.common.LoadingDialog
 import com.vi.techshopmobile.presentation.home.home_navigator.component.UtilityTopNavigation
 import com.vi.techshopmobile.presentation.navgraph.Route
@@ -111,7 +112,8 @@ fun UserOrdersScreen(
                 items(state.orders) { order ->
                     if (selectedItem.value == "ALL") {
                         OrdersItem(order = order) {
-                            navController.navigate(Route.OderDetailsScreen.route)
+                            //navController.navigate(Route.OderDetailsScreen.route)
+                            navigateToDetailOrder(navController,order.id.toString())
                         }
                         counter += 1;
                     } else if (order.status == selectedItem.value) {

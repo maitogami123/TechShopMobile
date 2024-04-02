@@ -1,6 +1,7 @@
 package com.vi.techshopmobile.data.remote.userDetails
 
 import arrow.core.Either
+import com.vi.techshopmobile.data.remote.userDetails.dto.UpdateUserDetailRequest
 import com.vi.techshopmobile.data.remote.userDetails.dto.UserDetailRequest
 import com.vi.techshopmobile.data.remote.userDetails.dto.UserDetailResponse
 import com.vi.techshopmobile.domain.model.ErrorResponse
@@ -17,6 +18,8 @@ import retrofit2.http.Path
 interface UserDetailsApi {
     @GET("all")
     suspend fun getListUserDetails(@Header("Authorization") token: String): Either<ErrorResponse, List<UserDetail>>
+    @GET("{id}")
+    suspend fun getUserDetailById(@Header("Authorization") token: String, @Path("id") id: String): Either<ErrorResponse, UserDetailResponse>
 
     @GET("default")
     suspend fun getUserDetails(@Header("Authorization") token: String): Either<ErrorResponse, UserDetail>
@@ -25,6 +28,12 @@ interface UserDetailsApi {
     suspend fun createUserDetails(
         @Header("Authorization") token: String,
         @Body userDetailRequest: UserDetailRequest
+    ): Either<ErrorResponse, UserDetailResponse>
+    @PATCH("{id}/update")
+    suspend fun updateUserDetails(
+        @Header("Authorization") token: String,
+        @Path("id") id: String,
+        @Body updateUserDetailRequest: UpdateUserDetailRequest
     ): Either<ErrorResponse, UserDetailResponse>
 
     @PATCH("{id}/active")

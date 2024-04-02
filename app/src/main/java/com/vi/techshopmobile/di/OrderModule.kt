@@ -6,6 +6,7 @@ import com.vi.techshopmobile.data.repository.OrdersRepositoryImpl
 import com.vi.techshopmobile.domain.repository.orders.OrdersRepository
 import com.vi.techshopmobile.domain.usecases.orders.CreateOrders
 import com.vi.techshopmobile.domain.usecases.orders.GetOrders
+import com.vi.techshopmobile.domain.usecases.orders.GetOrdersDetail
 import com.vi.techshopmobile.domain.usecases.orders.OrdersUseCases
 import com.vi.techshopmobile.util.Constants
 import dagger.Module
@@ -40,6 +41,7 @@ object OrderModule {
     @Singleton
     fun provideOrdersUseCase(ordersRepository: OrdersRepository) = OrdersUseCases(
         getOrders = GetOrders(ordersRepository),
-        createOrders = CreateOrders(ordersRepository)
+        createOrders = CreateOrders(ordersRepository),
+        getOrdersDetail = GetOrdersDetail(ordersRepository)
     )
 }

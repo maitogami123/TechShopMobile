@@ -46,8 +46,14 @@ class CheckOutViewModel @Inject constructor(
     private var _isCreateUserDetail = MutableStateFlow(false)
     val isCreateUserDetail = _isCreateUserDetail.asStateFlow()
 
+    private var _isUpdateUserDetail = MutableStateFlow(false)
+    val isUpdateUserDetail = _isUpdateUserDetail.asStateFlow()
+
     private var _createUserDetailError = MutableStateFlow("");
     val createUserDetailError = _createUserDetailError.asStateFlow();
+
+    private var _idOrderCreated = MutableStateFlow("")
+    val idOrderCreated = _idOrderCreated.asStateFlow()
     fun onEvent(event: CheckOutEvent) {
         when (event) {
             is CheckOutEvent.GetUserCart -> {
@@ -65,6 +71,10 @@ class CheckOutViewModel @Inject constructor(
                 getListUserDetail("Bearer " + event.token)
             }
 
+            is CheckOutEvent.GetUserDetailById -> {
+                getUserDetailById("Bearer " + event.token, event.id)
+            }
+
             is CheckOutEvent.CreateOrders -> {
                 viewModelScope.launch {
                     val orderResponse = ordersUseCases.createOrders(
@@ -74,7 +84,7 @@ class CheckOutViewModel @Inject constructor(
                     if (orderResponse.isRight()) {
                         orderResponse.onRight {
                             sendEvent(Event.Toast("Tạo đơn hàng thành công"))
-                            delay(600)
+                            _idOrderCreated.value = it.id.toString()
                             _isCreateOrder.value = true
                         }
                     } else {
@@ -124,6 +134,28 @@ class CheckOutViewModel @Inject constructor(
                     }
                 }
             }
+
+            is CheckOutEvent.UpdateUserDetail -> {
+                viewModelScope.launch {
+                    val updateUserDetailResponse = userDetailsUseCases.updateUserDetail(
+                        token = "Bearer " + event.token,
+                        id = event.id,
+                        updateUserDetailRequest = event.updateUserDetailRequest
+                    )
+                    if (updateUserDetailResponse.isRight()) {
+                        updateUserDetailResponse.onRight {
+                            sendEvent(Event.Toast("Cập nhật thông tin người dùng ${statePerson.value.userDetail.username} thành công"))
+                            delay(600)
+                            _isUpdateUserDetail.value = true
+                        }
+                    } else {
+                        updateUserDetailResponse.onLeft {
+                            sendEvent(Event.Toast(it.detail))
+                            _isUpdateUserDetail.value = false
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -139,6 +171,38 @@ class CheckOutViewModel @Inject constructor(
                     _statePerson.update {
                         it.copy(
                             userDetail = userDetail
+                        )
+                    }
+
+                }
+                .onLeft { error ->
+                    _statePerson.update {
+                        it.copy(
+                            error = error.detail
+                        )
+                    }
+                    EventBus.sendEvent(Event.Toast(error.detail))
+                }
+
+            _statePerson.update {
+                it.copy(isLoading = false)
+            }
+            _isLoading.value = false
+        }
+    }
+
+    fun getUserDetailById(token: String, id: String) {
+        viewModelScope.launch {
+            _isLoading.value = true
+            _statePerson.update {
+                it.copy(isLoading = true)
+            }
+            delay(2000L)
+            userDetailsUseCases.getUserDetailById(token, id)
+                .onRight { detailUserDetail ->
+                    _statePerson.update {
+                        it.copy(
+                            detailUserDetail = detailUserDetail
                         )
                     }
 

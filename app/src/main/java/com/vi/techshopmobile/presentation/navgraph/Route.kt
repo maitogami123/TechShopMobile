@@ -34,4 +34,5 @@ sealed class Route(
     object PaymentSuccessnScreen: Route(route = "paymentSuccessScreen")
     object PaymentErrorScreen: Route(route = "paymentErrorScreen")
     object AddNewAddressScreen: Route(route = "addNewAddressScreen")
+    object DetailAddressScreen: Route(route = "detailAddressScreen")
 }
