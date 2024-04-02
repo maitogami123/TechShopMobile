@@ -23,24 +23,29 @@ import javax.inject.Inject
 @HiltViewModel
 class PersonalInfoViewModel @Inject constructor(
     private val userDetailsUseCases: UserDetailsUseCases,
-) : ViewModel(){
+) : ViewModel() {
 
     private val _state = MutableStateFlow(PersonalInfoViewState())
     val state = _state.asStateFlow()
 
-//    private val _isLoading = MutableStateFlow(false)
-//    val isLoading = _isLoading.asStateFlow()
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading = _isLoading.asStateFlow()
 
     fun onEvent(event: PersonalInfoEvent) {
         when (event) {
             is PersonalInfoEvent.GetAllEventPersonalInfo -> {
-                getUserDetail( "Bearer " + event.token)
+                getUserDetail("Bearer " + event.token)
+            }
+
+            is PersonalInfoEvent.GetListUserDetail -> {
+                getListUserDetail("Bearer " + event.token)
             }
         }
     }
-    fun getUserDetail(token: String){
+
+    fun getUserDetail(token: String) {
         viewModelScope.launch {
-           // _isLoading.value = true
+            // _isLoading.value = true
             _state.update {
                 it.copy(isLoading = true)
             }
@@ -66,8 +71,39 @@ class PersonalInfoViewModel @Inject constructor(
             _state.update {
                 it.copy(isLoading = false)
             }
-           // _isLoading.value = false
+            // _isLoading.value = false
         }
     }
 
+    fun getListUserDetail(token: String) {
+        viewModelScope.launch {
+            _isLoading.value = true
+            _state.update {
+                it.copy(isLoading = true)
+            }
+            delay(2000L)
+            userDetailsUseCases.getListUserDetail(token)
+                .onRight { listUserDetail ->
+                    _state.update {
+                        it.copy(
+                            listUserDetail = listUserDetail
+                        )
+                    }
+
+                }
+                .onLeft { error ->
+                    _state.update {
+                        it.copy(
+                            error = error.detail
+                        )
+                    }
+                    EventBus.sendEvent(Event.Toast(error.detail))
+                }
+
+            _state.update {
+                it.copy(isLoading = false)
+            }
+            _isLoading.value = false
+        }
+    }
 }

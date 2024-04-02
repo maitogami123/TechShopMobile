@@ -23,6 +23,7 @@ import com.vi.techshopmobile.presentation.cart.CartScreen
 import com.vi.techshopmobile.presentation.change_password.ChangePasswordScreen
 import com.vi.techshopmobile.presentation.chatAI.ChatAiScreen
 import com.vi.techshopmobile.presentation.checkout.screens.AddNewAddressScreen
+import com.vi.techshopmobile.presentation.checkout.screens.DetailAddressScreen
 import com.vi.techshopmobile.presentation.home.HomeScreen
 import com.vi.techshopmobile.presentation.home.home_navigator.component.BottomNavigationItem
 import com.vi.techshopmobile.presentation.home.home_navigator.component.MainTopNavigation
@@ -157,22 +158,42 @@ fun HomeNavigator(navGraphController: NavController) {
                     PersonalInfoScreen(onNavigateUp = { navController.navigateUp() }, navController)
                 }
                 composable(route = Route.PersonalAddressScreen.route) {
-                    PersonalAddressScreen(onNavigateUp = {navController.navigateUp()}, navController)
+                    PersonalAddressScreen(
+                        onNavigateUp = { navController.navigateUp() },
+                        navController
+                    )
                 }
                 composable(route = Route.AddNewAddressScreen.route) {
-                    AddNewAddressScreen(navController = navController) {
-
-                    }
+                    AddNewAddressScreen(
+                        navController = navController,
+                        onNavigateUp = { navController.navigateUp() })
+                }
+                composable(
+                    route = Route.DetailAddressScreen.route
+                ) {
+                    navController.previousBackStackEntry?.savedStateHandle?.get<String?>("id")
+                        ?.let { id ->
+                            DetailAddressScreen(
+                                onNavigateUp = { navController.navigateUp() },
+                                id = id,
+                                navController = navController
+                            )
+                        }
                 }
                 composable(route = Route.ChangePasswordScreen.route) {
                     ChangePasswordScreen(onNavigateUp = { navController.navigateUp() })
                 }
-
                 composable(route = Route.UserOderScreen.route) {
-                    UserOrdersScreen(onNavigateUp = {navController.navigateUp()},navController)
+                    UserOrdersScreen(onNavigateUp = { navController.navigateUp() }, navController)
                 }
                 composable(route = Route.OderDetailsScreen.route) {
-                    OrderDetailsScreen(onNavigateUp = { navController.navigateUp() })
+                    navController.previousBackStackEntry?.savedStateHandle?.get<String?>("id")
+                        ?.let { id ->
+                            OrderDetailsScreen(
+                                id,
+                                navController = navController,
+                                onNavigateUp = { navController.navigateUp() })
+                        }
                 }
                 composable(route = Route.CartScreen.route) {
                     CartScreen(navController = navGraphController) {

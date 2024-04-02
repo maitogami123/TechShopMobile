@@ -5,9 +5,6 @@
       <entry key="CartScreenPreview">
         <State />
       </entry>
-      <entry key="ComboBoxPreview">
-        <State />
-      </entry>
       <entry key="EnterEmailScreenPreview (1)">
         <State />
       </entry>
@@ -19,6 +16,17 @@
       </entry>
       <entry key="app">
         <State>
+          <runningDeviceTargetSelectedWithDropDown>
+            <Target>
+              <type value="RUNNING_DEVICE_TARGET" />
+              <deviceKey>
+                <Key>
+                  <type value="VIRTUAL_DEVICE_PATH" />
+                  <value value="C:\Users\Quang Long\.android\avd\Pixel_7_API_33.avd" />
+                </Key>
+              </deviceKey>
+            </Target>
+          </runningDeviceTargetSelectedWithDropDown>
           <targetSelectedWithDropDown>
             <Target>
               <type value="QUICK_BOOT_TARGET" />
@@ -30,7 +38,7 @@
               </deviceKey>
             </Target>
           </targetSelectedWithDropDown>
-          <timeTargetWasSelectedWithDropDown value="2024-03-30T02:29:10.604335100Z" />
+          <timeTargetWasSelectedWithDropDown value="2024-04-02T14:11:51.362339200Z" />
         </State>
       </entry>
     </value>

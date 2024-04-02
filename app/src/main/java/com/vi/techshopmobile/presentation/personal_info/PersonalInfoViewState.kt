@@ -1,5 +1,6 @@
 package com.vi.techshopmobile.presentation.personal_info
 
+import com.vi.techshopmobile.data.remote.userDetails.dto.UserDetailResponse
 import com.vi.techshopmobile.domain.model.UserDetail
 import com.vi.techshopmobile.domain.model.AccountDetail
 import com.vi.techshopmobile.presentation.checkout.CheckOutEvent
@@ -7,6 +8,7 @@ import com.vi.techshopmobile.presentation.checkout.CheckOutEvent
 data class PersonalInfoViewState(
     val isLoading: Boolean = false,
     val listUserDetail: List<UserDetail> = emptyList(),
+    val detailUserDetail: UserDetailResponse? = null,
     val userDetail: UserDetail = UserDetail(
         accountDetail = AccountDetail(
             city = "",

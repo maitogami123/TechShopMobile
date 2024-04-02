@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.vi.techshopmobile.R
+import com.vi.techshopmobile.presentation.checkout.navigateToDetailOrder
 import com.vi.techshopmobile.presentation.common.AddressSelected
 import com.vi.techshopmobile.presentation.common.FloatingBottomBar
 import com.vi.techshopmobile.presentation.common.FloatingOnBottomBar
@@ -37,6 +38,7 @@ import com.vi.techshopmobile.util.formatPhoneNumber
 
 @Composable
 fun PaymentSuccessScreen(
+    id: String,
     navGraphController: NavController,
     navController: NavController,
     onNavigateUp: () -> Unit
@@ -48,9 +50,11 @@ fun PaymentSuccessScreen(
             Column {
                 FloatingBottomBar(buttonText = "Xem đơn hàng",
                     onButtonClick = {
-                        navGraphController.navigate(Route.TechShopNavigation.route) {
-                            navController.navigate(Route.UserSettingScreen.route)
-                        }
+                        navController.navigate(Route.OderDetailsScreen.route)
+                        navigateToDetailOrder(
+                            navController,
+                            id
+                        )
                     }
                 )
                 FloatingOnBottomBar(buttonText = "Trở về trang chủ", onButtonClick = {
@@ -106,6 +110,7 @@ fun PaymentSuccessScreen(
 @Composable
 fun PaymentSuccessScreenPreview() {
     PaymentSuccessScreen(
+        id = "1",
         navGraphController = rememberNavController(),
         navController = rememberNavController()
     ) {}

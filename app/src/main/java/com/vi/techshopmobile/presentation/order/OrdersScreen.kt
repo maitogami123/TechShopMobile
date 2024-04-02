@@ -32,6 +32,7 @@ import androidx.navigation.NavController
 import com.vi.techshopmobile.LocalToken
 import com.vi.techshopmobile.R
 import com.vi.techshopmobile.presentation.Dimens.SmallPadding
+import com.vi.techshopmobile.presentation.checkout.navigateToDetailOrder
 import com.vi.techshopmobile.presentation.common.LoadingDialog
 import com.vi.techshopmobile.presentation.home.home_navigator.component.UtilityTopNavigation
 import com.vi.techshopmobile.presentation.navgraph.Route
@@ -43,6 +44,7 @@ fun UserOrdersScreen(
     onNavigateUp: () -> Unit,
     navController: NavController
 ) {
+
     val viewModel: OrdersViewModel = hiltViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
     val token = LocalToken.current
@@ -50,7 +52,7 @@ fun UserOrdersScreen(
         listOf(
             mapOf("ALL" to "Tất cả"),
             mapOf("PENDING" to "Đang xử lý"),
-            mapOf("CONFIRMED" to "Đang xử lý"),
+            mapOf("CONFIRMED" to "Đã xác nhận"),
             mapOf("DELIVERING" to "Đang giao hàng"),
             mapOf("SUCCESS" to "Hoàn thành"),
             mapOf("CANCELED" to "Đã hủy"),
@@ -58,6 +60,7 @@ fun UserOrdersScreen(
     val selectedItem = remember {
         mutableStateOf("ALL")
     }
+
 
 
     LaunchedEffect(key1 = state.orders) {
@@ -97,7 +100,13 @@ fun UserOrdersScreen(
                             border = if (selectedItem.value == key) null else ButtonDefaults.outlinedButtonBorder
                         ) {
                             Text(
-                                text = value
+                                text = value,
+//                                color = if (value == "CANCELED") Color(0xffFF3A28)
+//                                else if (value == "SUCCESS") Color(0xff53B175)
+//                                else if (value == "CONFIRMED") Color(0xff3FA4FC)
+//                                else if (value == "PENDING") Color(0xffFFBB32)
+//                                else if (value == "DELIVERING") Color(0xff1e91cf)
+//                                else Color(0xffe3d4d4)
                             )
                         }
                     }
@@ -111,12 +120,12 @@ fun UserOrdersScreen(
                 items(state.orders) { order ->
                     if (selectedItem.value == "ALL") {
                         OrdersItem(order = order) {
-                            navController.navigate(Route.OderDetailsScreen.route)
+                            navigateToDetailOrder(navController, order.id.toString())
                         }
                         counter += 1;
                     } else if (order.status == selectedItem.value) {
                         OrdersItem(order = order) {
-                            navController.navigate(Route.OderDetailsScreen.route)
+                            navigateToDetailOrder(navController, order.id.toString())
                         }
                         counter += 1;
                     }
