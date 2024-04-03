@@ -29,5 +29,9 @@ class CartRepositoryImpl @Inject constructor(
         return cartDao.updateCartItem(quantity, id)
     }
 
+    override suspend fun clearCart(username: String) {
+        return cartDao.clearCart(username)
+    }
+
 
 }

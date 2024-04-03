@@ -94,19 +94,22 @@ fun UserOrdersScreen(
                         OutlinedButton(
                             onClick = { selectedItem.value = key },
                             colors = ButtonDefaults.buttonColors(
-                                containerColor = if (selectedItem.value == key) Blue_500 else Color.Transparent,
-                                contentColor = if (selectedItem.value == key) Color.White else MaterialTheme.colorScheme.primary
+                                containerColor = if (selectedItem.value == key) {
+                                    Blue_500
+                                } else Color.Transparent,
+                                contentColor = if (selectedItem.value == key) Color.White else {
+                                    if (key == "CANCELED") Color(0xffFF3A28)
+                                    else if (key == "SUCCESS") Color(0xff53B175)
+                                    else if (key == "CONFIRMED") Color(0xff3FA4FC)
+                                    else if (key== "PENDING") Color(0xffFFBB32)
+                                    else if (key == "DELIVERING") Color(0xff1e91cf)
+                                    else Color(0xffe3d4d4)
+                                }
                             ),
                             border = if (selectedItem.value == key) null else ButtonDefaults.outlinedButtonBorder
                         ) {
                             Text(
                                 text = value,
-//                                color = if (value == "CANCELED") Color(0xffFF3A28)
-//                                else if (value == "SUCCESS") Color(0xff53B175)
-//                                else if (value == "CONFIRMED") Color(0xff3FA4FC)
-//                                else if (value == "PENDING") Color(0xffFFBB32)
-//                                else if (value == "DELIVERING") Color(0xff1e91cf)
-//                                else Color(0xffe3d4d4)
                             )
                         }
                     }
