@@ -7,5 +7,5 @@ data class VnPayResponse(
     val total: Int,
     val paymentStatus: String,
     val message: String,
-    val URL: String
+    val url: String
 )

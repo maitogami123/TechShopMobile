@@ -185,7 +185,7 @@ class CheckOutViewModel @Inject constructor(
                             sendEvent(Event.Toast("Vui lòng thanh toán để tạo đơn hàng"))
                             _idOrderCreated.value = it.orderId.toString()
                             _isCreateOrder.value = true
-                            _isVnPayLoading.value = it.URL
+                            _isVnPayLoading.value = it.url
                         }
                     } else {
                         orderVnPayResponse.onLeft {

@@ -1,5 +1,10 @@
 package com.vi.techshopmobile.presentation.home.home_navigator
 
+import androidx.compose.animation.AnimatedContentScope
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -48,6 +53,8 @@ import android.content.Context as s
 val LocalNavController = compositionLocalOf<NavController> {
     error("No LocalNavController provided")
 }
+
+val time = 500
 
 @Composable
 fun HomeNavigator(navGraphController: NavController) {
@@ -125,15 +132,71 @@ fun HomeNavigator(navGraphController: NavController) {
             NavHost(
                 modifier = Modifier.padding(bottom = bottomPadding, top = topPadding),
                 navController = navController,
-                startDestination = Route.HomeScreen.route
+                startDestination = Route.HomeScreen.route,
+                enterTransition = {
+                    fadeIn(animationSpec = tween(time))
+                },
+                exitTransition = {
+                    fadeOut(animationSpec = tween(time))
+                },
+                popEnterTransition = {
+                    fadeIn(animationSpec = tween(time))
+                },
+                popExitTransition = {
+                    fadeOut(animationSpec = tween(time))
+                },
             ) {
-                composable(route = Route.HomeScreen.route) {
+                composable(route = Route.HomeScreen.route,) {
                     HomeScreen(navController)
                 }
-                composable(route = Route.SearchScreen.route) {
+                composable(
+                    route = Route.SearchScreen.route,
+                    enterTransition = {
+                        fadeIn(animationSpec = tween(time)) + slideIntoContainer(
+                            AnimatedContentTransitionScope.SlideDirection.Right, tween(time)
+                        )
+                    },
+                    exitTransition = {
+                        fadeOut(animationSpec = tween(time)) + slideOutOfContainer(
+                            AnimatedContentTransitionScope.SlideDirection.Left, tween(time)
+                        )
+                    },
+                    popEnterTransition = {
+                        fadeIn(animationSpec = tween(time)) + slideIntoContainer(
+                            AnimatedContentTransitionScope.SlideDirection.Right, tween(time)
+                        )
+                    },
+                    popExitTransition = {
+                        fadeOut(animationSpec = tween(time)) + slideOutOfContainer(
+                            AnimatedContentTransitionScope.SlideDirection.Left, tween(time)
+                        )
+                    },
+                ) {
                     SearchScreen()
                 }
-                composable(route = Route.UserSettingScreen.route) {
+                composable(
+                    route = Route.UserSettingScreen.route,
+                    enterTransition = {
+                        fadeIn(animationSpec = tween(time)) + slideIntoContainer(
+                            AnimatedContentTransitionScope.SlideDirection.Left, tween(time)
+                        )
+                    },
+                    exitTransition = {
+                        fadeOut(animationSpec = tween(time)) + slideOutOfContainer(
+                            AnimatedContentTransitionScope.SlideDirection.Right, tween(time)
+                        )
+                    },
+                    popEnterTransition = {
+                        fadeIn(animationSpec = tween(time)) + slideIntoContainer(
+                            AnimatedContentTransitionScope.SlideDirection.Left, tween(time)
+                        )
+                    },
+                    popExitTransition = {
+                        fadeOut(animationSpec = tween(time)) + slideOutOfContainer(
+                            AnimatedContentTransitionScope.SlideDirection.Right, tween(time)
+                        )
+                    },
+                ) {
                     UserSettingScreen(navController)
                 }
                 composable(route = Route.ProductDetailsScreen.route) {

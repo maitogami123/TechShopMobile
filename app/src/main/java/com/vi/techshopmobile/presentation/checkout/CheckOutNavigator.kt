@@ -14,6 +14,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.startActivity
 import androidx.navigation.NavController
@@ -51,7 +52,7 @@ fun CheckOutNavigator(navGraphController: NavController) {
     val browserIntent = Intent(Intent.ACTION_VIEW)
     browserIntent.setData(Uri.parse(urlVnPay.toString()))
     if (urlVnPay.value.isNotEmpty()) {
-
+        LocalUriHandler.current.openUri(urlVnPay.toString())
     }
 
 
