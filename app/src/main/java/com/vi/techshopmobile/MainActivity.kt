@@ -1,6 +1,9 @@
 package com.vi.techshopmobile
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -40,14 +43,17 @@ val LocalProvinces = compositionLocalOf<String> {
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     private val viewModel by viewModels<MainViewModel>()
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val data = ReadJSONFromAssets(context = baseContext, "provinces.json")
-
 //        WindowCompat.setDecorFitsSystemWindows(window, false);
 
+        val intent: Intent = intent
+
+        val action: String? = intent.action
+
+        val dataTEST: Uri? = intent.data
+        Log.d("TEST", dataTEST.toString())
         installSplashScreen().apply {
             setKeepOnScreenCondition {
                 viewModel.splashCondition
@@ -57,7 +63,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             CompositionLocalProvider(
                 LocalToken provides viewModel.accessToken,
-                LocalProvinces provides data
+                LocalProvinces provides data,
             ) {
                 TechShopMobileTheme {
                     val lifecycle = LocalLifecycleOwner.current.lifecycle

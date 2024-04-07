@@ -5,9 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import androidx.room.Update
 import com.vi.techshopmobile.domain.model.CartItem
-import com.vi.techshopmobile.domain.model.ProductLine
 import kotlinx.coroutines.flow.Flow
 
 
@@ -25,6 +23,9 @@ interface CartDao {
 
     @Delete
     suspend fun delete(cartItem: CartItem)
+
+    @Query("DELETE FROM CartItem Where username=:username")
+    suspend fun clearCart(username: String)
 
     @Query("SELECT * FROM CartItem WHERE username=:username")
     fun getCart(username: String): Flow<List<CartItem>>
