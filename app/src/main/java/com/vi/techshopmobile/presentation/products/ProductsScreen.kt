@@ -1,12 +1,13 @@
 package com.vi.techshopmobile.presentation.products
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
-import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
-import androidx.compose.foundation.lazy.staggeredgrid.items
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -16,22 +17,33 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.SwipeRefreshIndicator
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
-import com.vi.techshopmobile.presentation.products.component.ProductCard
+import com.vi.techshopmobile.R
 import com.vi.techshopmobile.presentation.common.ShimmerListItem
+import com.vi.techshopmobile.presentation.home.home_navigator.LocalNavController
+import com.vi.techshopmobile.presentation.home.home_navigator.component.UtilityTopNavigation
+import com.vi.techshopmobile.presentation.navgraph.Route
+import com.vi.techshopmobile.presentation.products.component.ProductCard
+import com.vi.techshopmobile.presentation.products.component.ProductsColumn
 
 @Composable
-fun ProductsScreen() {
+fun ProductsScreen(
+    navController: NavController,
+    categoryName: String,
+    brandName: String,
+    onNavigateUp: () -> Unit
+) {
     val viewModel: ProductsViewModel = hiltViewModel()
     val isLoading by viewModel.isLoading.collectAsState()
     val swipeRefreshState = rememberSwipeRefreshState(isRefreshing = isLoading)
-
+    val navGraphController = LocalNavController.current
     val state by viewModel.state.collectAsStateWithLifecycle()
     SwipeRefresh(
         state = swipeRefreshState,
-        onRefresh = { (viewModel::onEvent)(ProductsEvents.GetAllEventProduct) },
+        onRefresh = { (viewModel::onEvent)(ProductsEvents.GetAllProductByCategory(categoryName)) },
         indicator = { state, refreshTrigger ->
             SwipeRefreshIndicator(
                 state = state,
@@ -42,28 +54,46 @@ fun ProductsScreen() {
         },
     ) {
         Scaffold(modifier = Modifier.fillMaxSize(),
-            topBar = { }
+            topBar = {
+                UtilityTopNavigation(
+                    onRightBtnClick = { navGraphController.navigate(Route.FilterProductScreen.route) },
+                    onLeftBtnClick = { onNavigateUp() },
+                    rightBtnIcon = R.drawable.ic_filter,
+                    leftBtnIcon = R.drawable.ic_cross,
+                    title = "$categoryName $brandName",
+                    onSearch = {})
+            }
         ) {
-            LazyVerticalStaggeredGrid(
+            Box(
                 modifier = Modifier.padding(top = it.calculateTopPadding()),
-                columns = StaggeredGridCells.Fixed(2),
-                horizontalArrangement = Arrangement.spacedBy(10.dp),
-                verticalItemSpacing = 10.dp
             ) {
-                items(state.products) { product ->
-//                    ProductCard(product = product)
-                    ShimmerListItem(
-                        isLoading = state.isLoading,
-                        contentAfterLoading = {
-                            ProductCard(product = product)
-                        },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp)
+                if (brandName.isEmpty()) {
+                    val filteredProducts =
+                        state.productsOfCategory.find { it.category == categoryName }?.products
+                            ?: emptyList()
+                    ProductsColumn(
+                        modifier = Modifier,
+                        products = filteredProducts,
+                        isLoading = isLoading
                     )
+                } else {
+                    state.categories.forEachIndexed { index, category ->
+                        if (category.name == categoryName) {
+                            for (brand in category.brands) {
+                                if (brand.brandName == brandName) {
+                                    ProductsColumn(
+                                        modifier = Modifier,
+                                        products = brand.products,
+                                        isLoading = isLoading
+                                    )
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
     }
 }
+
 

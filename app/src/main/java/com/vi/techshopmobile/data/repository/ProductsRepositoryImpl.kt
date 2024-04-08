@@ -15,6 +15,7 @@ class ProductsRepositoryImpl @Inject constructor(
         return productsApi.getProducts()
        }
 
+
     override suspend fun getProductDetail(productLine: String): Either<ErrorResponse, ProductDetailResponse> {
         return productsApi.getProductDetail(productLine)
     }

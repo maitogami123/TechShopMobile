@@ -11,6 +11,12 @@ interface ProductsApi {
     @GET("all")
     suspend fun getProducts(): Either<ErrorResponse, List<ProductLine>>
 
+
     @GET("{productLine}")
-    suspend fun getProductDetail(@Path("productLine", encoded = true) productLine: String): Either<ErrorResponse, ProductDetailResponse>
+    suspend fun getProductDetail(
+        @Path(
+            "productLine",
+            encoded = true
+        ) productLine: String
+    ): Either<ErrorResponse, ProductDetailResponse>
 }

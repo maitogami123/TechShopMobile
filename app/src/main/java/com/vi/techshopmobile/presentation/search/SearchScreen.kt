@@ -10,12 +10,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavController
 import com.vi.techshopmobile.presentation.Dimens.ExtraSmallPadding2
 import com.vi.techshopmobile.presentation.Dimens.SmallPadding
 import com.vi.techshopmobile.presentation.common.SearchBar
 
 @Composable
-fun SearchScreen() {
+fun SearchScreen(navController: NavController) {
 
     var searchQuery by remember {
         mutableStateOf("")
