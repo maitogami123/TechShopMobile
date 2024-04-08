@@ -12,5 +12,10 @@ data class WishItem(
     val productName: String,
     val quantity: Int? = 0
 ) {
-    constructor(username: String, productLine: String, productName: String, quantity: Int? = 0) : this(0, username, productLine, productName, quantity)
+    constructor(
+        username: String,
+        productLine: String,
+        productName: String,
+        quantity: Int? = 0
+    ) : this(0, username, productLine, productName, quantity)
 }

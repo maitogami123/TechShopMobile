@@ -23,6 +23,7 @@ import com.vi.techshopmobile.presentation.cart.CartScreen
 import com.vi.techshopmobile.presentation.change_password.ChangePasswordScreen
 import com.vi.techshopmobile.presentation.chatAI.ChatAiScreen
 import com.vi.techshopmobile.presentation.checkout.screens.AddNewAddressScreen
+import com.vi.techshopmobile.presentation.filter.FilterScreen
 import com.vi.techshopmobile.presentation.home.HomeScreen
 import com.vi.techshopmobile.presentation.home.home_navigator.component.BottomNavigationItem
 import com.vi.techshopmobile.presentation.home.home_navigator.component.MainTopNavigation
@@ -35,6 +36,7 @@ import com.vi.techshopmobile.presentation.order_details.OrderDetailsScreen
 import com.vi.techshopmobile.presentation.personal_address.PersonalAddressScreen
 import com.vi.techshopmobile.presentation.personal_info.PersonalInfoScreen
 import com.vi.techshopmobile.presentation.product_details.ProductDetailsScreen
+import com.vi.techshopmobile.presentation.products.ProductsScreen
 import com.vi.techshopmobile.presentation.search.SearchScreen
 import com.vi.techshopmobile.presentation.sendEvent
 import com.vi.techshopmobile.presentation.user_setting.UserSettingScreen
@@ -42,7 +44,6 @@ import com.vi.techshopmobile.presentation.wish_list.WishListScreen
 import com.vi.techshopmobile.util.Event
 import com.vi.techshopmobile.util.decodeToken
 import com.vi.techshopmobile.util.navigateToTap
-import android.content.Context as s
 
 val LocalNavController = compositionLocalOf<NavController> {
     error("No LocalNavController provided")
@@ -130,7 +131,7 @@ fun HomeNavigator(navGraphController: NavController) {
                     HomeScreen(navController)
                 }
                 composable(route = Route.SearchScreen.route) {
-                    SearchScreen()
+                    SearchScreen(navController)
                 }
                 composable(route = Route.UserSettingScreen.route) {
                     UserSettingScreen(navController)
@@ -145,7 +146,20 @@ fun HomeNavigator(navGraphController: NavController) {
                             ) { navController.navigateUp() }
                         }
                 }
+                composable(route = Route.ProductsScreen.route) {
+                    navController.previousBackStackEntry?.savedStateHandle?.get<String?>("category")
+                        ?.let { category ->
+                            navController.previousBackStackEntry?.savedStateHandle?.get<String?>("brand")
+                                ?.let { brand ->
+                                    ProductsScreen(
+                                        navController = navController,
+                                        categoryName = category,
+                                        brandName = brand
+                                    ) { navController.navigateUp() }
+                                }
 
+                        }
+                }
                 composable(route = Route.CustomerSupportScreen.route) {
                     ChatAiScreen(onNavigateUp = { navController.navigateUp() })
                 }
@@ -157,7 +171,10 @@ fun HomeNavigator(navGraphController: NavController) {
                     PersonalInfoScreen(onNavigateUp = { navController.navigateUp() }, navController)
                 }
                 composable(route = Route.PersonalAddressScreen.route) {
-                    PersonalAddressScreen(onNavigateUp = {navController.navigateUp()}, navController)
+                    PersonalAddressScreen(
+                        onNavigateUp = { navController.navigateUp() },
+                        navController
+                    )
                 }
                 composable(route = Route.AddNewAddressScreen.route) {
                     AddNewAddressScreen(navController = navController) {
@@ -169,7 +186,7 @@ fun HomeNavigator(navGraphController: NavController) {
                 }
 
                 composable(route = Route.UserOderScreen.route) {
-                    UserOrdersScreen(onNavigateUp = {navController.navigateUp()},navController)
+                    UserOrdersScreen(onNavigateUp = { navController.navigateUp() }, navController)
                 }
                 composable(route = Route.OderDetailsScreen.route) {
                     OrderDetailsScreen(onNavigateUp = { navController.navigateUp() })
@@ -179,6 +196,9 @@ fun HomeNavigator(navGraphController: NavController) {
                         navController.navigateUp()
                     }
                 }
+                composable(route = Route.FilterProductScreen.route){
+                    FilterScreen(navController = navGraphController) {navController.navigateUp()}
+                }
             }
         }
     }
@@ -187,4 +207,10 @@ fun HomeNavigator(navGraphController: NavController) {
 fun navigateToDetails(navController: NavController, productLine: String) {
     navController.currentBackStackEntry?.savedStateHandle?.set("productLine", productLine)
     navController.navigate(Route.ProductDetailsScreen.route);
+}
+
+fun navigateToProducts(navController: NavController, category: String, brand: String) {
+    navController.currentBackStackEntry?.savedStateHandle?.set("category", category)
+    navController.currentBackStackEntry?.savedStateHandle?.set("brand", brand)
+    navController.navigate(Route.ProductsScreen.route);
 }
