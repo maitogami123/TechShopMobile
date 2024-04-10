@@ -52,13 +52,11 @@ fun SignUpScreen(navGraphController: NavController, onNavigateUp: () -> Unit) {
     val viewModel: AuthenticateViewModel = hiltViewModel()
     val isLoggedInState = viewModel.isLoggedIn.collectAsState();
     val registerError = viewModel.registerError.collectAsState()
-
     val usernameState = remember { mutableStateOf(Input()) }
     val emailState = remember { mutableStateOf(Input()) }
     val passwordState = remember { mutableStateOf(Input()) }
     val reEnterPasswordState = remember { mutableStateOf(Input()) }
 
-    //  Check if register is successful or not, if so redirect user to homeScreen
     LaunchedEffect(key1 = isLoggedInState.value) {
         if (isLoggedInState.value) {
             navGraphController.navigate(Route.TechShopNavigation.route) {
@@ -69,7 +67,6 @@ fun SignUpScreen(navGraphController: NavController, onNavigateUp: () -> Unit) {
         }
     }
 
-    // Check error in backend response
     LaunchedEffect(key1 = registerError.value) {
         if (registerError.value.contains("username")) {
             usernameState.value = usernameState.value.copy(

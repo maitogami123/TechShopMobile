@@ -181,7 +181,10 @@ fun HomeNavigator(navGraphController: NavController) {
                         }
                 }
                 composable(route = Route.ChangePasswordScreen.route) {
-                    ChangePasswordScreen(onNavigateUp = { navController.navigateUp() })
+                    ChangePasswordScreen(onNavigateUp = { navController.navigateUp() },
+
+
+                        )
                 }
                 composable(route = Route.UserOderScreen.route) {
                     UserOrdersScreen(onNavigateUp = { navController.navigateUp() }, navController)
