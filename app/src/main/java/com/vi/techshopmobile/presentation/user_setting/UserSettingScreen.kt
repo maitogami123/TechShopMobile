@@ -53,7 +53,7 @@ fun UserSettingScreen(navController: NavController) {
                 navController.navigate(Route.WishListScreen.route)
             }
             SettingItem(R.drawable.ic_bell, "Về TechShop") {
-
+                navController.navigate(Route.AboutScreen.route)
             }
         }
         Spacer(modifier = Modifier.weight(1f))
