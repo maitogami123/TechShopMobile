@@ -1,9 +1,7 @@
 package com.vi.techshopmobile.data.repository
 
 import com.vi.techshopmobile.data.local.WishListDao
-import com.vi.techshopmobile.data.remote.products.ProductsApi
 import com.vi.techshopmobile.domain.model.WishItem
-import com.vi.techshopmobile.domain.repository.products.ProductsRepository
 import com.vi.techshopmobile.domain.repository.wish_list.WishListRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject

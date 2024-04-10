@@ -1,5 +1,6 @@
 package com.vi.techshopmobile.presentation.home.home_navigator
 
+import android.os.Bundle
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -160,6 +161,12 @@ fun HomeNavigator(navGraphController: NavController) {
 
                         }
                 }
+                composable(route = Route.FilterProductScreen.route) {
+                    navController.previousBackStackEntry?.savedStateHandle?.get<ArrayList<String>>("brands")
+                        ?.let { brands ->
+                            FilterScreen(navController = navGraphController, brands = brands) { navController.navigateUp() }
+                        }
+                }
                 composable(route = Route.CustomerSupportScreen.route) {
                     ChatAiScreen(onNavigateUp = { navController.navigateUp() })
                 }
@@ -196,9 +203,7 @@ fun HomeNavigator(navGraphController: NavController) {
                         navController.navigateUp()
                     }
                 }
-                composable(route = Route.FilterProductScreen.route){
-                    FilterScreen(navController = navGraphController) {navController.navigateUp()}
-                }
+
             }
         }
     }
@@ -213,4 +218,9 @@ fun navigateToProducts(navController: NavController, category: String, brand: St
     navController.currentBackStackEntry?.savedStateHandle?.set("category", category)
     navController.currentBackStackEntry?.savedStateHandle?.set("brand", brand)
     navController.navigate(Route.ProductsScreen.route);
+}
+
+fun navigateToFilter(navController: NavController, brands: ArrayList<String>) {
+    navController.currentBackStackEntry?.savedStateHandle?.set("brands", brands)
+    navController.navigate(Route.FilterProductScreen.route);
 }

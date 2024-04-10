@@ -30,7 +30,7 @@ class ProductsViewModel @Inject constructor(
 
     init {
         getProducts()
-        getCategories()
+        categoryUseCases.getCategories
     }
 
     fun onEvent(event: ProductsEvents) {
@@ -68,39 +68,6 @@ class ProductsViewModel @Inject constructor(
                         )
                     }
                     sendEvent(Event.Toast(error.detail))
-                }
-
-            _state.update {
-                it.copy(isLoading = false)
-            }
-            _isLoading.value = false
-        }
-    }
-    private fun getCategories(){
-        viewModelScope.launch {
-            _isLoading.value = true
-            _state.update {
-                it.copy(isLoading = true)
-            }
-            delay(2000L)
-            categoryUseCases.getCategories()
-                .onRight { categories ->
-                    _state.update {
-                        it.copy(
-                            categories = categories
-                        )
-                    }
-                    for (category in categories) {
-                        getProductCategory(category.name)
-                    }
-                }
-                .onLeft { error ->
-                    _state.update {
-                        it.copy(
-                            error = error.detail
-                        )
-                    }
-                    EventBus.sendEvent(Event.Toast(error.detail))
                 }
 
             _state.update {
