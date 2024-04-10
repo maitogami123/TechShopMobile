@@ -1,6 +1,8 @@
 package com.vi.techshopmobile.domain.repository.user
 
 import arrow.core.Either
+import com.vi.techshopmobile.data.remote.user.dto.ChangePasswordReponse
+import com.vi.techshopmobile.data.remote.user.dto.ChangePasswordRequest
 import com.vi.techshopmobile.data.remote.user.dto.CheckOtpData
 import com.vi.techshopmobile.data.remote.user.dto.UpdatePasswordOtpData
 import com.vi.techshopmobile.data.remote.user.dto.UpdatePasswordReponse
@@ -13,4 +15,10 @@ interface UserRepository {
         email: String,
         updatePasswordOtpData: UpdatePasswordOtpData
     ): Either<ErrorResponse, UpdatePasswordReponse>
+
+    suspend fun changePasswordRequest(
+        token: String,
+        changePasswordRequest: ChangePasswordRequest
+    ): Either<ErrorResponse, ChangePasswordReponse>
+
 }
