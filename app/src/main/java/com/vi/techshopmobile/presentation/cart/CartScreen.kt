@@ -29,11 +29,13 @@ import com.vi.techshopmobile.LocalToken
 import com.vi.techshopmobile.R
 import com.vi.techshopmobile.data.remote.cart.CartResponse
 import com.vi.techshopmobile.presentation.Dimens
+import com.vi.techshopmobile.presentation.cart.components.NoCartScreen
 import com.vi.techshopmobile.presentation.cart.components.ProductCart
 import com.vi.techshopmobile.presentation.cart.components.RowPrice
 import com.vi.techshopmobile.presentation.cart.components.RowPriceDelivery
 import com.vi.techshopmobile.presentation.cart.components.RowTotalPrice
 import com.vi.techshopmobile.presentation.common.FloatingBottomBar
+import com.vi.techshopmobile.presentation.common.SwipeToDeleteContainer
 import com.vi.techshopmobile.presentation.home.home_navigator.component.UtilityTopNavigation
 import com.vi.techshopmobile.presentation.navgraph.Route
 import com.vi.techshopmobile.presentation.products.ProductsViewModel
@@ -69,69 +71,79 @@ fun CartScreen(
                 onSearch = {})
         },
         bottomBar = {
-            FloatingBottomBar(buttonText = "Thanh Toán", onButtonClick = {
-                if (state.value.isNotEmpty()) {
-                    navController.navigate(Route.CheckOutScreenNavigation.route)
-                }
-            })
+            if (state.value.isNotEmpty())
+                FloatingBottomBar(buttonText = "Thanh Toán", onButtonClick = {
+                    if (state.value.isNotEmpty()) {
+                        navController.navigate(Route.CheckOutScreenNavigation.route)
+                    }
+                })
         }
     )
     {
-        Column(
-            modifier = Modifier
-                .fillMaxHeight()
-                .padding(it),
-            verticalArrangement = Arrangement.SpaceBetween
-        ) {
-            LazyColumn(
-                modifier = Modifier
-                    .weight(.7f)
-                    .padding(Dimens.SmallPadding),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                itemsIndexed(state.value) { index, item ->
-                    ProductCart(
-                        onPlusQuantity = {
-                            (viewModel::onEvent)(CartEvent.IncreaseItemToCart(item))
-                        },
-                        onMinusQuantity = {
-                            (viewModel::onEvent)(CartEvent.DecreaseItemToCart(item))
-                        },
-                        onDeleteProduct = {
-                            (viewModel::onEvent)(CartEvent.DeleteCart(item))
-                        },
-                        cartResponse = CartResponse(
-                            thumbnailUri = item.thumbnailUri,
-                            price = item.price,
-                            productName = item.productName,
-                            productLine = item.productLine,
-                            quantity = item.quantity,
-                            stock = item.stock
-                        )
-                    )
-                    Spacer(modifier = Modifier.height(16.dp))
-                    Divider()
-                }
+        if (state.value.isEmpty()) {
+            NoCartScreen(navController = navController) {
             }
+        } else {
             Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(Dimens.SmallPadding)
+                    .fillMaxHeight()
+                    .padding(it),
+                verticalArrangement = Arrangement.SpaceBetween
             ) {
-                Text(
-                    text = "Chi tiết thanh toán",
-                    style = MaterialTheme.typography.displaySmall.copy(
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight(600)
-                    )
-                )
-                Column(
-                    modifier = Modifier.padding(Dimens.SmallPadding),
+                LazyColumn(
+                    modifier = Modifier
+                        .weight(.7f)
+                        .padding(Dimens.SmallPadding),
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                    RowPrice(textLeft = "Tổng tiền hàng", textRight = totalPrice.value)
-                    RowPriceDelivery(textLeft = "Tổng tiền hàng", textRight = "Miễn Phí")
-                    RowTotalPrice(textLeft = "Tổng thanh toán", textRight = totalPrice.value)
+                    itemsIndexed(state.value) { index, item ->
+                        SwipeToDeleteContainer(item = item, onDelete = {
+                            (viewModel::onEvent)(CartEvent.DeleteCart(item))
+                        }) { item ->
+                            ProductCart(
+                                onPlusQuantity = {
+                                    (viewModel::onEvent)(CartEvent.IncreaseItemToCart(item))
+                                },
+                                onMinusQuantity = {
+                                    (viewModel::onEvent)(CartEvent.DecreaseItemToCart(item))
+                                },
+                                onDeleteProduct = {
+                                    (viewModel::onEvent)(CartEvent.DeleteCart(item))
+                                },
+                                cartResponse = CartResponse(
+                                    thumbnailUri = item.thumbnailUri,
+                                    price = item.price,
+                                    productName = item.productName,
+                                    productLine = item.productLine,
+                                    quantity = item.quantity,
+                                    stock = item.stock
+                                )
+                            )
+                            Spacer(modifier = Modifier.height(16.dp))
+                            Divider()
+                        }
+                    }
+                }
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(Dimens.SmallPadding)
+                ) {
+                    Text(
+                        text = "Chi tiết thanh toán",
+                        style = MaterialTheme.typography.displaySmall.copy(
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight(600)
+                        )
+                    )
+                    Column(
+                        modifier = Modifier.padding(Dimens.SmallPadding),
+                        verticalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+                        RowPrice(textLeft = "Tổng tiền hàng", textRight = totalPrice.value)
+                        RowPriceDelivery(textLeft = "Tổng tiền hàng", textRight = "Miễn Phí")
+                        RowTotalPrice(textLeft = "Tổng thanh toán", textRight = totalPrice.value)
+                    }
                 }
             }
         }

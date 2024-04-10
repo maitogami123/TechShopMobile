@@ -16,7 +16,7 @@ interface CartDao {
     suspend fun upsert(cartItem: CartItem)
 
     @Query("Update CartItem set quantity=:quantity Where id=:id")
-    fun updateCartItem(quantity: Int, id: Int)
+    suspend fun updateCartItem(quantity: Int, id: Int)
 
     @Query("SELECT * FROM CartItem WHERE productLine=:productLine")
     fun getCartITem(productLine: String): Flow<CartItem>

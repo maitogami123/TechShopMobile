@@ -61,6 +61,7 @@ import com.vi.techshopmobile.presentation.checkout.components.PaymentOption
 import com.vi.techshopmobile.presentation.common.AddressTitle
 import com.vi.techshopmobile.presentation.common.FloatingBottomBar
 import com.vi.techshopmobile.presentation.common.LoadingDialog
+import com.vi.techshopmobile.presentation.common.SwipeToDeleteContainer
 import com.vi.techshopmobile.presentation.home.home_navigator.component.UtilityTopNavigation
 import com.vi.techshopmobile.presentation.navgraph.Route
 import com.vi.techshopmobile.presentation.personal_info.PersonalInfoEvent
@@ -231,7 +232,7 @@ fun CheckOutScreen(
                             }
                         }
                     )
-                    if(isVnPayLoading.value.isNotEmpty()){
+                    if (isVnPayLoading.value.isNotEmpty()) {
 //                        LocalUrlVnPay.current.value = isVnPayLoading.value
                         LocalUriHandler.current.openUri(isVnPayLoading.value)
                     }
