@@ -1,5 +1,6 @@
 package com.vi.techshopmobile.presentation.products
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -25,6 +26,7 @@ import com.vi.techshopmobile.R
 import com.vi.techshopmobile.presentation.common.ShimmerListItem
 import com.vi.techshopmobile.presentation.home.home_navigator.LocalNavController
 import com.vi.techshopmobile.presentation.home.home_navigator.component.UtilityTopNavigation
+import com.vi.techshopmobile.presentation.home.home_navigator.navigateToFilter
 import com.vi.techshopmobile.presentation.navgraph.Route
 import com.vi.techshopmobile.presentation.products.component.ProductCard
 import com.vi.techshopmobile.presentation.products.component.ProductsColumn
@@ -39,8 +41,16 @@ fun ProductsScreen(
     val viewModel: ProductsViewModel = hiltViewModel()
     val isLoading by viewModel.isLoading.collectAsState()
     val swipeRefreshState = rememberSwipeRefreshState(isRefreshing = isLoading)
-    val navGraphController = LocalNavController.current
     val state by viewModel.state.collectAsStateWithLifecycle()
+
+    val brands = ArrayList<String>()
+    if (brandName.isEmpty()) {
+        state.categories.filter { category -> category.name == categoryName }
+            .flatMap { category -> category.brands }
+            .forEach { brand ->
+                brands.add(brand.brandName)
+            }
+    }
     SwipeRefresh(
         state = swipeRefreshState,
         onRefresh = { (viewModel::onEvent)(ProductsEvents.GetAllProductByCategory(categoryName)) },
@@ -56,7 +66,7 @@ fun ProductsScreen(
         Scaffold(modifier = Modifier.fillMaxSize(),
             topBar = {
                 UtilityTopNavigation(
-                    onRightBtnClick = { navGraphController.navigate(Route.FilterProductScreen.route) },
+                    onRightBtnClick = { navigateToFilter(navController,brands) },
                     onLeftBtnClick = { onNavigateUp() },
                     rightBtnIcon = R.drawable.ic_filter,
                     leftBtnIcon = R.drawable.ic_cross,
@@ -77,7 +87,7 @@ fun ProductsScreen(
                         isLoading = isLoading
                     )
                 } else {
-                    state.categories.forEachIndexed { index, category ->
+                    state.categories.forEachIndexed { _ , category ->
                         if (category.name == categoryName) {
                             for (brand in category.brands) {
                                 if (brand.brandName == brandName) {
