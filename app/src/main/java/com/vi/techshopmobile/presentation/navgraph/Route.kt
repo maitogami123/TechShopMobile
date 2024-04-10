@@ -37,4 +37,5 @@ sealed class Route(
 
     object ProductsScreen: Route(route = "productsScreen")
     object FilterProductScreen: Route(route= "filterProductScreen")
+    object DetailAddressScreen: Route(route = "detailAddressScreen")
 }

@@ -79,6 +79,7 @@ dependencies {
     //Compose Navigation
     val nav_version = "2.6.0"
     implementation ("androidx.navigation:navigation-compose:$nav_version")
+    implementation("androidx.navigation:navigation-common:2.7.7")
 
     //Dagger Hilt
     implementation ("com.google.dagger:hilt-android:2.45")

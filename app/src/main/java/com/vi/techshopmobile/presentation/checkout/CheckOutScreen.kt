@@ -1,5 +1,7 @@
 package com.vi.techshopmobile.presentation.checkout
 
+import android.app.Activity
+import android.content.Intent
 import android.util.Log
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.clickable
@@ -13,7 +15,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -25,11 +32,15 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.app.ActivityCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.vi.techshopmobile.LocalToken
@@ -37,6 +48,7 @@ import com.vi.techshopmobile.R
 import com.vi.techshopmobile.data.remote.cart.CartResponse
 import com.vi.techshopmobile.data.remote.orders.dto.CartItem
 import com.vi.techshopmobile.data.remote.orders.dto.RequestCheckOut
+import com.vi.techshopmobile.domain.model.AccountDetail
 import com.vi.techshopmobile.domain.usecases.orders.CreateOrders
 import com.vi.techshopmobile.presentation.Dimens
 import com.vi.techshopmobile.presentation.cart.CartViewModel
@@ -66,15 +78,17 @@ fun CheckOutScreen(
 ) {
     val viewModel: CheckOutViewModel = hiltViewModel()
     val state = viewModel.state.collectAsState()
+    val idOrderCreated = viewModel.idOrderCreated.collectAsState()
     val token = LocalToken.current
     val decodedToken = decodeToken(token)
     val paymentMethod = listOf("online" to "Chuyển khoản", "cash" to "Tiền mặt")
     val paymentOnlineGate = listOf("ic_cast" to "VN Pay", "ic_money" to "Momo")
     val totalPrice = viewModel.totalPrice.collectAsState()
-
+    val isVnPayLoading = viewModel.isVnPayLoading.collectAsState()
     val statePersonalInfo = viewModel.statePerson.collectAsState()
     val isCreateOrder = viewModel.isCreateOrder.collectAsState()
 
+    val isOrderLoading = viewModel.isOrderLoading.collectAsState()
     val paymentMethodIsExpanded = remember {
         mutableStateOf(false);
     }
@@ -95,6 +109,21 @@ fun CheckOutScreen(
         mutableIntStateOf(R.drawable.ic_cast)
     }
 
+    var personalInfo by remember {
+        mutableStateOf(
+            AccountDetail(
+                id = 0,
+                default = false,
+                firstName = "",
+                lastName = "",
+                email = "",
+                district = "",
+                phoneNumber = "",
+                city = "",
+                detailedAddress = ""
+            )
+        )
+    }
     LaunchedEffect(key1 = null) {
         // TODO: Migrate event
         if (statePersonalInfo.value.listUserDetail.isEmpty()) {
@@ -107,8 +136,9 @@ fun CheckOutScreen(
     }
 
     LaunchedEffect(key1 = isCreateOrder.value) {
-        if (isCreateOrder.value) {
-            navController.navigate(Route.PaymentSuccessnScreen.route)
+        if (isCreateOrder.value == true && idOrderCreated.value != null) {
+            navigateToPaymentSuccess(navController, idOrderCreated.value)
+
         }
     }
 
@@ -124,39 +154,88 @@ fun CheckOutScreen(
                 onSearch = {})
         },
         bottomBar = {
-            if (statePersonalInfo.value.listUserDetail.isNotEmpty()) {
-                val personalInfo =
-                    statePersonalInfo.value.listUserDetail[LocalSelectedIndex.current.intValue].accountDetail
-                Log.d("IND", LocalSelectedIndex.current.intValue.toString())
-                FloatingBottomBar(
-                    buttonText = "Thanh Toán",
-                    onButtonClick = {
-                        if (paymentMethodState.intValue == 1) {
-                            (viewModel::onEvent)(
-                                CheckOutEvent.CreateOrders(
-                                    token = token,
-                                    requestCheckOut = RequestCheckOut(
-                                        email = personalInfo.email,
-                                        phoneNumber = personalInfo.phoneNumber,
-                                        lastName = personalInfo.lastName,
-                                        firstName = personalInfo.firstName,
-                                        district = personalInfo.district,
-                                        detailedAddress = personalInfo.detailedAddress,
-                                        cartItems =
-                                        state.value.map { item ->
-                                            CartItem(
-                                                productLine = item.productLine,
-                                                quantity = item.quantity
-                                            )
-                                        },
-                                        city = personalInfo.city,
-                                        total = totalPrice.value.toInt()
-                                    ),
+            if (isOrderLoading.value) {
+                Button(
+                    onClick = { /*TODO*/ }, enabled = !isOrderLoading.value,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(40.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        contentColor = Color.White
+                    ), shape = RoundedCornerShape(size = 6.dp)
+                ) {
+                    CircularProgressIndicator(
+                        modifier = Modifier
+                            .width(20.dp)
+                            .align(Alignment.CenterVertically),
+                        color = MaterialTheme.colorScheme.secondary,
+                        trackColor = MaterialTheme.colorScheme.surfaceVariant,
+                    )
+                }
+            } else {
+                if (statePersonalInfo.value.listUserDetail.isNotEmpty()) {
+                    personalInfo =
+                        statePersonalInfo.value.listUserDetail[LocalSelectedIndex.current.intValue].accountDetail
+                    Log.d("IND", LocalSelectedIndex.current.intValue.toString())
+                    FloatingBottomBar(
+                        buttonText = "Thanh Toán",
+                        onButtonClick = {
+                            if (paymentMethodState.intValue == 1) {
+                                (viewModel::onEvent)(
+                                    CheckOutEvent.CreateOrders(
+                                        token = token,
+                                        requestCheckOut = RequestCheckOut(
+                                            email = personalInfo.email,
+                                            phoneNumber = personalInfo.phoneNumber,
+                                            lastName = personalInfo.lastName,
+                                            firstName = personalInfo.firstName,
+                                            district = personalInfo.district,
+                                            detailedAddress = personalInfo.detailedAddress,
+                                            cartItems =
+                                            state.value.map { item ->
+                                                CartItem(
+                                                    productLine = item.productLine,
+                                                    quantity = item.quantity
+                                                )
+                                            },
+                                            city = personalInfo.city,
+                                            total = totalPrice.value.toInt()
+                                        ),
+                                    )
                                 )
-                            )
+                            }
+                            if (paymentMethodState.intValue == 0) {
+                                (viewModel::onEvent)(
+                                    CheckOutEvent.VnPayPayment(
+                                        token = token,
+                                        requestCheckOut = RequestCheckOut(
+                                            email = personalInfo.email,
+                                            phoneNumber = personalInfo.phoneNumber,
+                                            lastName = personalInfo.lastName,
+                                            firstName = personalInfo.firstName,
+                                            district = personalInfo.district,
+                                            detailedAddress = personalInfo.detailedAddress,
+                                            cartItems =
+                                            state.value.map { item ->
+                                                CartItem(
+                                                    productLine = item.productLine,
+                                                    quantity = item.quantity
+                                                )
+                                            },
+                                            city = personalInfo.city,
+                                            total = totalPrice.value.toInt()
+                                        ),
+                                    )
+                                )
+                            }
                         }
+                    )
+                    if(isVnPayLoading.value.isNotEmpty()){
+//                        LocalUrlVnPay.current.value = isVnPayLoading.value
+                        LocalUriHandler.current.openUri(isVnPayLoading.value)
                     }
-                )
+                }
             }
         }
     )

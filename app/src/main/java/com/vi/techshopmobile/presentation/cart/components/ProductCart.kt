@@ -7,12 +7,16 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
@@ -42,6 +46,7 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.vi.techshopmobile.R
 import com.vi.techshopmobile.data.remote.cart.CartResponse
+import com.vi.techshopmobile.presentation.Dimens
 import com.vi.techshopmobile.presentation.Dimens.IconSizeMedium
 import com.vi.techshopmobile.presentation.Dimens.SmallPadding
 import com.vi.techshopmobile.ui.theme.Danger
@@ -185,7 +190,7 @@ fun ProductCart(
  * @param cartResponse to show Cart
  */
 @Composable
-fun     ProductCart(
+fun ProductCart(
     modifier: Modifier = Modifier,
     cartResponse: CartResponse,
 ) {
@@ -254,6 +259,108 @@ fun     ProductCart(
     }
 }
 
+/**
+ * A ProductCart contain info of Product in Cart.
+ *
+ * @param modifier the icon to be displayed. If no value passed, it will not display anything
+ * @param cartResponse to show Cart
+ */
+@Composable
+fun ProductCartOrderDetail(
+    modifier: Modifier = Modifier,
+    cartResponse: CartResponse,
+) {
+    val textSeri = buildAnnotatedString {
+        append("Seri: ")
+        withStyle(
+            style = SpanStyle(
+                color = Color(0xffFF3A28),
+                fontSize = 14.sp
+            )
+        ) {
+            append(cartResponse.productSN.toString())
+        }
+    }
+    val textWarranty = buildAnnotatedString {
+        append("Hạn bảo hành: ")
+        withStyle(
+            style = SpanStyle(
+                color = Color(0xffFF3A28),
+                fontSize = 14.sp
+            )
+        ) {
+            append(cartResponse.warrantyDate.toString())
+        }
+    }
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .height(IntrinsicSize.Max),
+        //verticalAlignment = Alignment.CenterVertically
+    ) {
+        AsyncImage(
+            model = Constants.BASE_URL + "product/get-file?filePath=" + cartResponse.thumbnailUri,
+            contentDescription = null,
+            modifier = Modifier.width(96.dp).fillMaxHeight(),
+            contentScale = ContentScale.Crop,
+            alignment = Alignment.Center
+        )
+        Column(
+            modifier = Modifier
+                .fillMaxHeight()
+                .fillMaxWidth()
+                .padding(start = 16.dp),
+            horizontalAlignment = Alignment.Start,
+            verticalArrangement = Arrangement.SpaceBetween,
+        ) {
+            Text(
+                text = cartResponse.productName,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis,
+                style = MaterialTheme.typography.labelMedium.copy(
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight(400)
+                )
+            )
+            Text(
+                text = formatPrice(cartResponse.price),
+                style = MaterialTheme.typography.displaySmall.copy(
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight(600)
+                ),
+                color = Danger
+            )
+            Spacer(modifier = Modifier.padding(Dimens.ExtraSmallGap))
+            Divider()
+            Text(
+                style = MaterialTheme.typography.labelMedium.copy(
+                    fontSize = 14.sp
+                ), text = textSeri
+            )
+            Text(
+                style = MaterialTheme.typography.labelMedium.copy(
+                    fontSize = 14.sp
+                ), text = textWarranty
+            )
+//            Row(
+//                modifier = Modifier.fillMaxHeight(.6f),
+//                verticalAlignment = Alignment.CenterVertically,
+//                horizontalArrangement = Arrangement.spacedBy(8.dp)
+//            ) {
+//                Text(
+//                    style = MaterialTheme.typography.labelMedium.copy(
+//                        fontSize = 14.sp
+//                    ), text = textSeri
+//                )
+//                Text(
+//                    style = MaterialTheme.typography.labelMedium.copy(
+//                        fontSize = 14.sp
+//                    ), text = textWarranty
+//                )
+//            }
+        }
+    }
+}
 
 /**
  * A ProductCartRow contain info of Product in Cart(row contain price and quantity).
@@ -363,6 +470,17 @@ fun ProductCartPreview() {
             ProductCart(
                 cartResponse = CartResponse(
                     quantity = 1,
+                    productLine = "ACER1",
+                    productName = "ACER NITRO 5 FVXS5 SAD 2023êqweqeqweqwe",
+                    price = 2.129e+07,
+                    thumbnailUri = R.drawable.banner_category.toString()
+                ),
+            )
+            Divider()
+            ProductCartOrderDetail(
+                cartResponse = CartResponse(
+                    productSN = "acER_12",
+                    warrantyDate = "123123213",
                     productLine = "ACER1",
                     productName = "ACER NITRO 5 FVXS5 SAD 2023êqweqeqweqwe",
                     price = 2.129e+07,

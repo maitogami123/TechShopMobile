@@ -92,9 +92,16 @@ fun RowTotalPrice(textLeft: String, textRight: Double, modifier: Modifier = Modi
 }
 
 @Composable
-fun RowPaymentNavigate(textLeft: String, textRight: String, modifier: Modifier = Modifier, onClick: () -> Unit) {
+fun RowPaymentNavigate(
+    textLeft: String,
+    textRight: String,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
+) {
     Row(
-        Modifier.fillMaxWidth().clickable { onClick() },
+        Modifier
+            .fillMaxWidth()
+            .clickable { onClick() },
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -120,6 +127,29 @@ fun RowPaymentNavigate(textLeft: String, textRight: String, modifier: Modifier =
                 contentDescription = null
             )
         }
+    }
+}
+
+@Composable
+fun RowPaymentNavigate(textLeft: String, textRight: String, modifier: Modifier = Modifier) {
+    Row(
+        Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = textLeft, style = MaterialTheme.typography.headlineMedium.copy(
+                fontWeight = FontWeight(600),
+                fontSize = 16.sp
+            )
+        )
+
+        Text(
+            text = textRight, style = MaterialTheme.typography.headlineMedium.copy(
+                fontWeight = FontWeight(400),
+                fontSize = 14.sp
+            )
+        )
 
     }
 }
@@ -133,7 +163,9 @@ fun RowPaymentGateNavigate(
     onClick: () -> Unit
 ) {
     Row(
-        Modifier.fillMaxWidth().clickable { onClick() },
+        Modifier
+            .fillMaxWidth()
+            .clickable { onClick() },
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -168,6 +200,44 @@ fun RowPaymentGateNavigate(
     }
 }
 
+@Composable
+fun RowPaymentGateNavigate(
+    textLeft: String,
+    textRight: String,
+    headIconGate: Painter,
+    modifier: Modifier = Modifier,
+) {
+    Row(
+        Modifier
+            .fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = textLeft, style = MaterialTheme.typography.headlineMedium.copy(
+                fontWeight = FontWeight(600),
+                fontSize = 16.sp
+            )
+        )
+        Row(
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                painter = headIconGate,
+                contentDescription = null
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Text(
+                text = textRight, style = MaterialTheme.typography.headlineMedium.copy(
+                    fontWeight = FontWeight(400),
+                    fontSize = 14.sp,
+                )
+            )
+        }
+    }
+}
+
 @Preview(showSystemUi = true)
 @Composable
 fun RowPricePreview() {
@@ -179,12 +249,24 @@ fun RowPricePreview() {
             RowPrice(textLeft = "Tổng tiền hàng", textRight = 12312314.000)
             RowPriceDelivery(textLeft = "Tổng tiền hàng", textRight = "Miễn Phí")
             RowTotalPrice(textLeft = "Tổng thanh toán", textRight = 2.129e+07)
-            RowPaymentNavigate(textLeft = "Phương thức thanh toán", textRight = "Thanh toán online"){}
+            RowPaymentNavigate(
+                textLeft = "Phương thức thanh toán",
+                textRight = "Thanh toán online"
+            ) {}
+            RowPaymentNavigate(
+                textLeft = "Phương thức thanh toán",
+                textRight = "Thanh toán online"
+            )
             RowPaymentGateNavigate(
                 textLeft = "Cổng thanh toán", textRight = "VN PAY", painterResource(
                     id = R.drawable.ic_bell
                 )
-            ){}
+            ) {}
+            RowPaymentGateNavigate(
+                textLeft = "Cổng thanh toán", textRight = "VN PAY", painterResource(
+                    id = R.drawable.ic_bell
+                )
+            )
         }
     }
 

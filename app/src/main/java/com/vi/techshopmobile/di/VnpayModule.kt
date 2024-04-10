@@ -2,12 +2,17 @@ package com.vi.techshopmobile.di
 
 import arrow.retrofit.adapter.either.EitherCallAdapterFactory
 import com.vi.techshopmobile.data.remote.orders.OrdersApi
+import com.vi.techshopmobile.data.remote.vnpay.VnPayApi
 import com.vi.techshopmobile.data.repository.OrdersRepositoryImpl
+import com.vi.techshopmobile.data.repository.VnpayRepositoryImpl
 import com.vi.techshopmobile.domain.repository.orders.OrdersRepository
+import com.vi.techshopmobile.domain.repository.vnpay.VnPayRepository
 import com.vi.techshopmobile.domain.usecases.orders.CreateOrders
 import com.vi.techshopmobile.domain.usecases.orders.GetOrders
 import com.vi.techshopmobile.domain.usecases.orders.GetOrdersDetail
 import com.vi.techshopmobile.domain.usecases.orders.OrdersUseCases
+import com.vi.techshopmobile.domain.usecases.vnpay.CreateOrderByVnpay
+import com.vi.techshopmobile.domain.usecases.vnpay.VnPayUseCases
 import com.vi.techshopmobile.util.Constants
 import dagger.Module
 import dagger.Provides
@@ -19,29 +24,27 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object OrderModule {
+object VnpayModule {
 
     @Provides
     @Singleton
-    fun provideOrdersApi(): OrdersApi {
+    fun provideVnPayApi(): VnPayApi {
         return Retrofit.Builder()
-            .baseUrl(Constants.BASE_URL + "order/")
+            .baseUrl(Constants.BASE_URL + "api/v1/")
             .addConverterFactory(GsonConverterFactory.create())
             .addCallAdapterFactory(EitherCallAdapterFactory.create())
-            .build().create(OrdersApi::class.java)
+            .build().create(VnPayApi::class.java)
     }
 
     @Provides
     @Singleton
-    fun provideOrdersRepository(
-        ordersApi: OrdersApi
-    ): OrdersRepository = OrdersRepositoryImpl(ordersApi)
+    fun provideVnPayRepository(
+        vnPayApi: VnPayApi
+    ): VnPayRepository = VnpayRepositoryImpl(vnPayApi)
 
     @Provides
     @Singleton
-    fun provideOrdersUseCase(ordersRepository: OrdersRepository) = OrdersUseCases(
-        getOrders = GetOrders(ordersRepository),
-        createOrders = CreateOrders(ordersRepository),
-        getOrdersDetail = GetOrdersDetail(ordersRepository)
+    fun provideVnPayUseCase(vnPayRepository: VnPayRepository) = VnPayUseCases(
+        CreateOrderByVnpay(vnPayRepository)
     )
 }

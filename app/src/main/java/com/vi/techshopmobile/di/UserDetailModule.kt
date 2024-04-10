@@ -6,8 +6,10 @@ import com.vi.techshopmobile.data.repository.UserDetailsRepositoryImpl
 import com.vi.techshopmobile.domain.repository.userDetail.UserDetailsRepository
 import com.vi.techshopmobile.domain.usecases.userDetail.CreateUserDetail
 import com.vi.techshopmobile.domain.usecases.userDetail.GetListUserDetail
+import com.vi.techshopmobile.domain.usecases.userDetail.GetUserDetailById
 import com.vi.techshopmobile.domain.usecases.userDetail.GetUserDetails
 import com.vi.techshopmobile.domain.usecases.userDetail.UpdateAllUserDetailsToNotDefault
+import com.vi.techshopmobile.domain.usecases.userDetail.UpdateUserDetail
 import com.vi.techshopmobile.domain.usecases.userDetail.UserDetailsUseCases
 import com.vi.techshopmobile.util.Constants
 import dagger.Module
@@ -48,6 +50,8 @@ object UserDetailModule {
             createUserDetail = CreateUserDetail(userDetailsRepository),
             updateAllUserDetailsToNotDefault = UpdateAllUserDetailsToNotDefault(
                 userDetailsRepository
-            )
+            ),
+            getUserDetailById = GetUserDetailById(userDetailsRepository),
+            updateUserDetail = UpdateUserDetail(userDetailsRepository)
         )
 }

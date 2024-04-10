@@ -1,6 +1,10 @@
 package com.vi.techshopmobile.presentation.home.home_navigator
 
-import android.os.Bundle
+import androidx.compose.animation.AnimatedContentScope
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -24,6 +28,7 @@ import com.vi.techshopmobile.presentation.cart.CartScreen
 import com.vi.techshopmobile.presentation.change_password.ChangePasswordScreen
 import com.vi.techshopmobile.presentation.chatAI.ChatAiScreen
 import com.vi.techshopmobile.presentation.checkout.screens.AddNewAddressScreen
+import com.vi.techshopmobile.presentation.checkout.screens.DetailAddressScreen
 import com.vi.techshopmobile.presentation.filter.FilterScreen
 import com.vi.techshopmobile.presentation.home.HomeScreen
 import com.vi.techshopmobile.presentation.home.home_navigator.component.BottomNavigationItem
@@ -49,6 +54,8 @@ import com.vi.techshopmobile.util.navigateToTap
 val LocalNavController = compositionLocalOf<NavController> {
     error("No LocalNavController provided")
 }
+
+val time = 500
 
 @Composable
 fun HomeNavigator(navGraphController: NavController) {
@@ -126,15 +133,71 @@ fun HomeNavigator(navGraphController: NavController) {
             NavHost(
                 modifier = Modifier.padding(bottom = bottomPadding, top = topPadding),
                 navController = navController,
-                startDestination = Route.HomeScreen.route
+                startDestination = Route.HomeScreen.route,
+                enterTransition = {
+                    fadeIn(animationSpec = tween(time))
+                },
+                exitTransition = {
+                    fadeOut(animationSpec = tween(time))
+                },
+                popEnterTransition = {
+                    fadeIn(animationSpec = tween(time))
+                },
+                popExitTransition = {
+                    fadeOut(animationSpec = tween(time))
+                },
             ) {
-                composable(route = Route.HomeScreen.route) {
+                composable(route = Route.HomeScreen.route,) {
                     HomeScreen(navController)
                 }
-                composable(route = Route.SearchScreen.route) {
+                composable(
+                    route = Route.SearchScreen.route,
+                    enterTransition = {
+                        fadeIn(animationSpec = tween(time)) + slideIntoContainer(
+                            AnimatedContentTransitionScope.SlideDirection.Right, tween(time)
+                        )
+                    },
+                    exitTransition = {
+                        fadeOut(animationSpec = tween(time)) + slideOutOfContainer(
+                            AnimatedContentTransitionScope.SlideDirection.Left, tween(time)
+                        )
+                    },
+                    popEnterTransition = {
+                        fadeIn(animationSpec = tween(time)) + slideIntoContainer(
+                            AnimatedContentTransitionScope.SlideDirection.Right, tween(time)
+                        )
+                    },
+                    popExitTransition = {
+                        fadeOut(animationSpec = tween(time)) + slideOutOfContainer(
+                            AnimatedContentTransitionScope.SlideDirection.Left, tween(time)
+                        )
+                    },
+                ) {
                     SearchScreen(navController)
                 }
-                composable(route = Route.UserSettingScreen.route) {
+                composable(
+                    route = Route.UserSettingScreen.route,
+                    enterTransition = {
+                        fadeIn(animationSpec = tween(time)) + slideIntoContainer(
+                            AnimatedContentTransitionScope.SlideDirection.Left, tween(time)
+                        )
+                    },
+                    exitTransition = {
+                        fadeOut(animationSpec = tween(time)) + slideOutOfContainer(
+                            AnimatedContentTransitionScope.SlideDirection.Right, tween(time)
+                        )
+                    },
+                    popEnterTransition = {
+                        fadeIn(animationSpec = tween(time)) + slideIntoContainer(
+                            AnimatedContentTransitionScope.SlideDirection.Left, tween(time)
+                        )
+                    },
+                    popExitTransition = {
+                        fadeOut(animationSpec = tween(time)) + slideOutOfContainer(
+                            AnimatedContentTransitionScope.SlideDirection.Right, tween(time)
+                        )
+                    },
+                ) {
                     UserSettingScreen(navController)
                 }
                 composable(route = Route.ProductDetailsScreen.route) {
@@ -184,19 +247,36 @@ fun HomeNavigator(navGraphController: NavController) {
                     )
                 }
                 composable(route = Route.AddNewAddressScreen.route) {
-                    AddNewAddressScreen(navController = navController) {
-
-                    }
+                    AddNewAddressScreen(
+                        navController = navController,
+                        onNavigateUp = { navController.navigateUp() })
+                }
+                composable(
+                    route = Route.DetailAddressScreen.route
+                ) {
+                    navController.previousBackStackEntry?.savedStateHandle?.get<String?>("id")
+                        ?.let { id ->
+                            DetailAddressScreen(
+                                onNavigateUp = { navController.navigateUp() },
+                                id = id,
+                                navController = navController
+                            )
+                        }
                 }
                 composable(route = Route.ChangePasswordScreen.route) {
                     ChangePasswordScreen(onNavigateUp = { navController.navigateUp() })
                 }
-
                 composable(route = Route.UserOderScreen.route) {
                     UserOrdersScreen(onNavigateUp = { navController.navigateUp() }, navController)
                 }
                 composable(route = Route.OderDetailsScreen.route) {
-                    OrderDetailsScreen(onNavigateUp = { navController.navigateUp() })
+                    navController.previousBackStackEntry?.savedStateHandle?.get<String?>("id")
+                        ?.let { id ->
+                            OrderDetailsScreen(
+                                id,
+                                navController = navController,
+                                onNavigateUp = { navController.navigateUp() })
+                        }
                 }
                 composable(route = Route.CartScreen.route) {
                     CartScreen(navController = navGraphController) {

@@ -3,10 +3,13 @@ package com.vi.techshopmobile.presentation.order_details
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -14,29 +17,43 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.vi.techshopmobile.LocalToken
 import com.vi.techshopmobile.R
+import com.vi.techshopmobile.data.remote.cart.CartResponse
 import com.vi.techshopmobile.presentation.Dimens
-import com.vi.techshopmobile.presentation.cart.components.RowPriceDelivery
+import com.vi.techshopmobile.presentation.cart.components.ProductCart
+import com.vi.techshopmobile.presentation.cart.components.ProductCartOrderDetail
+import com.vi.techshopmobile.presentation.cart.components.RowPaymentGateNavigate
+import com.vi.techshopmobile.presentation.cart.components.RowPaymentNavigate
+import com.vi.techshopmobile.presentation.cart.components.RowTotalPrice
+import com.vi.techshopmobile.presentation.checkout.LocalSelectedIndex
 import com.vi.techshopmobile.presentation.common.Address
+import com.vi.techshopmobile.presentation.common.AddressTitle
+import com.vi.techshopmobile.presentation.common.LoadingDialog
 import com.vi.techshopmobile.presentation.home.home_navigator.component.UtilityTopNavigation
+import com.vi.techshopmobile.presentation.navgraph.Route
 import com.vi.techshopmobile.presentation.personal_info.PersonalInfoEvent
 import com.vi.techshopmobile.presentation.personal_info.PersonalInfoViewModel
+import com.vi.techshopmobile.util.formatPhoneNumber
+import com.vi.techshopmobile.util.formatPrice
 
 @Composable
-fun OrderDetailsScreen(onNavigateUp: () -> Unit) {
+fun OrderDetailsScreen(id: String, navController: NavController, onNavigateUp: () -> Unit) {
 
-    val viewModel: PersonalInfoViewModel = hiltViewModel()
+    val viewModel: OrderDetailsViewModel = hiltViewModel()
     val token = LocalToken.current
     val state = viewModel.state.collectAsState()
-
-    LaunchedEffect(key1 = null) {
-        (viewModel::onEvent)(PersonalInfoEvent.GetAllEventPersonalInfo(token))
+    val totalPrice = viewModel.totalPrice.collectAsState()
+    LaunchedEffect(key1 = id) {
+        (viewModel::onEvent)(OrderDetailsEvent.GetOrderDetail(token, id))
     }
 
     Scaffold(
@@ -51,39 +68,56 @@ fun OrderDetailsScreen(onNavigateUp: () -> Unit) {
     ) {
         Column(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(top = it.calculateTopPadding())
+                .fillMaxHeight()
+                .padding(Dimens.SmallPadding)
+                .padding(it),
+            verticalArrangement = Arrangement.SpaceBetween,
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Text(text = "List sản phẩm")
-//            AsyncImage(
-//                model = Constants.BASE_URL + "product/get-file?filePath=" + product.thumbnailUri,
-//                contentDescription = null,
-//                modifier = Modifier
-//                    .fillMaxWidth()
-//                    .height(110.dp)
-//                    .clip(RoundedCornerShape(10.dp)),
-//                contentScale = ContentScale.Crop,
-//                alignment = Alignment.Center
-//            )
-            Spacer(modifier = Modifier.height(10.dp))
-            Divider()
-            Spacer(modifier = Modifier.height(10.dp))
-            state.value.userDetail?.accountDetail?.let {
-                Column {
-                    Text(
-                        text = ("Địa chỉ mặc định hiện tại"),
-                        style = MaterialTheme.typography.headlineMedium
-                    )
-                    Address(
-                        name = it.firstName + " " + it.lastName,
-                        phoneNumber = "(+84) " + it.phoneNumber,
-                        addressNote = it.detailedAddress,
-                        address = it.district + " " + it.city
-                    )
+            if (state.value.isLoading) {
+                LoadingDialog(isLoading = state.value.isLoading)
+            } else {
+                LazyColumn(
+                    modifier = Modifier
+                        .weight(.7f),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    itemsIndexed(state.value.orderDetailResponse!!.orderItems) { index, item ->
+                        ProductCartOrderDetail(
+                            cartResponse = CartResponse(
+                                productSN = item.productSN,
+                                warrantyDate = item.warrantyDate,
+                                productLine = item.productLine,
+                                productName = item.productName,
+                                price = item.price,
+                                thumbnailUri = "thumbnails/" + item.productLine + "/" + item.productLine + ".jpg"
+                            ),
+                        )
+                        Spacer(modifier = Modifier.height(16.dp))
+                        Divider()
+                    }
                 }
             }
 
+            Spacer(modifier = Modifier.height(Dimens.SmallPadding))
             Divider()
+            Spacer(modifier = Modifier.height(Dimens.SmallPadding))
+
+            if (state.value.orderDetailResponse != null) {
+                val orderInfo =
+                    state.value.orderDetailResponse!!.orderInformation
+                AddressTitle(
+                    title = "Địa chỉ nhận hàng",
+                    name = orderInfo.fullname,
+                    phoneNumber = formatPhoneNumber(orderInfo.phoneNumber),
+                    addressNote = "",
+                    address = orderInfo.address,
+                )
+            }
+            Spacer(modifier = Modifier.height(Dimens.SmallPadding))
+            Divider()
+            Spacer(modifier = Modifier.height(Dimens.SmallPadding))
+
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -98,15 +132,34 @@ fun OrderDetailsScreen(onNavigateUp: () -> Unit) {
                 )
                 Column(
                     modifier = Modifier.padding(Dimens.SmallPadding),
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    RowPriceDelivery(textLeft = "Tổng tiền hàng", textRight = "Miễn Phí")
-                    RowPriceDelivery(textLeft = "Tổng tiền hàng", textRight = "Miễn Phí")
-                    RowPriceDelivery(textLeft = "Tổng thanh toán", textRight = "100000000VNĐ")
+//                    RowPaymentNavigate(
+//                        textLeft = "Phương thức thanh toán",
+//                        textRight = if (state.value.orderDetailResponse!!.orderStatus != null) "Tiền mặt"
+//                        else if (state.value.orderDetailResponse!!.paymentStatus != null) "Chuyển khoản"
+//                        else "",
+////                        paymentMethod[paymentMethodState.intValue].second,
+//                    )
+//                    if (state.value.orderDetailResponse!!.paymentStatus != null) {
+//                        RowPaymentGateNavigate(
+//                            textLeft = "Cổng thanh toán",
+//                            textRight = "VN Pay",
+////                        paymentOnlineGate[paymentOnlineGateState.intValue].second,
+//                            headIconGate = painterResource(
+//                                R.drawable.ic_bell
+//                                //paymentOnlineGateIconState.intValue
+//                            ),
+//                        )
+//                    }
+                    RowTotalPrice(
+                        textLeft = "Tổng thanh toán",
+                        textRight = totalPrice.value
+                    )
                 }
             }
         }
     }
-
-//    LoadingDialog(isLoading = state.isLoading)
 }
+

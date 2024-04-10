@@ -71,6 +71,13 @@ class CartViewModel @Inject constructor(
                     this.cancel();
                 }
             }
+
+            is CartEvent.ClearCart -> {
+                viewModelScope.launch {
+                    cartUseCases.clearCart(event.username)
+                    calculateTotal()
+                }
+            }
         }
     }
 

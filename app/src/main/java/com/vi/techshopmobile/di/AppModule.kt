@@ -15,6 +15,7 @@ import com.vi.techshopmobile.domain.usecases.app_entry.AppEntryUseCases
 import com.vi.techshopmobile.domain.usecases.app_entry.ReadAppEntry
 import com.vi.techshopmobile.domain.usecases.app_entry.SaveAppEntry
 import com.vi.techshopmobile.domain.usecases.cart.CartUseCases
+import com.vi.techshopmobile.domain.usecases.cart.ClearCart
 import com.vi.techshopmobile.domain.usecases.cart.DeleteCart
 import com.vi.techshopmobile.domain.usecases.cart.GetCart
 import com.vi.techshopmobile.domain.usecases.cart.GetCartItem
@@ -74,13 +75,13 @@ object AppModule {
     @Singleton
     fun provideWishListRepository(
         wishListDao: WishListDao
-    ) : WishListRepository = WishListRepositoryImpl(wishListDao)
+    ): WishListRepository = WishListRepositoryImpl(wishListDao)
 
     @Provides
     @Singleton
     fun provideWishListUseCases(
         wishListRepository: WishListRepository
-    ) : WishListUseCases = WishListUseCases(
+    ): WishListUseCases = WishListUseCases(
         UpsertWishItem(wishListRepository),
         DeleteWishItem(wishListRepository),
         GetWishList(wishListRepository)
@@ -105,8 +106,9 @@ object AppModule {
     ): CartUseCases = CartUseCases(
         UpsertCart(cartRepository),
         DeleteCart(cartRepository),
+        ClearCart(cartRepository),
         GetCart(cartRepository),
         GetCartItem(cartRepository),
-        UpdateCart(cartRepository)
+        UpdateCart(cartRepository),
     )
 }

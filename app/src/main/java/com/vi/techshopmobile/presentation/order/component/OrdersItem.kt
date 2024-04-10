@@ -11,6 +11,7 @@ import androidx.compose.material3.CardDefaults.cardColors
 import androidx.compose.material3.CardDefaults.cardElevation
 import androidx.compose.material3.CardDefaults.shape
 import androidx.compose.material3.Divider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -33,6 +34,13 @@ import com.vi.techshopmobile.domain.model.OrderItem
 
 @Composable
 fun OrdersItem(order: OrderItem, onClick: () -> Unit) {
+    val color = if (order.status == "CANCELED") Color(0xffFF3A28)
+    else if (order.status == "SUCCESS") Color(0xff53B175)
+    else if (order.status == "CONFIRMED") Color(0xff3FA4FC)
+    else if (order.status == "PENDING") Color(0xffFFBB32)
+    else if (order.status == "DELIVERING") Color(0xff1e91cf)
+    else Color(0xffe3d4d4)
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -57,17 +65,22 @@ fun OrdersItem(order: OrderItem, onClick: () -> Unit) {
                         .width(90.dp)
                         .border(
                             width = 1.dp,
-                            color = Color(0xFF4682B4),
+                            color = color,
                             shape = RoundedCornerShape(5.dp)
                         ),
                     contentAlignment = Alignment.Center
 
-                    ) {
+                ) {
                     Text(
-                        modifier = Modifier.fillMaxWidth().padding(5.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(5.dp),
                         textAlign = TextAlign.Center,
-                        style = TextStyle(fontSize = TextUnit.Unspecified),
-                        color = Color(0xFF4682B4),
+                        style = MaterialTheme.typography.labelMedium.copy(
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight(400)
+                        ),
+                        color = color,
                         text = "${order.status}"
                     )
                 }
