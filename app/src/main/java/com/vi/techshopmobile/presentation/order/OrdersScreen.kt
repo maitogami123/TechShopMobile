@@ -61,8 +61,6 @@ fun UserOrdersScreen(
         mutableStateOf("ALL")
     }
 
-
-
     LaunchedEffect(key1 = state.orders) {
         if (state.orders.isEmpty()) {
             (viewModel::onEvent)(OrdersEvents.GetAllEvent(token))

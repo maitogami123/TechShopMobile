@@ -301,7 +301,9 @@ fun ProductCartOrderDetail(
         AsyncImage(
             model = Constants.BASE_URL + "product/get-file?filePath=" + cartResponse.thumbnailUri,
             contentDescription = null,
-            modifier = Modifier.width(96.dp).fillMaxHeight(),
+            modifier = Modifier
+                .width(96.dp)
+                .fillMaxHeight(),
             contentScale = ContentScale.Crop,
             alignment = Alignment.Center
         )
@@ -445,6 +447,82 @@ fun ProductCartRow(
     }
 }
 
+@Composable
+fun ProductCartRowNoQuantity(
+    modifier: Modifier = Modifier,
+    cartResponse: CartResponse,
+) {
+    val textQuantity = buildAnnotatedString {
+        append("Số lượng: ")
+        withStyle(
+            style = SpanStyle(
+                color = Color(0xffFF3A28),
+                fontSize = 14.sp
+            )
+        ) {
+            append(cartResponse.quantity.toString())
+        }
+    }
+
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .height(96.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        AsyncImage(
+            model = Constants.BASE_URL + "product/get-file?filePath=" + cartResponse.thumbnailUri,
+            contentDescription = null,
+            modifier = Modifier.size(96.dp),
+            contentScale = ContentScale.Crop,
+            alignment = Alignment.Center
+        )
+        Column(
+            modifier = Modifier
+                .fillMaxHeight()
+                .weight(.8f)
+//                .fillMaxWidth()
+                .padding(start = 16.dp, end = 0.dp, top = 8.dp, bottom = 8.dp),
+            horizontalAlignment = Alignment.Start,
+            verticalArrangement = Arrangement.SpaceBetween,
+        ) {
+            Text(
+                modifier = Modifier
+                    .fillMaxHeight(.5f)
+                    .fillMaxWidth(),
+                text = cartResponse.productName,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis,
+                style = MaterialTheme.typography.labelMedium.copy(
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight(400)
+                )
+            )
+            Row(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.Bottom,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(
+                    text = formatPrice(cartResponse.price),
+                    style = MaterialTheme.typography.labelMedium.copy(
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight(400)
+                    ),
+                    color = Danger
+                )
+            }
+        }
+        Icon(
+            modifier = Modifier.fillMaxHeight(),
+            painter = painterResource(id = R.drawable.ic_right_arrow),
+            contentDescription = null
+        )
+    }
+}
 
 @Preview(showSystemUi = true)
 @Composable
@@ -489,6 +567,17 @@ fun ProductCartPreview() {
             )
             Divider()
             ProductCartRow(
+                cartResponse = CartResponse(
+                    quantity = 1,
+                    productLine = "ACER1",
+                    productName = "ACER NITRO 5 FVXS5 SAD 2023",
+                    price = 2.129e+07,
+                    thumbnailUri = R.drawable.banner_category.toString()
+                ),
+            )
+
+            Divider()
+            ProductCartRowNoQuantity(
                 cartResponse = CartResponse(
                     quantity = 1,
                     productLine = "ACER1",

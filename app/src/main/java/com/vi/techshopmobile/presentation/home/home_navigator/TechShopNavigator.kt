@@ -1,5 +1,6 @@
 package com.vi.techshopmobile.presentation.home.home_navigator
 
+import android.app.Activity
 import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
@@ -24,6 +25,8 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.vi.techshopmobile.LocalToken
 import com.vi.techshopmobile.R
+import com.vi.techshopmobile.domain.model.ProductLine
+import com.vi.techshopmobile.presentation.about.AboutScreen
 import com.vi.techshopmobile.presentation.cart.CartScreen
 import com.vi.techshopmobile.presentation.change_password.ChangePasswordScreen
 import com.vi.techshopmobile.presentation.chatAI.ChatAiScreen
@@ -215,7 +218,7 @@ fun HomeNavigator(navGraphController: NavController) {
                 }
 
                 composable(route = Route.WishListScreen.route) {
-                    WishListScreen(onNavigateUp = { navController.navigateUp() })
+                    WishListScreen(onNavigateUp = { navController.navigateUp() }, navController)
                 }
                 composable(route = Route.PersonalInfoScreen.route) {
                     PersonalInfoScreen(onNavigateUp = { navController.navigateUp() }, navController)
@@ -251,6 +254,9 @@ fun HomeNavigator(navGraphController: NavController) {
                 }
                 composable(route = Route.UserOderScreen.route) {
                     UserOrdersScreen(onNavigateUp = { navController.navigateUp() }, navController)
+                }
+                composable(route = Route.AboutScreen.route) {
+                    AboutScreen(onNavigateUp = { navController.navigateUp() })
                 }
                 composable(route = Route.OderDetailsScreen.route) {
                     navController.previousBackStackEntry?.savedStateHandle?.get<String?>("id")
