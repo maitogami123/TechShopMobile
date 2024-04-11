@@ -9,10 +9,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="com.vi.techshopmobile" />
+                  <option name="mobileSdkAppId" value="1:990819816783:android:aef06539987fd1f3efa13a" />
+                  <option name="projectId" value="techshopmoblie" />
+                  <option name="projectNumber" value="990819816783" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />

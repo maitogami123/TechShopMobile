@@ -84,7 +84,7 @@ fun CheckOutNavigator(navGraphController: NavController) {
                 )
             }
             composable(
-                route = Route.PaymentSuccessnScreen.route
+                route = Route.PaymentSuccessScreen.route
             ) {
                 navController.previousBackStackEntry?.savedStateHandle?.get<String?>("id")
                     ?.let { id ->
@@ -147,10 +147,18 @@ fun navigateToDetailAddress(navController: NavController, id: String) {
 
 fun navigateToDetailOrder(navController: NavController, id: String) {
     navController.currentBackStackEntry?.savedStateHandle?.set("id", id)
-    navController.navigate(Route.OderDetailsScreen.route);
+    navController.navigate(Route.OderDetailsScreen.route) {
+        popUpTo(Route.HomeScreen.route) {
+            inclusive = true
+        }
+    };
 }
 
 fun navigateToPaymentSuccess(navController: NavController, id: String) {
     navController.currentBackStackEntry?.savedStateHandle?.set("id", id)
-    navController.navigate(Route.OderDetailsScreen.route);
+    navController.navigate(Route.PaymentSuccessScreen.route) {
+        popUpTo(Route.HomeScreen.route) {
+            inclusive = true
+        }
+    };
 }

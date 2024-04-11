@@ -31,4 +31,6 @@ sealed class CheckOutEvent {
 
     data class VnPayPayment(val token: String, val requestCheckOut: RequestCheckOut) :
         CheckOutEvent()
+
+    data class PollingOrderInfo(val token: String, val orderId: String): CheckOutEvent()
 }

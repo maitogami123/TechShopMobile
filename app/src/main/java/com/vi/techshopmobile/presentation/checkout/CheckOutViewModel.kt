@@ -58,8 +58,11 @@ class CheckOutViewModel @Inject constructor(
     private var _isOrderLoading = MutableStateFlow(false)
     val isOrderLoading = _isOrderLoading.asStateFlow()
 
-    private var _isVnPayLoading = MutableStateFlow("")
-    val isVnPayLoading = _isVnPayLoading.asStateFlow()
+    private var _paymentUrl = MutableStateFlow("")
+    val paymentUrl = _paymentUrl.asStateFlow()
+
+    private var _orderPaymentStatus = MutableStateFlow(false);
+    val orderPaymentStatus = _orderPaymentStatus.asStateFlow();
     fun onEvent(event: CheckOutEvent) {
         when (event) {
             is CheckOutEvent.GetUserCart -> {
@@ -169,7 +172,6 @@ class CheckOutViewModel @Inject constructor(
                 viewModelScope.launch {
                     cartUseCases.clearCart(event.username)
                     calculateTotal()
-                    //EventBus.sendEvent(Event.Toast("Đã xóa sản phẩm khỏi giỏ hàng"))
                 }
             }
 
@@ -184,8 +186,10 @@ class CheckOutViewModel @Inject constructor(
                         orderVnPayResponse.onRight {
                             sendEvent(Event.Toast("Vui lòng thanh toán để tạo đơn hàng"))
                             _idOrderCreated.value = it.orderId.toString()
-                            _isCreateOrder.value = true
-                            _isVnPayLoading.value = it.url
+                            // Add loading state
+                            _isLoading.value = true
+//                            _isCreateOrder.value = true
+                            _paymentUrl.value = it.url
                         }
                     } else {
                         orderVnPayResponse.onLeft {
@@ -194,6 +198,26 @@ class CheckOutViewModel @Inject constructor(
                     }
                 }
             }
+
+            is CheckOutEvent.PollingOrderInfo -> {
+                viewModelScope.launch {
+                    val orderResponse = ordersUseCases.getOrdersDetail("Bearer " + event.token, event.orderId);
+                    if (orderResponse.isRight()) {
+                        orderResponse.onRight {
+                            if (it.paymentStatus == "SUCCESS") {
+                                sendEvent(Event.Toast("Đơn hàng thanh toán thành công"))
+                                _isLoading.value = false
+                                _orderPaymentStatus.value = true;
+                            }
+                        }
+                    } else {
+                        sendEvent(Event.Toast("Có lỗi xảy ra khi thanh toán!"))
+                        _isLoading.value = false
+                        _orderPaymentStatus.value = false;
+                    }
+                }
+            }
+
         }
     }
 

@@ -1,10 +1,8 @@
 package com.vi.techshopmobile.presentation.checkout
 
-import android.app.Activity
-import android.content.Intent
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.animation.animateContentSize
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -24,12 +22,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableIntState
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.currentCompositionLocalContext
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -40,7 +36,6 @@ import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.app.ActivityCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.vi.techshopmobile.LocalToken
@@ -49,10 +44,7 @@ import com.vi.techshopmobile.data.remote.cart.CartResponse
 import com.vi.techshopmobile.data.remote.orders.dto.CartItem
 import com.vi.techshopmobile.data.remote.orders.dto.RequestCheckOut
 import com.vi.techshopmobile.domain.model.AccountDetail
-import com.vi.techshopmobile.domain.usecases.orders.CreateOrders
 import com.vi.techshopmobile.presentation.Dimens
-import com.vi.techshopmobile.presentation.cart.CartViewModel
-import com.vi.techshopmobile.presentation.cart.CartEvent
 import com.vi.techshopmobile.presentation.cart.components.ProductCart
 import com.vi.techshopmobile.presentation.cart.components.RowPaymentGateNavigate
 import com.vi.techshopmobile.presentation.cart.components.RowPaymentNavigate
@@ -61,14 +53,14 @@ import com.vi.techshopmobile.presentation.checkout.components.PaymentOption
 import com.vi.techshopmobile.presentation.common.AddressTitle
 import com.vi.techshopmobile.presentation.common.FloatingBottomBar
 import com.vi.techshopmobile.presentation.common.LoadingDialog
-import com.vi.techshopmobile.presentation.common.SwipeToDeleteContainer
 import com.vi.techshopmobile.presentation.home.home_navigator.component.UtilityTopNavigation
 import com.vi.techshopmobile.presentation.navgraph.Route
-import com.vi.techshopmobile.presentation.personal_info.PersonalInfoEvent
-import com.vi.techshopmobile.presentation.personal_info.PersonalInfoViewModel
 import com.vi.techshopmobile.ui.theme.TechShopMobileTheme
+import com.vi.techshopmobile.util.Event
+import com.vi.techshopmobile.util.EventBus
 import com.vi.techshopmobile.util.formatPhoneNumber
 import com.vi.techshopmobile.util.decodeToken
+import kotlinx.coroutines.delay
 
 
 @Composable
@@ -85,11 +77,22 @@ fun CheckOutScreen(
     val paymentMethod = listOf("online" to "Chuyển khoản", "cash" to "Tiền mặt")
     val paymentOnlineGate = listOf("ic_cast" to "VN Pay", "ic_money" to "Momo")
     val totalPrice = viewModel.totalPrice.collectAsState()
-    val isVnPayLoading = viewModel.isVnPayLoading.collectAsState()
+    val paymentUrl = viewModel.paymentUrl.collectAsState()
     val statePersonalInfo = viewModel.statePerson.collectAsState()
     val isCreateOrder = viewModel.isCreateOrder.collectAsState()
-
+    // HACK: Duplicated state
+    val paymentInProgress = viewModel.isLoading.collectAsState()
     val isOrderLoading = viewModel.isOrderLoading.collectAsState()
+    val orderPaymentStatus = viewModel.orderPaymentStatus.collectAsState()
+    // Delay 2s per poll
+    val maxPollingRequest = remember {
+        mutableIntStateOf(10)
+    }
+
+    val urlOpened = remember {
+        mutableStateOf(false)
+    }
+
     val paymentMethodIsExpanded = remember {
         mutableStateOf(false);
     }
@@ -126,20 +129,37 @@ fun CheckOutScreen(
         )
     }
     LaunchedEffect(key1 = null) {
-        // TODO: Migrate event
         if (statePersonalInfo.value.listUserDetail.isEmpty()) {
             (viewModel::onEvent)(CheckOutEvent.GetListUserDetail(token))
         }
     }
     LaunchedEffect(key1 = null) {
-        // TODO: Migrate event
         (viewModel::onEvent)(CheckOutEvent.GetUserCart(decodedToken.sub))
     }
 
-    LaunchedEffect(key1 = isCreateOrder.value) {
-        if (isCreateOrder.value == true && idOrderCreated.value != null) {
-            navigateToPaymentSuccess(navController, idOrderCreated.value)
+//    LaunchedEffect(key1 = isCreateOrder.value) {
+//        if (isCreateOrder.value == true && idOrderCreated.value != null) {
+//            navigateToPaymentSuccess(navController, idOrderCreated.value)
+//        }
+//    }
+    
+    LaunchedEffect(key1 = idOrderCreated.value, key2 = maxPollingRequest.intValue) {
+        if (idOrderCreated.value.isNotEmpty()) {
+            (viewModel::onEvent)(CheckOutEvent.PollingOrderInfo(token, idOrderCreated.value))
+            delay(2000)
+            maxPollingRequest.intValue -= 1
+        }
+//        if (maxPollingRequest.intValue == 0) {
+//            // TODO: navigate to payment error
+//        }
+    }
 
+    LaunchedEffect(key1 = orderPaymentStatus.value) {
+        if (orderPaymentStatus.value == true) {
+            navigateToPaymentSuccess(navController, idOrderCreated.value)
+        } else if (maxPollingRequest.intValue == 0) {
+            EventBus.sendEvent(Event.Toast("Error payment..."))
+            // TODO: navigate to payment error
         }
     }
 
@@ -232,9 +252,11 @@ fun CheckOutScreen(
                             }
                         }
                     )
-                    if (isVnPayLoading.value.isNotEmpty()) {
-//                        LocalUrlVnPay.current.value = isVnPayLoading.value
-                        LocalUriHandler.current.openUri(isVnPayLoading.value)
+                    if(paymentUrl.value.isNotEmpty()){
+                        if (urlOpened.value == false) {
+                            urlOpened.value = true
+                            LocalUriHandler.current.openUri(paymentUrl.value)
+                        }
                     }
                 }
             }
@@ -249,8 +271,11 @@ fun CheckOutScreen(
             verticalArrangement = Arrangement.SpaceBetween,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            if (statePersonalInfo.value.isLoading) {
-                LoadingDialog(isLoading = statePersonalInfo.value.isLoading)
+            if (statePersonalInfo.value.isLoading || paymentInProgress.value) {
+                if (statePersonalInfo.value.isLoading)
+                    LoadingDialog(isLoading = statePersonalInfo.value.isLoading)
+                else if (paymentInProgress.value)
+                    LoadingDialog(isLoading = paymentInProgress.value)
             } else {
                 LazyColumn(
                     modifier = Modifier
@@ -307,9 +332,6 @@ fun CheckOutScreen(
                         Column(
                             modifier = Modifier
                                 .animateContentSize()
-//                            .clickable {
-//                                paymentMethodIsExpanded.value = !paymentMethodIsExpanded.value
-//                            }
                         ) {
                             RowPaymentNavigate(
                                 textLeft = "Phương thức thanh toán",
