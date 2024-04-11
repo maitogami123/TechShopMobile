@@ -124,6 +124,25 @@ fun ProductDetailsScreen(
                 FloatingBottomBar(
                     buttonText = "Mua ngay",
                     onButtonClick = {
+                        (viewModel::onEvent)(
+                            ProductDetailsEvent.AddItemToCart(
+                                CartItem(
+                                    brandName = state.productDetail!!.brandName,
+                                    categoryName = state.productDetail!!.categoryName,
+                                    thumbnailUri = state.productDetail!!.thumbnailUri,
+                                    price = (
+                                            state.productDetail!!.product.price -
+                                                    ((state.productDetail!!.product.price * (state.productDetail!!.product.discount / 100)))
+                                            ),
+                                    productName = state.productDetail!!.product.productName,
+                                    productLine = productLine,
+                                    username = decodedToken.sub,
+                                    quantity = quantity,
+                                    stock = state.productDetail!!.stock
+                                )
+                            )
+                        )
+                        navController.navigate(Route.CartScreen.route)
                     },
                     onAddToWishList = {
                         (viewModel::onEvent)(
@@ -312,8 +331,9 @@ fun ProductDetailsScreen(
                                     enabled = if (quantity > 1) statusMinusBtn else !statusMinusBtn
                                 ) {
                                     quantity = quantity.minus(1)
-                                    (viewModel::quantityProduct)
-                                    (quantityToAdd.minus(1))
+                                    (viewModel::onEvent)(
+                                        ProductDetailsEvent.DecreaseQuantity(1)
+                                    )
                                 }
                         )
 

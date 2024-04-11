@@ -23,11 +23,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.google.android.gms.auth.api.identity.SignInClient
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.vi.techshopmobile.R
 import com.vi.techshopmobile.presentation.Dimens.RadiusMedium
 import com.vi.techshopmobile.presentation.navgraph.Route
 import com.vi.techshopmobile.presentation.user_setting.components.SettingItem
 import com.vi.techshopmobile.ui.theme.TechShopMobileTheme
+import kotlinx.coroutines.tasks.await
 
 @Composable
 fun UserSettingScreen(navController: NavController) {
@@ -65,6 +69,7 @@ fun UserSettingScreen(navController: NavController) {
                         inclusive = true
                     }
                 }
+                Firebase.auth.signOut()
             }, modifier = Modifier
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(RadiusMedium)), colors = ButtonDefaults.buttonColors(

@@ -7,12 +7,12 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.vi.techshopmobile.presentation.authenticate.sign_in.SignInScreen
+import com.vi.techshopmobile.presentation.authenticate.sign_up.SignUpScreen
 import com.vi.techshopmobile.presentation.forget_password.screens.EnterEmailScreen
 import com.vi.techshopmobile.presentation.forget_password.screens.EnterNewPasswordScreen
 import com.vi.techshopmobile.presentation.forget_password.screens.EnterOTPScreen
 import com.vi.techshopmobile.presentation.navgraph.Route
-import com.vi.techshopmobile.presentation.authenticate.sign_in.SignInScreen
-import com.vi.techshopmobile.presentation.authenticate.sign_up.SignUpScreen
 
 @Composable
 fun AuthenticateNavigator(navGraphController: NavController) {
@@ -39,7 +39,7 @@ fun AuthenticateNavigator(navGraphController: NavController) {
         ) {
             EnterEmailScreen(
                 navController = navController,
-                onNavigateUp = { navController.navigate(Route.SignUpScreen.route)})
+                onNavigateUp = { navController.navigate(Route.SignUpScreen.route) })
         }
         composable(
             route = Route.ForgetPasswordScreenOTPScreen.route + "/{email}",
