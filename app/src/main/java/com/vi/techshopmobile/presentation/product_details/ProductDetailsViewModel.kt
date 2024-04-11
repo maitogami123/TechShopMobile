@@ -71,6 +71,13 @@ class ProductDetailsViewModel @Inject constructor(
                     this.cancel()
                 }
             }
+
+            is ProductDetailsEvent.DecreaseQuantity -> {
+                viewModelScope.launch {
+                    _quantityProduct.value = quantityProduct.value.minus(event.quantity)
+                    this.cancel()
+                }
+            }
         }
     }
 

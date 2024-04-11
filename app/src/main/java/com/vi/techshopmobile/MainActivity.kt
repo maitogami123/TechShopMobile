@@ -40,12 +40,9 @@ val LocalProvinces = compositionLocalOf<String> {
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     private val viewModel by viewModels<MainViewModel>()
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val data = ReadJSONFromAssets(context = baseContext, "provinces.json")
-
 //        WindowCompat.setDecorFitsSystemWindows(window, false);
 
         installSplashScreen().apply {
@@ -57,7 +54,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             CompositionLocalProvider(
                 LocalToken provides viewModel.accessToken,
-                LocalProvinces provides data
+                LocalProvinces provides data,
             ) {
                 TechShopMobileTheme {
                     val lifecycle = LocalLifecycleOwner.current.lifecycle

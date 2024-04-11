@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">TechShop</string>
+    <string name="filter_view_http_vnpay">VNPAY</string>
     <string name="title_activity_personal_infor_screen">PersonalInforScreen</string>
+    <string name="web_client_id">969933065479-eqepe3dosflttknrkh0iq2skq24pmghh.apps.googleusercontent.com</string>
     <string name="chatAI">TechShop AI</string>
 </resources>

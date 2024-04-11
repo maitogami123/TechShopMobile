@@ -1,26 +1,44 @@
 {
   "project_info": {
-    "project_number": "990819816783",
-    "project_id": "techshopmoblie",
-    "storage_bucket": "techshopmoblie.appspot.com"
+    "project_number": "969933065479",
+    "project_id": "authenggtechshop-7413e",
+    "storage_bucket": "authenggtechshop-7413e.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:990819816783:android:aef06539987fd1f3efa13a",
+        "mobilesdk_app_id": "1:969933065479:android:7d1b6230d36249461449a2",
         "android_client_info": {
           "package_name": "com.vi.techshopmobile"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "969933065479-1ggajh8idg1chcgtbifgoqvft4rbgveb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.vi.techshopmobile",
+            "certificate_hash": "eda031d7735427ae60056f0d15f7259f812b96f2"
+          }
+        },
+        {
+          "client_id": "969933065479-eqepe3dosflttknrkh0iq2skq24pmghh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
-          "current_key": "AIzaSyDXRNDj8-SqYpCLRF9h-EsGi2DxPI1k5e0"
+          "current_key": "AIzaSyCezscOi7U2_GveShxn91HxVj1JzbDwyU0"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "969933065479-eqepe3dosflttknrkh0iq2skq24pmghh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

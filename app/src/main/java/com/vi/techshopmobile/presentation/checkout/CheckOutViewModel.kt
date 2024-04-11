@@ -1,13 +1,12 @@
 package com.vi.techshopmobile.presentation.checkout
 
-import android.util.Log
-import androidx.compose.runtime.MutableIntState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.vi.techshopmobile.domain.model.CartItem
 import com.vi.techshopmobile.domain.usecases.cart.CartUseCases
 import com.vi.techshopmobile.domain.usecases.orders.OrdersUseCases
 import com.vi.techshopmobile.domain.usecases.userDetail.UserDetailsUseCases
+import com.vi.techshopmobile.domain.usecases.vnpay.VnPayUseCases
 import com.vi.techshopmobile.presentation.personal_info.PersonalInfoViewState
 import com.vi.techshopmobile.presentation.sendEvent
 import com.vi.techshopmobile.util.Event
@@ -27,6 +26,7 @@ class CheckOutViewModel @Inject constructor(
     private val cartUseCases: CartUseCases,
     private val userDetailsUseCases: UserDetailsUseCases,
     private val ordersUseCases: OrdersUseCases,
+    private val vnPayUseCases: VnPayUseCases
 ) : ViewModel() {
     private var _state = MutableStateFlow(emptyList<CartItem>())
     val state = _state.asStateFlow()
@@ -54,6 +54,12 @@ class CheckOutViewModel @Inject constructor(
 
     private var _idOrderCreated = MutableStateFlow("")
     val idOrderCreated = _idOrderCreated.asStateFlow()
+
+    private var _isOrderLoading = MutableStateFlow(false)
+    val isOrderLoading = _isOrderLoading.asStateFlow()
+
+    private var _isVnPayLoading = MutableStateFlow("")
+    val isVnPayLoading = _isVnPayLoading.asStateFlow()
     fun onEvent(event: CheckOutEvent) {
         when (event) {
             is CheckOutEvent.GetUserCart -> {
@@ -97,6 +103,7 @@ class CheckOutViewModel @Inject constructor(
 
             is CheckOutEvent.CreateUserDetail -> {
                 viewModelScope.launch {
+                    _isOrderLoading.value = true
                     val userDetailRes = userDetailsUseCases.createUserDetail(
                         token = "Bearer " + event.token,
                         userDetailRequest = event.userDetailRequest
@@ -111,6 +118,7 @@ class CheckOutViewModel @Inject constructor(
                         userDetailRes.onLeft {
                             _createUserDetailError.value = it.detail
                             sendEvent(Event.Toast(it.detail + "Có lỗi xảy ra"))
+                            _isOrderLoading.value = false
                         }
                     }
                 }
@@ -152,6 +160,36 @@ class CheckOutViewModel @Inject constructor(
                         updateUserDetailResponse.onLeft {
                             sendEvent(Event.Toast(it.detail))
                             _isUpdateUserDetail.value = false
+                        }
+                    }
+                }
+            }
+
+            is CheckOutEvent.ClearCart -> {
+                viewModelScope.launch {
+                    cartUseCases.clearCart(event.username)
+                    calculateTotal()
+                    //EventBus.sendEvent(Event.Toast("Đã xóa sản phẩm khỏi giỏ hàng"))
+                }
+            }
+
+            is CheckOutEvent.VnPayPayment -> {
+                viewModelScope.launch {
+                    val orderVnPayResponse = vnPayUseCases.createOrderByVnpay(
+                        token = "Bearer " + event.token,
+                        requestCheckOut = event.requestCheckOut
+                    )
+
+                    if (orderVnPayResponse.isRight()) {
+                        orderVnPayResponse.onRight {
+                            sendEvent(Event.Toast("Vui lòng thanh toán để tạo đơn hàng"))
+                            _idOrderCreated.value = it.orderId.toString()
+                            _isCreateOrder.value = true
+                            _isVnPayLoading.value = it.url
+                        }
+                    } else {
+                        orderVnPayResponse.onLeft {
+                            sendEvent(Event.Toast(it.detail))
                         }
                     }
                 }

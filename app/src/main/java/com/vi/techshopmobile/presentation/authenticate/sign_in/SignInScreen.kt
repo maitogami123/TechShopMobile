@@ -27,15 +27,22 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.vi.techshopmobile.R
 import com.vi.techshopmobile.data.remote.authenticate.dto.SignInData
+import com.vi.techshopmobile.data.remote.authenticate.dto.SignUpData
 import com.vi.techshopmobile.presentation.Dimens.MediumPadding2
 import com.vi.techshopmobile.presentation.Dimens.RadiusSmall
 import com.vi.techshopmobile.presentation.Dimens.SmallGap
@@ -43,6 +50,7 @@ import com.vi.techshopmobile.presentation.Dimens.SmallPadding
 import com.vi.techshopmobile.presentation.authenticate.AuthenticateEvent
 import com.vi.techshopmobile.presentation.authenticate.AuthenticateViewModel
 import com.vi.techshopmobile.presentation.common.CustomButton
+import com.vi.techshopmobile.presentation.common.CustomButtonIcon
 import com.vi.techshopmobile.presentation.common.Input
 import com.vi.techshopmobile.presentation.common.TransformableInput
 import com.vi.techshopmobile.presentation.home.home_navigator.component.UtilityTopNavigation
@@ -55,14 +63,40 @@ fun SignInScreen(
     navGraphController: NavController,
     navController: NavController
 ) {
+    //Google
+    var user by remember { mutableStateOf(Firebase.auth.currentUser) }
+    val token = stringResource(id = R.string.web_client_id)
+    val context = LocalContext.current
+    val launcher = rememberFirebaseAuthLauncher(
+        onAuthComplete = { result ->
+            user = result.user
+        },
+        onAuthError = {
+            user = null
+        }
+    )
+
     val viewModel: AuthenticateViewModel = hiltViewModel()
     val isLoggedInState = viewModel.isLoggedIn.collectAsState();
+    //val stateGoogle = viewModel.state.collectAsStateWithLifecycle()
     var username by remember {
         mutableStateOf("")
     }
     var password by remember {
         mutableStateOf("")
     }
+
+//    val context = LocalContext.current
+//    LaunchedEffect(key1 = stateGoogle.value.signInError) {
+//        stateGoogle.value.signInError?.let { error ->
+//            Toast.makeText(
+//                context,
+//                error,
+//                Toast.LENGTH_LONG
+//            ).show()
+//        }
+//    }
+
     LaunchedEffect(key1 = isLoggedInState.value) {
         if (isLoggedInState.value) {
             navGraphController.navigate(Route.TechShopNavigation.route) {
@@ -105,7 +139,6 @@ fun SignInScreen(
             )
             Column(
                 modifier = Modifier
-                    .weight(1f)
                     .clip(RoundedCornerShape(topStart = RadiusSmall, topEnd = RadiusSmall))
                     .background(Color.White)
                     .padding(horizontal = SmallPadding)
@@ -164,10 +197,43 @@ fun SignInScreen(
                         )
                     )
                 }
+                Spacer(modifier = Modifier.height(SmallGap))
+                if (user == null) {
+                    CustomButtonIcon(
+                        icon = R.drawable.google,
+                        text = "Đăng nhập bằng Google",
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        val gso =
+                            GoogleSignInOptions
+                                .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                                .requestIdToken(token)
+                                .requestEmail()
+                                .build()
+
+                        val googleSignInClient = GoogleSignIn
+                            .getClient(context, gso)
+//                        val googleSignInClient = GoogleSignIn
+//                            .getClient(context, test.value.options)
+                        launcher
+                            .launch(googleSignInClient.signInIntent)
+                    }
+                } else {
+                    user?.email.let {
+                        (viewModel::onEvent)(
+                            AuthenticateEvent.RegisterEvent(
+                                SignUpData(
+                                    username = user!!.email!!.split("@")[0],
+                                    email = user!!.email!!,
+                                    password = "Long123@",
+                                    confirmPassword = "Long123@"
+                                )
+                            )
+                        )
+                    }
+                }
             }
-
         }
-
     }
 }
 

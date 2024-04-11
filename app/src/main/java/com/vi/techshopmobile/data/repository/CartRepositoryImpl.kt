@@ -25,8 +25,12 @@ class CartRepositoryImpl @Inject constructor(
         return cartDao.getCartITem(productLine)
     }
 
-    override fun updateCart(quantity: Int, id: Int) {
+    override suspend fun updateCart(quantity: Int, id: Int) {
         return cartDao.updateCartItem(quantity, id)
+    }
+
+    override suspend fun clearCart(username: String) {
+        return cartDao.clearCart(username)
     }
 
 
