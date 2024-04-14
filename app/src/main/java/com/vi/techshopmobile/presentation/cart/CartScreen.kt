@@ -141,7 +141,7 @@ fun CartScreen(
                         verticalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
                         RowPrice(textLeft = "Tổng tiền hàng", textRight = totalPrice.value)
-                        RowPriceDelivery(textLeft = "Tổng tiền hàng", textRight = "Miễn Phí")
+                        RowPriceDelivery(textLeft = "Tổng tiền vận chuyển", textRight = "Miễn Phí")
                         RowTotalPrice(textLeft = "Tổng thanh toán", textRight = totalPrice.value)
                     }
                 }

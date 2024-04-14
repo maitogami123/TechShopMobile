@@ -22,7 +22,10 @@ import com.vi.techshopmobile.domain.usecases.cart.GetCartItem
 import com.vi.techshopmobile.domain.usecases.cart.UpdateCart
 import com.vi.techshopmobile.domain.usecases.cart.UpsertCart
 import com.vi.techshopmobile.domain.usecases.wish_list.DeleteWishItem
+import com.vi.techshopmobile.domain.usecases.wish_list.DeleteWishItemByProductLine
 import com.vi.techshopmobile.domain.usecases.wish_list.GetWishList
+import com.vi.techshopmobile.domain.usecases.wish_list.SelectWishItem
+import com.vi.techshopmobile.domain.usecases.wish_list.UpdateWishItem
 import com.vi.techshopmobile.domain.usecases.wish_list.UpsertWishItem
 import com.vi.techshopmobile.domain.usecases.wish_list.WishListUseCases
 import com.vi.techshopmobile.util.Constants.DATABASE_NAME
@@ -84,7 +87,10 @@ object AppModule {
     ): WishListUseCases = WishListUseCases(
         UpsertWishItem(wishListRepository),
         DeleteWishItem(wishListRepository),
-        GetWishList(wishListRepository)
+        GetWishList(wishListRepository),
+        SelectWishItem(wishListRepository),
+        DeleteWishItemByProductLine(wishListRepository),
+        UpdateWishItem(wishListRepository)
     )
 
     @Provides
