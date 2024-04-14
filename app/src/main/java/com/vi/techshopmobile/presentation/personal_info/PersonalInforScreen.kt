@@ -74,7 +74,9 @@ fun PersonalInfoScreen(onNavigateUp: () -> Unit, navController: NavController) {
                     labelText = "Email",
                     linkLabel = "Đổi gmail",
                     inputText = accountDetail.email,
-                    onChange = {}) {
+                    onChange = {},
+                ) {
+                    navController.navigate(Route.ChangeEmailScreen.route)
                 }
             }
 
