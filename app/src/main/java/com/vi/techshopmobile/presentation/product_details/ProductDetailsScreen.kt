@@ -1,5 +1,6 @@
 package com.vi.techshopmobile.presentation.product_details
 
+import android.util.Log
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -52,6 +53,8 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import arrow.core.left
+import arrow.core.right
 import coil.compose.AsyncImage
 import com.vi.techshopmobile.LocalToken
 import com.vi.techshopmobile.R
@@ -69,6 +72,7 @@ import com.vi.techshopmobile.ui.theme.TechShopMobileTheme
 import com.vi.techshopmobile.util.Constants.BASE_URL
 import com.vi.techshopmobile.util.decodeToken
 import com.vi.techshopmobile.util.formatPrice
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
@@ -83,7 +87,7 @@ fun ProductDetailsScreen(
     val navGraphController = LocalNavGraphController.current;
     val state by viewModel.productDetail.collectAsState();
 
-    val quantityToAdd by viewModel.quantityProduct.collectAsState()
+    val itemInWishList = viewModel.itemInWishList.collectAsState()
 
     val scope = rememberCoroutineScope()
     val sheetState = rememberModalBottomSheetState()
@@ -107,6 +111,15 @@ fun ProductDetailsScreen(
         (viewModel::onEvent)(ProductDetailsEvent.GetDetailEvent(productLine))
     }
 
+    LaunchedEffect(key1 = itemInWishList) {
+        (viewModel::onEvent)(
+            ProductDetailsEvent.SelectItemWishList(
+                productLine = productLine,
+                username = decodedToken.sub
+            )
+        )
+    }
+
     Scaffold(
         topBar = {
             UtilityTopNavigation(
@@ -122,6 +135,7 @@ fun ProductDetailsScreen(
         bottomBar = {
             if (isLoggedIn) {
                 FloatingBottomBar(
+                    itemInWishList = itemInWishList.value,
                     buttonText = "Mua ngay",
                     onButtonClick = {
                         (viewModel::onEvent)(

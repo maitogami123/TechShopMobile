@@ -1,10 +1,7 @@
 package com.vi.techshopmobile.presentation.product_details
 
-import android.util.Log
-import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.vi.techshopmobile.domain.model.CartItem
 import com.vi.techshopmobile.domain.usecases.cart.CartUseCases
 import com.vi.techshopmobile.domain.usecases.products.ProductUseCases
 import com.vi.techshopmobile.domain.usecases.wish_list.WishListUseCases
@@ -16,6 +13,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -32,6 +30,9 @@ class ProductDetailsViewModel @Inject constructor(
     private val _quantityProduct = MutableStateFlow(1)
     val quantityProduct = _quantityProduct.asStateFlow()
 
+    private val _itemInWishList = MutableStateFlow(false)
+    val itemInWishList = _itemInWishList.asStateFlow()
+
     fun onEvent(event: ProductDetailsEvent) {
         when (event) {
             is ProductDetailsEvent.GetDetailEvent -> {
@@ -40,8 +41,23 @@ class ProductDetailsViewModel @Inject constructor(
 
             is ProductDetailsEvent.AddItemToWishListEvent -> {
                 viewModelScope.launch {
-                    wishListUseCases.upsertWishItem(event.wishItem)
-                    EventBus.sendEvent(Event.Toast("Đã thêm vào danh sách yêu thích"))
+                    wishListUseCases.selectWishItem(
+                        event.wishItem.username,
+                        event.wishItem.productLine,
+                    ).collect {
+                        if (it == null || it.username != event.wishItem.username) {
+                            wishListUseCases.upsertWishItem(event.wishItem)
+                            EventBus.sendEvent(Event.Toast("Đã thêm vào danh sách yêu thích"))
+                            this.cancel();
+                        } else {
+                            wishListUseCases.deleteWishItemByProductLine(
+                                event.wishItem.username,
+                                event.wishItem.productLine
+                            )
+                            EventBus.sendEvent(Event.Toast("Đã xóa khỏi danh sách yêu thích"))
+                            this.cancel();
+                        }
+                    }
                 }
             }
 
@@ -78,6 +94,29 @@ class ProductDetailsViewModel @Inject constructor(
                     this.cancel()
                 }
             }
+
+            is ProductDetailsEvent.RemoveItemWishList -> {
+                viewModelScope.launch {
+                    wishListUseCases.deleteWishItem(event.wishItem)
+                    EventBus.sendEvent(Event.Toast("Đã xóa sản phẩm khỏi danh sách yêu thích"))
+                }
+            }
+
+            is ProductDetailsEvent.SelectItemWishList -> {
+                viewModelScope.launch {
+                    wishListUseCases.selectWishItem(event.username, event.productLine).collectLatest {
+                        if (it == null || it.username != event.username) {
+                            _itemInWishList.value = false
+                        }
+                        else{
+                            _itemInWishList.value = it.isSelected
+                        }
+                    }
+                    EventBus.sendEvent(Event.Toast("đã chọn sản phẩm yêu thích với tên ${event.productLine}"))
+                }
+            }
+
+            is ProductDetailsEvent.DeleteWishItemByProductLine -> TODO()
         }
     }
 

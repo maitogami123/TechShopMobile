@@ -8,7 +8,10 @@ import com.vi.techshopmobile.presentation.authenticate.AuthenticateEvent
 sealed class ProductDetailsEvent {
     data class GetDetailEvent(val productLine: String) : ProductDetailsEvent()
     data class AddItemToWishListEvent(val wishItem: WishItem) : ProductDetailsEvent()
-    data class AddItemToCart(val cartItem: CartItem): ProductDetailsEvent()
-    data class IncreaseQuantity(val quantity: Int): ProductDetailsEvent()
-    data class DecreaseQuantity(val quantity: Int): ProductDetailsEvent()
+    data class RemoveItemWishList(val wishItem: WishItem) : ProductDetailsEvent()
+    data class SelectItemWishList(val username: String, val productLine: String) : ProductDetailsEvent()
+    data class DeleteWishItemByProductLine(val username: String, val productLine: String) : ProductDetailsEvent()
+    data class AddItemToCart(val cartItem: CartItem) : ProductDetailsEvent()
+    data class IncreaseQuantity(val quantity: Int) : ProductDetailsEvent()
+    data class DecreaseQuantity(val quantity: Int) : ProductDetailsEvent()
 }
