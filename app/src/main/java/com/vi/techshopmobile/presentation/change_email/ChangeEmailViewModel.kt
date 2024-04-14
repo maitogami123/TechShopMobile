@@ -32,8 +32,6 @@ class ChangeEmailViewModel @Inject constructor(
     val isOldEmail = _isOldEmail.asStateFlow()
 
     //gui email
-    private var _isSendMail = MutableStateFlow(false)
-    val isSendEmail = _isSendMail.asStateFlow()
     private var _isSendMailLoading = MutableStateFlow(false)
     val isSendEmailLoading = _isSendMailLoading.asStateFlow()
 
@@ -97,7 +95,7 @@ class ChangeEmailViewModel @Inject constructor(
                     if (mailResponse.isRight()) {
                         mailResponse.onRight {
                             sendEvent(Event.Toast("Đã gửi mã thành công"))
-                            _isSendMail.value = true
+                            _isSendMailLoading.value = false
                         }
                     } else {
                         mailResponse.onLeft {
