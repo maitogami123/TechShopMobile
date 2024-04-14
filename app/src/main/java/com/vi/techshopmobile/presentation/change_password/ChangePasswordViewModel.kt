@@ -63,7 +63,7 @@ class ChangePasswordViewModel @Inject constructor(
 
                     } else {
                         passwordReponse.onLeft {
-                            sendEvent(Event.Toast(it.detail))
+                            sendEvent(Event.Toast("Mật khẩu cũ không đúng"))
                         }
                     }
                 }

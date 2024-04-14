@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -24,6 +25,7 @@ import com.vi.techshopmobile.presentation.common.Address
 import com.vi.techshopmobile.presentation.common.CustomButton
 import com.vi.techshopmobile.presentation.common.Input
 import com.vi.techshopmobile.presentation.common.InputWithLink
+import com.vi.techshopmobile.presentation.common.LoadingDialog
 import com.vi.techshopmobile.presentation.home.home_navigator.component.UtilityTopNavigation
 import com.vi.techshopmobile.presentation.navgraph.Route
 
@@ -47,72 +49,76 @@ fun PersonalInfoScreen(onNavigateUp: () -> Unit, navController: NavController) {
             ) { }
         }
     ) {
-        val topPadding = it.calculateTopPadding()
-        Column(
-            modifier = Modifier
-                .padding(top = topPadding + SmallPadding)
-                .padding(horizontal = SmallPadding),
-            verticalArrangement = Arrangement.spacedBy(SmallPadding)
-        ) {
-            state.value.userDetail?.accountDetail?.let { accountDetail ->
-                Input(
-                    inputText = accountDetail.firstName,
-                    labelText = "Họ và tên lót",
-                    modifier = Modifier.fillMaxWidth()
-                ) {}
-            }
-            state.value.userDetail?.accountDetail?.let { accountDetail ->
-                Input(
-                    inputText = accountDetail.lastName,
-                    labelText = "Tên",
-                    modifier = Modifier.fillMaxWidth()
-                ) {}
-            }
-
-            state.value.userDetail?.let { accountDetail ->
-                InputWithLink(
-                    labelText = "Email",
-                    linkLabel = "Đổi gmail",
-                    inputText = accountDetail.email,
-                    onChange = {},
-                ) {
-                    navController.navigate(Route.ChangeEmailScreen.route)
-                }
-            }
-
-            CustomButton(modifier = Modifier.fillMaxWidth(), text = "Đổi mật khẩu") {
-                navController.navigate(Route.ChangePasswordScreen.route)
-
-            }
-            Divider(
+        if (state.value.isLoading) {
+            LoadingDialog(isLoading = state.value.isLoading)
+        } else {
+            LazyColumn(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = SmallPadding)
-            )
-            Column(verticalArrangement = Arrangement.spacedBy(SmallGap)) {
-                Text(
-                    text = ("Địa chỉ mặc định hiện tại"),
-                    style = MaterialTheme.typography.headlineMedium
-                )
-                state.value.userDetail?.accountDetail?.let { user ->
-                    Address(
-                        name = user.firstName + " " + user.lastName,
-                        phoneNumber = "(+84) " + user.phoneNumber,
-                        addressNote = user.detailedAddress,
-                        address = user.district + " " + user.city
-                    )
+                    .padding(it),
+//                .padding(horizontal = Dimens.SmallPadding),
+                verticalArrangement = Arrangement.spacedBy(SmallPadding)
+            ) {}
+            val topPadding = it.calculateTopPadding()
+            Column(
+                modifier = Modifier
+                    .padding(top = topPadding + SmallPadding)
+                    .padding(horizontal = SmallPadding),
+                verticalArrangement = Arrangement.spacedBy(SmallPadding)
+            ) {
+                state.value.userDetail?.accountDetail?.let { accountDetail ->
+                    Input(
+                        inputText = accountDetail.firstName,
+                        labelText = "Họ và tên lót",
+                        modifier = Modifier.fillMaxWidth()
+                    ) {}
                 }
+                state.value.userDetail?.accountDetail?.let { accountDetail ->
+                    Input(
+                        inputText = accountDetail.lastName,
+                        labelText = "Tên",
+                        modifier = Modifier.fillMaxWidth()
+                    ) {}
+                }
+
+                state.value.userDetail?.let { accountDetail ->
+                    InputWithLink(
+                        labelText = "Email",
+                        linkLabel = "Đổi gmail",
+                        inputText = accountDetail.email,
+                        onChange = {},
+                    ) {
+                        navController.navigate(Route.ChangeEmailScreen.route)
+                    }
+                }
+
+                CustomButton(modifier = Modifier.fillMaxWidth(), text = "Đổi mật khẩu") {
+                    navController.navigate(Route.ChangePasswordScreen.route)
+
+                }
+                Divider(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = SmallPadding)
+                )
+                Column(verticalArrangement = Arrangement.spacedBy(SmallGap)) {
+                    Text(
+                        text = ("Địa chỉ mặc định hiện tại"),
+                        style = MaterialTheme.typography.headlineMedium
+                    )
+                    state.value.userDetail?.accountDetail?.let { user ->
+                        Address(
+                            name = user.firstName + " " + user.lastName,
+                            phoneNumber = "(+84) " + user.phoneNumber,
+                            addressNote = user.detailedAddress,
+                            address = user.district + " " + user.city
+                        )
+                    }
+                }
+                Spacer(modifier = Modifier.weight(1f))
+                CustomButton(modifier = Modifier.fillMaxWidth(), text = "Lưu thay đổi") {}
             }
-            Spacer(modifier = Modifier.weight(1f))
-            CustomButton(modifier = Modifier.fillMaxWidth(), text = "Lưu thay đổi") {}
         }
     }
-}
 
-@Preview
-@Composable
-fun PersonalInfoScreenPreview() {
-//    PersonalInfoScreen {
-//
-//    }
 }

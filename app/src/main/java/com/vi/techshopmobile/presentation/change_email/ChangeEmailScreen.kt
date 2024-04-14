@@ -1,5 +1,6 @@
 package com.vi.techshopmobile.presentation.change_email
 
+import android.annotation.SuppressLint
 import android.os.CountDownTimer
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -9,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -36,6 +38,7 @@ import com.vi.techshopmobile.presentation.Dimens
 import com.vi.techshopmobile.presentation.common.CustomButton
 import com.vi.techshopmobile.presentation.common.FloatingBottomBar
 import com.vi.techshopmobile.presentation.common.Input
+import com.vi.techshopmobile.presentation.common.LoadingDialog
 import com.vi.techshopmobile.presentation.forget_password.components.OtpInputField
 import com.vi.techshopmobile.presentation.home.home_navigator.component.UtilityTopNavigation
 import com.vi.techshopmobile.presentation.navgraph.Route
@@ -43,18 +46,18 @@ import com.vi.techshopmobile.util.convertMilisToMinus
 
 
 @Composable
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 fun ChangeEmailScreen(onNavigateUp: () -> Unit, navController: NavController) {
     val viewModel: ChangeEmailViewModel = hiltViewModel()
     val token = LocalToken.current
+    val state = viewModel.state.collectAsState()
     val oldEmailState = remember { mutableStateOf("") }
     val newEmailState = remember { mutableStateOf("") }
-
     val isSendMailLoading = viewModel.isSendEmailLoading.collectAsState()
     val time: Long = 20000
     var otpValue by remember { mutableStateOf("") }
     var resendOtp by remember { mutableStateOf(time) }
     var isResendOtp by remember { mutableStateOf(true) }
-
     var showResendButton by remember { mutableStateOf(false) }
     var isButtonClicked by remember { mutableStateOf(false) }
     var isInputDirty by remember { mutableStateOf(false) }
@@ -100,7 +103,9 @@ fun ChangeEmailScreen(onNavigateUp: () -> Unit, navController: NavController) {
                 }
             )
         }
+
     ) {
+
         val topPadding = it.calculateTopPadding()
         Column(
             modifier = Modifier
@@ -117,10 +122,9 @@ fun ChangeEmailScreen(onNavigateUp: () -> Unit, navController: NavController) {
                 labelText = "Email cũ",
                 onChange = {
                     oldEmailState.value = it
-                    isInputDirty = it.isNotEmpty()
                 },
                 modifier = Modifier.fillMaxWidth(),
-                errorMessage = if (isInputDirty && oldEmailState.value.isEmpty()) "Email cũ không được để trống" else null
+                errorMessage = if (oldEmailState.value.isBlank()) "Email cũ không được để trống" else null
             )
             Spacer(modifier = Modifier.height(Dimens.SmallGap))
 
@@ -188,7 +192,14 @@ fun ChangeEmailScreen(onNavigateUp: () -> Unit, navController: NavController) {
             }
 
             Spacer(modifier = Modifier.height(Dimens.SmallGap))
-
+            val emailRegex = Regex("^[^@]+@[^@]+\\.[^@]+$")
+            val errorMessage = if (newEmailState.value.isBlank()) {
+                "Email mới không được để trống"
+            } else if (!emailRegex.matches(newEmailState.value)) {
+                "Email mới không hợp lệ "
+            } else {
+                null
+            }
             Input(
                 inputText = newEmailState.value,
                 labelText = "Email mới",
@@ -196,8 +207,7 @@ fun ChangeEmailScreen(onNavigateUp: () -> Unit, navController: NavController) {
                     newEmailState.value = it
                 },
                 modifier = Modifier.fillMaxWidth(),
-                errorMessage = if (newEmailState.value.isBlank()) "Email mới không được để trống" else null
-
+                errorMessage = errorMessage
             )
 
             Spacer(modifier = Modifier.height(Dimens.SmallGap))
@@ -213,5 +223,9 @@ fun ChangeEmailScreen(onNavigateUp: () -> Unit, navController: NavController) {
             Spacer(modifier = Modifier.weight(1f))
 
         }
+
     }
+
+
+
 }
