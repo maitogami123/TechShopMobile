@@ -35,7 +35,6 @@ import kotlinx.coroutines.delay
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun ChangePasswordScreen(
-
     onNavigateUp: () -> Unit
 ) {
     val token = LocalToken.current
@@ -62,16 +61,7 @@ fun ChangePasswordScreen(
         )
 
     }
-//    LaunchedEffect(key1 = newPasswordState.value.value) {
-//        delay(500L)
-//
-//        val error = if (newPasswordState.value.value == oldPasswordState.value.value) {
-//            "Mật khẩu không được trùng"
-//        } else {
-//            null
-//        }
-//        newPasswordState.value = newPasswordState.value.copy(error = error)
-//    }
+
 
     Scaffold(
         topBar = {

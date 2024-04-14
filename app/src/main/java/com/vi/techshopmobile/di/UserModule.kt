@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder
 import com.vi.techshopmobile.data.remote.user.UserApi
 import com.vi.techshopmobile.data.repository.UserRepositoryImpl
 import com.vi.techshopmobile.domain.repository.user.UserRepository
+import com.vi.techshopmobile.domain.usecases.user.ChangeEmail
 import com.vi.techshopmobile.domain.usecases.user.ChangePassword
 import com.vi.techshopmobile.domain.usecases.user.CheckOtp
 import com.vi.techshopmobile.domain.usecases.user.UpdatePasswordOtp
@@ -44,6 +45,7 @@ object UserModule {
     fun provideUserUseCases(userRepository: UserRepository) = UserUseCases(
         checkOtp = CheckOtp(userRepository),
         updatePasswordOtp = UpdatePasswordOtp(userRepository),
-        changePassword = ChangePassword(userRepository)
+        changePassword = ChangePassword(userRepository),
+        changeEmail = ChangeEmail(userRepository)
     )
 }
