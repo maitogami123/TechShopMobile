@@ -28,6 +28,7 @@ import com.vi.techshopmobile.R
 import com.vi.techshopmobile.domain.model.ProductLine
 import com.vi.techshopmobile.presentation.about.AboutScreen
 import com.vi.techshopmobile.presentation.cart.CartScreen
+import com.vi.techshopmobile.presentation.change_email.ChangeEmailScreen
 import com.vi.techshopmobile.presentation.change_password.ChangePasswordScreen
 import com.vi.techshopmobile.presentation.chatAI.ChatAiScreen
 import com.vi.techshopmobile.presentation.checkout.screens.AddNewAddressScreen
@@ -248,9 +249,11 @@ fun HomeNavigator(navGraphController: NavController) {
                 }
                 composable(route = Route.ChangePasswordScreen.route) {
                     ChangePasswordScreen(onNavigateUp = { navController.navigateUp() },
-
-
                         )
+                }
+                composable(route = Route.ChangeEmailScreen.route) {
+                    ChangeEmailScreen(onNavigateUp = { navController.navigateUp() }, navController
+                    )
                 }
                 composable(route = Route.UserOderScreen.route) {
                     UserOrdersScreen(onNavigateUp = { navController.navigateUp() }, navController)

@@ -1,6 +1,7 @@
 package com.vi.techshopmobile.data.remote.user
 
 import arrow.core.Either
+import com.vi.techshopmobile.data.remote.user.dto.ChangeEmailRequest
 import com.vi.techshopmobile.data.remote.user.dto.ChangePasswordReponse
 import com.vi.techshopmobile.data.remote.user.dto.ChangePasswordRequest
 import com.vi.techshopmobile.data.remote.user.dto.UpdatePasswordOtpData
@@ -24,5 +25,7 @@ interface UserApi {
     @PATCH("changepassword")
     suspend fun changePassword(@Header("Authorization") token: String , @Body changePasswordRequest: ChangePasswordRequest): Either<ErrorResponse, ChangePasswordReponse>
 
+    @PATCH("updatemail")
+    suspend fun changeEmail(@Header("Authorization") token: String, @Body changeEmailRequest: ChangeEmailRequest): Either<ErrorResponse, ChangePasswordReponse>
 
 }

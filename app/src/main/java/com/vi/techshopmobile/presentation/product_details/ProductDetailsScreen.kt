@@ -173,9 +173,11 @@ fun ProductDetailsScreen(
                         showBottomSheet = true
                     })
             } else {
-                FloatingBottomBar(buttonText = "Đăng nhập") {
-                    navGraphController.navigate(Route.AuthenticateNavigation.route)
-                }
+                FloatingBottomBar(
+                    buttonText = "Đăng nhập",
+                    onButtonClick = { navGraphController.navigate(Route.AuthenticateNavigation.route) })
+
+
             }
         }
     ) {

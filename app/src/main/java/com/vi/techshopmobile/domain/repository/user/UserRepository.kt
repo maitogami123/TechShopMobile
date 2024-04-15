@@ -1,6 +1,7 @@
 package com.vi.techshopmobile.domain.repository.user
 
 import arrow.core.Either
+import com.vi.techshopmobile.data.remote.user.dto.ChangeEmailRequest
 import com.vi.techshopmobile.data.remote.user.dto.ChangePasswordReponse
 import com.vi.techshopmobile.data.remote.user.dto.ChangePasswordRequest
 import com.vi.techshopmobile.data.remote.user.dto.CheckOtpData
@@ -21,4 +22,8 @@ interface UserRepository {
         changePasswordRequest: ChangePasswordRequest
     ): Either<ErrorResponse, ChangePasswordReponse>
 
+    suspend fun changeEmailRequest(
+        token: String,
+        changeEmailRequest: ChangeEmailRequest
+    ): Either<ErrorResponse, ChangePasswordReponse>
 }

@@ -2,6 +2,8 @@ package com.vi.techshopmobile.data.repository
 
 import arrow.core.Either
 import com.vi.techshopmobile.data.remote.user.UserApi
+import com.vi.techshopmobile.data.remote.user.dto.ChangeEmailRequest
+import com.vi.techshopmobile.data.remote.user.dto.ChangeEmailResponse
 import com.vi.techshopmobile.data.remote.user.dto.ChangePasswordReponse
 import com.vi.techshopmobile.data.remote.user.dto.ChangePasswordRequest
 import com.vi.techshopmobile.data.remote.user.dto.UpdatePasswordOtpData
@@ -34,6 +36,12 @@ class UserRepositoryImpl @Inject constructor(
         changePasswordRequest: ChangePasswordRequest
     ): Either<ErrorResponse, ChangePasswordReponse> {
         return userApi.changePassword(token, changePasswordRequest)
+    }
+    override suspend fun changeEmailRequest(
+        token: String,
+        changeEmailRequest: ChangeEmailRequest
+    ): Either<ErrorResponse, ChangePasswordReponse> {
+        return userApi.changeEmail(token, changeEmailRequest )
     }
 
 }
