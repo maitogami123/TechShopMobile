@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -20,6 +19,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -27,6 +27,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -38,7 +39,6 @@ import com.vi.techshopmobile.presentation.Dimens
 import com.vi.techshopmobile.presentation.common.CustomButton
 import com.vi.techshopmobile.presentation.common.FloatingBottomBar
 import com.vi.techshopmobile.presentation.common.Input
-import com.vi.techshopmobile.presentation.common.LoadingDialog
 import com.vi.techshopmobile.presentation.forget_password.components.OtpInputField
 import com.vi.techshopmobile.presentation.home.home_navigator.component.UtilityTopNavigation
 import com.vi.techshopmobile.presentation.navgraph.Route
@@ -46,22 +46,21 @@ import com.vi.techshopmobile.util.convertMilisToMinus
 
 
 @Composable
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "UnrememberedMutableState")
 fun ChangeEmailScreen(onNavigateUp: () -> Unit, navController: NavController) {
     val viewModel: ChangeEmailViewModel = hiltViewModel()
     val token = LocalToken.current
-    val state = viewModel.state.collectAsState()
-    val oldEmailState = remember { mutableStateOf("") }
-    val newEmailState = remember { mutableStateOf("") }
+    val oldEmailState = remember { mutableStateOf(Input()) }
+    val newEmailState = remember { mutableStateOf(Input()) }
+
     val isSendMailLoading = viewModel.isSendEmailLoading.collectAsState()
     val time: Long = 20000
-    var otpValue by remember { mutableStateOf("") }
+    val otpValue = remember { mutableStateOf(Input()) }
     var resendOtp by remember { mutableStateOf(time) }
     var isResendOtp by remember { mutableStateOf(true) }
     var showResendButton by remember { mutableStateOf(false) }
-    var isButtonClicked by remember { mutableStateOf(false) }
-    var isInputDirty by remember { mutableStateOf(false) }
 
+    val isEnableButton = derivedStateOf { otpValue.value.value.length == 6 }
 
     val resendTimer = object : CountDownTimer(time, 1000) {
         override fun onTick(millisUntilFinished: Long) {
@@ -83,23 +82,38 @@ fun ChangeEmailScreen(onNavigateUp: () -> Unit, navController: NavController) {
         },
         bottomBar = {
             FloatingBottomBar(
+                enable = isEnableButton.value,
                 buttonText = "Thay đổi",
                 onButtonClick = {
-                    isButtonClicked = true
-                    if (oldEmailState.value.isBlank() || newEmailState.value.isBlank() || otpValue.isBlank()) {
-                        return@FloatingBottomBar
+                    var hasError = false;
+                    listOf(
+                        oldEmailState, newEmailState, otpValue
+                    ).forEach { state ->
+                        if (state.value.error != null) {
+                            hasError = true;
+                            return@forEach;
+                        }
+                        if (state.value.value.isBlank()) {
+                            state.value =
+                                state.value.copy(error = "Vui lòng nhập thông tin đầy đủ")
+                            hasError = true;
+                        } else {
+                            state.value = state.value.copy(error = null)
+                        }
                     }
-                    (viewModel::onEvent)(
-                        ChangeEmailEvent.GetAllEventChangeEmail(
-                            token = token,
-                            changeEmailRequest = ChangeEmailRequest(
-                                oldEmail = oldEmailState.value,
-                                email = newEmailState.value,
-                                verificationCode = otpValue
+                    if (!hasError) {
+                        (viewModel::onEvent)(
+                            ChangeEmailEvent.GetAllEventChangeEmail(
+                                token = token,
+                                changeEmailRequest = ChangeEmailRequest(
+                                    oldEmail = oldEmailState.value.value,
+                                    email = newEmailState.value.value,
+                                    verificationCode = otpValue.value.value
+                                )
                             )
                         )
-                    )
-                    navController.navigate(Route.PersonalInfoScreen.route)
+                        navController.navigate(Route.PersonalInfoScreen.route)
+                    }
                 }
             )
         }
@@ -114,17 +128,29 @@ fun ChangeEmailScreen(onNavigateUp: () -> Unit, navController: NavController) {
         ) {
             Text(
                 text = ("Cung cấp email mới"),
-                style = MaterialTheme.typography.headlineMedium,
+                style = MaterialTheme.typography.displayMedium.copy(
+                    fontWeight = FontWeight(600)
+                ),
                 modifier = Modifier.padding(bottom = Dimens.SmallPadding)
             )
             Input(
-                inputText = oldEmailState.value,
-                labelText = "Email cũ",
+                inputText = oldEmailState.value.value,
+                errorMessage = oldEmailState.value.error,
+                labelText = "Nhập mail cũ",
                 onChange = {
-                    oldEmailState.value = it
+                    oldEmailState.value = oldEmailState.value.copy(
+                        value = it,
+                        error =
+                        //if ("^(?!\\s*\$).+".toRegex()
+                        if ("[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}\$".toRegex()
+                                .matches(it)
+                        ) null else
+                            if ("^(?!\\s*\$).+".toRegex()
+                                    .matches(it)
+                            ) "Vui lòng điền chính xác thông tin mail" else "Vui lòng điền thông tin"
+                    )
                 },
                 modifier = Modifier.fillMaxWidth(),
-                errorMessage = if (oldEmailState.value.isBlank()) "Email cũ không được để trống" else null
             )
             Spacer(modifier = Modifier.height(Dimens.SmallGap))
 
@@ -168,7 +194,7 @@ fun ChangeEmailScreen(onNavigateUp: () -> Unit, navController: NavController) {
                                 if (isResendOtp) {
                                     (viewModel::onEvent)(
                                         ChangeEmailEvent.SendOtpByMail(
-                                            SendOtpByMailData(oldEmailState.value)
+                                            SendOtpByMailData(oldEmailState.value.value)
                                         )
                                     )
                                     resendTimer.start()
@@ -179,35 +205,50 @@ fun ChangeEmailScreen(onNavigateUp: () -> Unit, navController: NavController) {
                     }
                 } else {
                     CustomButton(text = "Nhận mã xác nhận", modifier = Modifier.fillMaxWidth()) {
-                        (viewModel::onEvent)(
-                            ChangeEmailEvent.SendOtpByMail(
-                                SendOtpByMailData(oldEmailState.value)
+                        var hasError = false;
+                        if (oldEmailState.value.error != null) {
+                            hasError = true;
+                        }
+                        if (oldEmailState.value.value.isBlank()) {
+                            oldEmailState.value =
+                                oldEmailState.value.copy(error = "Vui lòng nhập email cũ để nhận mã OTP")
+                            hasError = true;
+                        } else {
+                            oldEmailState.value = oldEmailState.value.copy(error = null)
+                        }
+                        if (!hasError) {
+                            (viewModel::onEvent)(
+                                ChangeEmailEvent.SendOtpByMail(
+                                    SendOtpByMailData(oldEmailState.value.value)
+                                )
                             )
-                        )
-                        showResendButton = true
-                        resendTimer.start()
-                        isResendOtp = false
+                            showResendButton = true
+                            resendTimer.start()
+                            isResendOtp = false
+                        }
                     }
                 }
             }
 
             Spacer(modifier = Modifier.height(Dimens.SmallGap))
-            val emailRegex = Regex("^[^@]+@[^@]+\\.[^@]+$")
-            val errorMessage = if (newEmailState.value.isBlank()) {
-                "Email mới không được để trống"
-            } else if (!emailRegex.matches(newEmailState.value)) {
-                "Email mới không hợp lệ "
-            } else {
-                null
-            }
+
             Input(
-                inputText = newEmailState.value,
-                labelText = "Email mới",
+                inputText = newEmailState.value.value,
+                labelText = "Nhập mail mới",
                 onChange = {
-                    newEmailState.value = it
+                    newEmailState.value = newEmailState.value.copy(
+                        value = it,
+                        error =
+                        //if ("^(?!\\s*\$).+".toRegex()
+                        if ("[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}\$".toRegex()
+                                .matches(it)
+                        ) null else
+                            if ("^(?!\\s*\$).+".toRegex()
+                                    .matches(it)
+                            ) "Vui lòng điền chính xác thông tin mail" else "Vui lòng điền thông tin"
+                    )
                 },
                 modifier = Modifier.fillMaxWidth(),
-                errorMessage = errorMessage
             )
 
             Spacer(modifier = Modifier.height(Dimens.SmallGap))
@@ -217,15 +258,16 @@ fun ChangeEmailScreen(onNavigateUp: () -> Unit, navController: NavController) {
                 style = MaterialTheme.typography.labelLarge,
             )
             OtpInputField(otpLength = 6, onOtpChanged = { otp ->
-                otpValue = otp
+                otpValue.value = otpValue.value.copy(
+                    value = otp
+                )
             })
-
             Spacer(modifier = Modifier.weight(1f))
-
         }
-
     }
-
-
-
 }
+
+data class Input(
+    val value: String = "",
+    val error: String? = null
+)
