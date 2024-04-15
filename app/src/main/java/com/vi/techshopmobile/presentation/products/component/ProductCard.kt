@@ -58,7 +58,7 @@ fun ProductCard(
     Card(
         modifier = modifier
             .clickable {
-                navigateToDetails(navController, product.productLine)
+                navigateToDetails(navController, product.productLine, product.categoryName)
             }
             .width(180.dp)
             .height(250.dp),

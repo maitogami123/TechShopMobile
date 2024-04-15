@@ -240,11 +240,15 @@ fun HomeNavigator(navGraphController: NavController) {
                 ) {
                     navController.previousBackStackEntry?.savedStateHandle?.get<String?>("id")
                         ?.let { id ->
-                            DetailAddressScreen(
-                                onNavigateUp = { navController.navigateUp() },
-                                id = id,
-                                navController = navController
-                            )
+                            navController.previousBackStackEntry?.savedStateHandle?.get<String?>("categoryName")
+                                ?.let { categoryName ->
+                                    DetailAddressScreen(
+                                        onNavigateUp = { navController.navigateUp() },
+                                        id = id,
+                                        categoryName = categoryName,
+                                        navController = navController
+                                    )
+                                }
                         }
                 }
                 composable(route = Route.ChangePasswordScreen.route) {
@@ -280,7 +284,8 @@ fun HomeNavigator(navGraphController: NavController) {
     }
 }
 
-fun navigateToDetails(navController: NavController, productLine: String) {
+fun navigateToDetails(navController: NavController, productLine: String, categoryName: String) {
     navController.currentBackStackEntry?.savedStateHandle?.set("productLine", productLine)
+    navController.currentBackStackEntry?.savedStateHandle?.set("categoryName", categoryName)
     navController.navigate(Route.ProductDetailsScreen.route);
 }

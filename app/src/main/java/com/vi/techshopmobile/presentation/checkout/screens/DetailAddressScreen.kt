@@ -56,6 +56,7 @@ import com.vi.techshopmobile.ui.theme.Blue_50
 fun DetailAddressScreen(
     navController: NavController,
     id: String,
+    categoryName: String,
     onNavigateUp: () -> Unit
 ) {
     val viewModel: CheckOutViewModel = hiltViewModel()
@@ -323,7 +324,7 @@ fun DetailAddressScreen(
 @Preview
 @Composable
 fun DetailAddressScreenScreen() {
-    DetailAddressScreen(navController = rememberNavController(), id = "1") {
+    DetailAddressScreen(navController = rememberNavController(), id = "1", categoryName = "Laptop") {
 
     }
 
