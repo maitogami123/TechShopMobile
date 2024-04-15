@@ -59,7 +59,7 @@ fun ChangeEmailScreen(onNavigateUp: () -> Unit, navController: NavController) {
     var resendOtp by remember { mutableStateOf(time) }
     var isResendOtp by remember { mutableStateOf(true) }
     var showResendButton by remember { mutableStateOf(false) }
-
+    var showInputOtpAndNewMail by remember { mutableStateOf(false) }
     val isEnableButton = derivedStateOf { otpValue.value.value.length == 6 }
 
     val resendTimer = object : CountDownTimer(time, 1000) {
@@ -225,44 +225,48 @@ fun ChangeEmailScreen(onNavigateUp: () -> Unit, navController: NavController) {
                             showResendButton = true
                             resendTimer.start()
                             isResendOtp = false
+                            showInputOtpAndNewMail = true
                         }
                     }
                 }
             }
 
-            Spacer(modifier = Modifier.height(Dimens.SmallGap))
+            if (showInputOtpAndNewMail && !isSendMailLoading.value) {
 
-            Input(
-                inputText = newEmailState.value.value,
-                labelText = "Nhập mail mới",
-                onChange = {
-                    newEmailState.value = newEmailState.value.copy(
-                        value = it,
-                        error =
-                        //if ("^(?!\\s*\$).+".toRegex()
-                        if ("[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}\$".toRegex()
-                                .matches(it)
-                        ) null else
-                            if ("^(?!\\s*\$).+".toRegex()
+                Spacer(modifier = Modifier.height(Dimens.SmallGap))
+
+                Input(
+                    inputText = newEmailState.value.value,
+                    labelText = "Nhập mail mới",
+                    onChange = {
+                        newEmailState.value = newEmailState.value.copy(
+                            value = it,
+                            error =
+                            //if ("^(?!\\s*\$).+".toRegex()
+                            if ("[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}\$".toRegex()
                                     .matches(it)
-                            ) "Vui lòng điền chính xác thông tin mail" else "Vui lòng điền thông tin"
-                    )
-                },
-                modifier = Modifier.fillMaxWidth(),
-            )
-
-            Spacer(modifier = Modifier.height(Dimens.SmallGap))
-
-            Text(
-                text = ("Nhập mã OTP"),
-                style = MaterialTheme.typography.labelLarge,
-            )
-            OtpInputField(otpLength = 6, onOtpChanged = { otp ->
-                otpValue.value = otpValue.value.copy(
-                    value = otp
+                            ) null else
+                                if ("^(?!\\s*\$).+".toRegex()
+                                        .matches(it)
+                                ) "Vui lòng điền chính xác thông tin mail" else "Vui lòng điền thông tin"
+                        )
+                    },
+                    modifier = Modifier.fillMaxWidth(),
                 )
-            })
-            Spacer(modifier = Modifier.weight(1f))
+
+                Spacer(modifier = Modifier.height(Dimens.SmallGap))
+
+                Text(
+                    text = ("Nhập mã OTP"),
+                    style = MaterialTheme.typography.labelLarge,
+                )
+                OtpInputField(otpLength = 6, onOtpChanged = { otp ->
+                    otpValue.value = otpValue.value.copy(
+                        value = otp
+                    )
+                })
+                Spacer(modifier = Modifier.weight(1f))
+            }
         }
     }
 }
