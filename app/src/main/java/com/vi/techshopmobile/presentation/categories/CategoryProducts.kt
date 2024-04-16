@@ -10,7 +10,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,7 +33,7 @@ fun CategoryProducts(navController: NavController) {
     ) {
         state.categories.forEachIndexed { index, category ->
             if (state.categoriesProduct.isNotEmpty() && state.categoriesProduct.size > index && state.categoriesProduct[index].products.isNotEmpty()) {
-                CategoriesBanner(categoryName = category.name)
+                CategoriesBanner(navController,categoryName = category.name)
                 LazyRow(
                     modifier = Modifier
                         .padding(top = 15.dp)
@@ -45,7 +44,7 @@ fun CategoryProducts(navController: NavController) {
                     items(category.brands) { brand ->
                         Button(
                             colors = ButtonDefaults.buttonColors(containerColor = Color(0xffC3DDFD)),
-                            onClick = { navigateToProducts(navController, category.name, brand.brandName) }) {
+                            onClick = { navigateToProducts(navController, category.name, brand.brandName, brand.products) }) {
                             Text(text = brand.brandName, color = Color(0xff1A56DB))
                         }
                     }

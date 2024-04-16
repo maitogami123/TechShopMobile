@@ -6,8 +6,17 @@ import com.vi.techshopmobile.domain.repository.search.SearchRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class SearchRepositoryImpl @Inject constructor(private val searchHistoryDAO: SearchDAO):SearchRepository {
-    override fun getSearchHistory(username: String): Flow<List<SearchHistory>> {
-        TODO("Not yet implemented")
+class SearchRepositoryImpl @Inject constructor(
+    private val searchHistoryDAO: SearchDAO
+) :
+    SearchRepository {
+
+    override suspend fun upsetArticle(searchHistory: SearchHistory) {
+        return searchHistoryDAO.upsert(searchHistory)
     }
+
+    override fun getSearchHistory(username: String): Flow<List<SearchHistory>> {
+        return searchHistoryDAO.getSearchHistory(username)
+    }
+
 }

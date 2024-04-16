@@ -38,7 +38,7 @@ fun CategoryBadge(modifier: Modifier = Modifier, category: Category) {
             .height(92.dp)
             .width(83.dp)
             .clickable {
-                navigateToProducts(navController, category.name, "")
+                navigateToProducts(navController, category.name, "", emptyList())
             },
     )
     {

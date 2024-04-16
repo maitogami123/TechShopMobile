@@ -28,51 +28,41 @@ import com.vi.techshopmobile.ui.theme.Blue
 import com.vi.techshopmobile.ui.theme.Gray_900
 
 @Composable
-fun FilterRadioGroup(heading: String, optionList: List<FilterLabel>){
-    val disableItemPos = listOf<Int>()
-    var selectedIndex by remember {
-        mutableIntStateOf(-1)
-    }
-    val context = LocalContext.current
-    Column(
+fun FilterRadioGroup(
+    index: Int,
+    lableName: String,
+    selectedIndex: Int,
+    onClick: () -> Unit
+) {
+    Row(
         modifier = Modifier
-            .selectableGroup()
-            .fillMaxSize(),
-        verticalArrangement = Arrangement.Center
+            .fillMaxWidth()
+            .height(56.dp)
+            .selectable(
+                selected = selectedIndex == index,
+                onClick = {
+                    onClick()
+                },
+                role = Role.RadioButton,
+            )
+            .padding(start = 16.dp), verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(text = heading, style = MaterialTheme.typography.displayMedium)
-        optionList.forEachIndexed { index, option ->
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(56.dp)
-                    .selectable(
-                        selected = selectedIndex == index,
-                        onClick = {
-                            selectedIndex = index
-                        },
-                        role = Role.RadioButton,
-                        enabled = index !in disableItemPos
-                    )
-                    .padding(start = 16.dp), verticalAlignment = Alignment.CenterVertically
-            ) {
-                RadioButton(
-                    selected = selectedIndex == index,
-                    onClick = {selectedIndex = index },
-                    colors = RadioButtonDefaults.colors(
-                        selectedColor = Blue,
-                        unselectedColor = Gray_900,
-                        disabledUnselectedColor = Gray_900,
-                        disabledSelectedColor = Gray_900
-                    ),
-                    enabled = index !in disableItemPos
-                )
-                Text(
-                    text = option.label,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = if (index !in disableItemPos) Gray_900 else Blue
-                )
-            }
-        }
+        RadioButton(
+            selected = selectedIndex == index,
+            onClick = { },
+            colors = RadioButtonDefaults.colors(
+                selectedColor = Blue,
+                unselectedColor = Gray_900,
+                disabledUnselectedColor = Gray_900,
+                disabledSelectedColor = Gray_900
+            ),
+        )
+        Text(
+            text = lableName,
+            style = MaterialTheme.typography.bodyMedium,
+            color = if (index != selectedIndex) Gray_900 else Blue
+        )
+
+
     }
 }

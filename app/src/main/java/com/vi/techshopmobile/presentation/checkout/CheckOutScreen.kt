@@ -139,7 +139,6 @@ fun CheckOutScreen(
     LaunchedEffect(key1 = isCreateOrder.value) {
         if (isCreateOrder.value == true && idOrderCreated.value != null) {
             navigateToPaymentSuccess(navController, idOrderCreated.value)
-
         }
     }
 
