@@ -9,6 +9,7 @@ import com.vi.techshopmobile.domain.repository.category.CategoriesRepository
 import com.vi.techshopmobile.domain.repository.products.ProductsRepository
 import com.vi.techshopmobile.domain.usecases.products.GetProductDetail
 import com.vi.techshopmobile.domain.usecases.products.GetProducts
+import com.vi.techshopmobile.domain.usecases.products.GetProductsRandom
 import com.vi.techshopmobile.domain.usecases.products.ProductUseCases
 import com.vi.techshopmobile.util.Constants
 import dagger.Module
@@ -42,6 +43,7 @@ object ProductModule {
     @Singleton
     fun provideProductsUseCases(productsRepository: ProductsRepository) = ProductUseCases(
         getProducts = GetProducts(productsRepository),
-        getProductDetail = GetProductDetail(productsRepository)
+        getProductDetail = GetProductDetail(productsRepository),
+        getProductsRandom = GetProductsRandom(productsRepository)
     )
 }

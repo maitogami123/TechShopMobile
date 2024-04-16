@@ -20,7 +20,7 @@ interface ProductsApi {
         ) productLine: String
     ): Either<ErrorResponse, ProductDetailResponse>
 
-    @GET("randomProduct/{categoryId}")
+    @GET("randomProduct/{categoryName}")
     suspend fun getProductsRandom(
         @Path("categoryName", encoded = true) categoryName: String,
         @Query("num", encoded = true) num: Int

@@ -45,10 +45,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -60,12 +62,14 @@ import com.vi.techshopmobile.LocalToken
 import com.vi.techshopmobile.R
 import com.vi.techshopmobile.domain.model.CartItem
 import com.vi.techshopmobile.domain.model.WishItem
+import com.vi.techshopmobile.presentation.Dimens
 import com.vi.techshopmobile.presentation.common.Accordion
 import com.vi.techshopmobile.presentation.common.FloatingBottomBar
 import com.vi.techshopmobile.presentation.common.LoadingDialog
 import com.vi.techshopmobile.presentation.home.home_navigator.component.UtilityTopNavigation
 import com.vi.techshopmobile.presentation.navgraph.LocalNavGraphController
 import com.vi.techshopmobile.presentation.navgraph.Route
+import com.vi.techshopmobile.presentation.products.component.ProductsRow
 import com.vi.techshopmobile.ui.theme.Danger
 import com.vi.techshopmobile.ui.theme.Gray_500
 import com.vi.techshopmobile.ui.theme.TechShopMobileTheme
@@ -81,11 +85,14 @@ fun ProductDetailsScreen(
     navController: NavController,
     isLoggedIn: Boolean = false,
     productLine: String,
+    categoryName: String,
+    name: String? = null,
     onNavigateUp: () -> Unit
 ) {
     val viewModel: ProductDetailsViewModel = hiltViewModel()
     val navGraphController = LocalNavGraphController.current;
     val state by viewModel.productDetail.collectAsState();
+    val stateProduct by viewModel.state.collectAsState()
 
     val itemInWishList = viewModel.itemInWishList.collectAsState()
 
@@ -107,8 +114,14 @@ fun ProductDetailsScreen(
         mutableStateOf(true)
     }
 
-    LaunchedEffect(key1 = productLine) {
+    LaunchedEffect(key1 = productLine, key2 = categoryName) {
         (viewModel::onEvent)(ProductDetailsEvent.GetDetailEvent(productLine))
+        (viewModel::onEvent)(
+            ProductDetailsEvent.GetProductsRandom(
+                categoryName = if (name.isNullOrEmpty()) categoryName else name,
+                num = 5
+            )
+        )
     }
 
     LaunchedEffect(key1 = itemInWishList) {
@@ -189,7 +202,7 @@ fun ProductDetailsScreen(
                 .fillMaxSize(),
             verticalArrangement = Arrangement.Top
         ) {
-            if (state.isLoading) {
+            if (state.isLoading && stateProduct.isLoading) {
                 LoadingDialog(isLoading = state.isLoading)
             } else {
                 if (state.productDetail != null) {
@@ -270,8 +283,16 @@ fun ProductDetailsScreen(
                             heading = "Thông tin sản phẩm",
                             items = state.productDetail!!.productInfos.map { item -> item.productInformation }
                         )
-                    }
 
+                        Text(
+                            text = "Sản phẩm gợi ý",
+                            style = MaterialTheme.typography.headlineMedium.copy(
+                                fontSize = 18.sp,
+                                fontWeight = FontWeight(600)
+                            )
+                        )
+                        ProductsRow(products = stateProduct.products)
+                    }
                 }
                 Spacer(Modifier.height(it.calculateBottomPadding()))
             }
@@ -407,7 +428,11 @@ fun ProductDetailsScreen(
 @Composable
 private fun PreviewProductDetails() {
     TechShopMobileTheme {
-        ProductDetailsScreen(productLine = "Next level", navController = rememberNavController()) {
+        ProductDetailsScreen(
+            productLine = "Next level",
+            categoryName = "Laptop",
+            navController = rememberNavController()
+        ) {
         }
     }
 }
