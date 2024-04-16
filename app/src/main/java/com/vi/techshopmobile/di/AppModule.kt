@@ -3,13 +3,16 @@ package com.vi.techshopmobile.di
 import android.app.Application
 import androidx.room.Room
 import com.vi.techshopmobile.data.local.CartDao
+import com.vi.techshopmobile.data.local.SearchDAO
 import com.vi.techshopmobile.data.local.TechShopDatabase
 import com.vi.techshopmobile.data.local.WishListDao
 import com.vi.techshopmobile.data.manager.LocalUserManagerImpl
 import com.vi.techshopmobile.data.repository.CartRepositoryImpl
+import com.vi.techshopmobile.data.repository.SearchRepositoryImpl
 import com.vi.techshopmobile.data.repository.WishListRepositoryImpl
 import com.vi.techshopmobile.domain.manager.LocalUserManager
 import com.vi.techshopmobile.domain.repository.cart.CartRepository
+import com.vi.techshopmobile.domain.repository.search.SearchRepository
 import com.vi.techshopmobile.domain.repository.wish_list.WishListRepository
 import com.vi.techshopmobile.domain.usecases.app_entry.AppEntryUseCases
 import com.vi.techshopmobile.domain.usecases.app_entry.ReadAppEntry
@@ -21,6 +24,9 @@ import com.vi.techshopmobile.domain.usecases.cart.GetCart
 import com.vi.techshopmobile.domain.usecases.cart.GetCartItem
 import com.vi.techshopmobile.domain.usecases.cart.UpdateCart
 import com.vi.techshopmobile.domain.usecases.cart.UpsertCart
+import com.vi.techshopmobile.domain.usecases.search.GetSearchHistory
+import com.vi.techshopmobile.domain.usecases.search.SearchUseCases
+import com.vi.techshopmobile.domain.usecases.search.UpsetSearchHistory
 import com.vi.techshopmobile.domain.usecases.wish_list.DeleteWishItem
 import com.vi.techshopmobile.domain.usecases.wish_list.GetWishList
 import com.vi.techshopmobile.domain.usecases.wish_list.UpsertWishItem
@@ -110,5 +116,24 @@ object AppModule {
         GetCart(cartRepository),
         GetCartItem(cartRepository),
         UpdateCart(cartRepository),
+    )
+
+    @Provides
+    @Singleton
+    fun provideSearchDao(
+        techShopDatabase: TechShopDatabase
+    ): SearchDAO = techShopDatabase.searchDAO
+
+    @Provides
+    @Singleton
+    fun provideSearchRepository(
+        searchDAO: SearchDAO
+    ): SearchRepository = SearchRepositoryImpl(searchDAO)
+
+    @Provides
+    @Singleton
+    fun provideSearchUseCases(searchRepository: SearchRepository): SearchUseCases = SearchUseCases(
+        UpsetSearchHistory(searchRepository),
+        GetSearchHistory(searchRepository)
     )
 }

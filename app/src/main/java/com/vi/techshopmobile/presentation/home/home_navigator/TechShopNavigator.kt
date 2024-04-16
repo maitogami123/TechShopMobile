@@ -1,6 +1,5 @@
 package com.vi.techshopmobile.presentation.home.home_navigator
 
-import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -24,6 +23,8 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.vi.techshopmobile.LocalToken
 import com.vi.techshopmobile.R
+import com.vi.techshopmobile.domain.model.Brand
+import com.vi.techshopmobile.domain.model.ProductLine
 import com.vi.techshopmobile.presentation.cart.CartScreen
 import com.vi.techshopmobile.presentation.change_password.ChangePasswordScreen
 import com.vi.techshopmobile.presentation.chatAI.ChatAiScreen
@@ -147,7 +148,7 @@ fun HomeNavigator(navGraphController: NavController) {
                     fadeOut(animationSpec = tween(time))
                 },
             ) {
-                composable(route = Route.HomeScreen.route,) {
+                composable(route = Route.HomeScreen.route) {
                     HomeScreen(navController)
                 }
                 composable(
@@ -213,21 +214,49 @@ fun HomeNavigator(navGraphController: NavController) {
                 composable(route = Route.ProductsScreen.route) {
                     navController.previousBackStackEntry?.savedStateHandle?.get<String?>("category")
                         ?.let { category ->
-                            navController.previousBackStackEntry?.savedStateHandle?.get<String?>("brand")
-                                ?.let { brand ->
-                                    ProductsScreen(
-                                        navController = navController,
-                                        categoryName = category,
-                                        brandName = brand
-                                    ) { navController.navigateUp() }
+                            navController.previousBackStackEntry?.savedStateHandle?.get<String?>(
+                                "brand"
+                            )?.let { brand ->
+                                navController.previousBackStackEntry?.savedStateHandle?.get<List<ProductLine>?>(
+                                    "products"
+                                )?.let { products ->
+                                    navController.previousBackStackEntry?.savedStateHandle?.get<Boolean?>(
+                                        "isFilter"
+                                    )?.let { isFilter ->
+                                        ProductsScreen(
+                                            navController = navController,
+                                            categoryName = category,
+                                            brandName = brand,
+                                            products = products,
+                                            isFilter = isFilter
+                                        )
+                                    }
                                 }
+                            }
 
                         }
+
                 }
                 composable(route = Route.FilterProductScreen.route) {
-                    navController.previousBackStackEntry?.savedStateHandle?.get<ArrayList<String>>("brands")
-                        ?.let { brands ->
-                            FilterScreen(navController = navGraphController, brands = brands) { navController.navigateUp() }
+                    navController.previousBackStackEntry?.savedStateHandle?.get<String?>("category")
+                        ?.let { category ->
+                            navController.previousBackStackEntry?.savedStateHandle?.get<ArrayList<Brand>?>(
+                                "brands"
+                            )
+                                ?.let { brands ->
+                                    navController.previousBackStackEntry?.savedStateHandle?.get<List<ProductLine>?>(
+                                        "products"
+                                    )?.let { products ->
+                                        FilterScreen(
+                                            navController = navController,
+                                            category = category,
+                                            brands = brands,
+                                            products = products
+                                        ) { navController.navigateUp() }
+
+                                    }
+                                }
+
                         }
                 }
                 composable(route = Route.CustomerSupportScreen.route) {
@@ -238,7 +267,10 @@ fun HomeNavigator(navGraphController: NavController) {
                     WishListScreen(onNavigateUp = { navController.navigateUp() })
                 }
                 composable(route = Route.PersonalInfoScreen.route) {
-                    PersonalInfoScreen(onNavigateUp = { navController.navigateUp() }, navController)
+                    PersonalInfoScreen(
+                        onNavigateUp = { navController.navigateUp() },
+                        navController
+                    )
                 }
                 composable(route = Route.PersonalAddressScreen.route) {
                     PersonalAddressScreen(
@@ -267,7 +299,10 @@ fun HomeNavigator(navGraphController: NavController) {
                     ChangePasswordScreen(onNavigateUp = { navController.navigateUp() })
                 }
                 composable(route = Route.UserOderScreen.route) {
-                    UserOrdersScreen(onNavigateUp = { navController.navigateUp() }, navController)
+                    UserOrdersScreen(
+                        onNavigateUp = { navController.navigateUp() },
+                        navController
+                    )
                 }
                 composable(route = Route.OderDetailsScreen.route) {
                     navController.previousBackStackEntry?.savedStateHandle?.get<String?>("id")
@@ -294,13 +329,28 @@ fun navigateToDetails(navController: NavController, productLine: String) {
     navController.navigate(Route.ProductDetailsScreen.route);
 }
 
-fun navigateToProducts(navController: NavController, category: String, brand: String) {
+fun navigateToProducts(
+    navController: NavController,
+    category: String,
+    brand: String,
+    products: List<ProductLine>? = emptyList(),
+    isFilter: Boolean? = false
+) {
     navController.currentBackStackEntry?.savedStateHandle?.set("category", category)
     navController.currentBackStackEntry?.savedStateHandle?.set("brand", brand)
+    navController.currentBackStackEntry?.savedStateHandle?.set("products", products)
+    navController.currentBackStackEntry?.savedStateHandle?.set("isFilter", isFilter)
     navController.navigate(Route.ProductsScreen.route);
 }
 
-fun navigateToFilter(navController: NavController, brands: ArrayList<String>) {
+fun navigateToFilter(
+    navController: NavController,
+    category: String,
+    brands: ArrayList<Brand>,
+    products: List<ProductLine>,
+) {
+    navController.currentBackStackEntry?.savedStateHandle?.set("category", category)
     navController.currentBackStackEntry?.savedStateHandle?.set("brands", brands)
+    navController.currentBackStackEntry?.savedStateHandle?.set("products", products)
     navController.navigate(Route.FilterProductScreen.route);
 }

@@ -9,7 +9,9 @@ import com.vi.techshopmobile.domain.repository.category.CategoriesRepository
 import com.vi.techshopmobile.domain.repository.products.ProductsRepository
 import com.vi.techshopmobile.domain.usecases.products.GetProductDetail
 import com.vi.techshopmobile.domain.usecases.products.GetProducts
+import com.vi.techshopmobile.domain.usecases.products.GetSearchProducts
 import com.vi.techshopmobile.domain.usecases.products.ProductUseCases
+import com.vi.techshopmobile.domain.usecases.search.GetSearchHistory
 import com.vi.techshopmobile.util.Constants
 import dagger.Module
 import dagger.Provides
@@ -36,12 +38,13 @@ object ProductModule {
     @Singleton
     fun provideProductsRepository(
         productsApi: ProductsApi
-    ) : ProductsRepository = ProductsRepositoryImpl(productsApi)
+    ): ProductsRepository = ProductsRepositoryImpl(productsApi)
 
     @Provides
     @Singleton
     fun provideProductsUseCases(productsRepository: ProductsRepository) = ProductUseCases(
         getProducts = GetProducts(productsRepository),
-        getProductDetail = GetProductDetail(productsRepository)
+        getProductDetail = GetProductDetail(productsRepository),
+        getSearchProducts = GetSearchProducts(productsRepository)
     )
 }
