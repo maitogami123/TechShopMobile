@@ -66,12 +66,14 @@ fun ListInfoScreen(
                 onSearch = {})
         },
         bottomBar = {
-            FloatingBottomBar(buttonText = "Xác nhận địa chỉ",
-                onButtonClick = {
-                    initialSelectedAddress.intValue = selectedAddress.value
-                    navController.navigateUp()
-                }
-            )
+            if (!state.value.isLoading) {
+                FloatingBottomBar(buttonText = "Xác nhận địa chỉ",
+                    onButtonClick = {
+                        initialSelectedAddress.intValue = selectedAddress.value
+                        navController.navigateUp()
+                    }
+                )
+            }
         }
     )
     {

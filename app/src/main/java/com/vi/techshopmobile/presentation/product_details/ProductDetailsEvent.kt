@@ -14,4 +14,5 @@ sealed class ProductDetailsEvent {
     data class AddItemToCart(val cartItem: CartItem) : ProductDetailsEvent()
     data class IncreaseQuantity(val quantity: Int) : ProductDetailsEvent()
     data class DecreaseQuantity(val quantity: Int) : ProductDetailsEvent()
+    data class GetProductsRandom(val categoryName: String, val num: Int): ProductDetailsEvent()
 }

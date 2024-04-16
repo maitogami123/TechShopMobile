@@ -50,6 +50,7 @@ fun Input(
     errorMessage: String? = null,
     placeHolderText: String? = null,
     inputText: String,
+    enabled: Boolean = true,
     onChange: (changedValue: String) -> Unit
 ) {
     var isFocused by rememberSaveable {
@@ -90,6 +91,7 @@ fun Input(
                 color = if (!isFocused) Danger else Gray_300,
                 shape = RoundedCornerShape(RadiusSmall)
             ),
+            enabled = enabled,
             singleLine = true,
             placeholder = {
                 if (placeHolderText != null)
@@ -265,6 +267,7 @@ fun InputWithLink(
     linkLabel: String,
     placeHolderText: String? = null,
     inputText: String,
+    enabled: Boolean = true,
     onChange: (changedValue: String) -> Unit,
     onNavigate: () -> Unit
 ) {
@@ -301,6 +304,7 @@ fun InputWithLink(
                 color = if (!isFocused) Danger else Gray_300,
                 shape = RoundedCornerShape(RadiusSmall)
             ),
+            enabled = enabled,
             singleLine = true,
             placeholder = {
                 if (placeHolderText != null)

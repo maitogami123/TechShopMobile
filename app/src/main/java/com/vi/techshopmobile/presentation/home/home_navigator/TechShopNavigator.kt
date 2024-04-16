@@ -150,7 +150,7 @@ fun HomeNavigator(navGraphController: NavController) {
                     fadeOut(animationSpec = tween(time))
                 },
             ) {
-                composable(route = Route.HomeScreen.route,) {
+                composable(route = Route.HomeScreen.route) {
                     HomeScreen(navController)
                 }
                 composable(
@@ -206,11 +206,15 @@ fun HomeNavigator(navGraphController: NavController) {
                 composable(route = Route.ProductDetailsScreen.route) {
                     navController.previousBackStackEntry?.savedStateHandle?.get<String?>("productLine")
                         ?.let { productLine ->
-                            ProductDetailsScreen(
-                                navController = navController,
-                                productLine = productLine,
-                                isLoggedIn = isLoggedIn
-                            ) { navController.navigateUp() }
+                            navController.previousBackStackEntry?.savedStateHandle?.get<String?>("categoryName")
+                                ?.let { categoryName ->
+                                    ProductDetailsScreen(
+                                        navController = navController,
+                                        productLine = productLine,
+                                        categoryName = categoryName,
+                                        isLoggedIn = isLoggedIn
+                                    ) { navController.navigateUp() }
+                                }
                         }
                 }
 
@@ -248,11 +252,13 @@ fun HomeNavigator(navGraphController: NavController) {
                         }
                 }
                 composable(route = Route.ChangePasswordScreen.route) {
-                    ChangePasswordScreen(onNavigateUp = { navController.navigateUp() },
-                        )
+                    ChangePasswordScreen(
+                        onNavigateUp = { navController.navigateUp() },
+                    )
                 }
                 composable(route = Route.ChangeEmailScreen.route) {
-                    ChangeEmailScreen(onNavigateUp = { navController.navigateUp() }, navController
+                    ChangeEmailScreen(
+                        onNavigateUp = { navController.navigateUp() }, navController
                     )
                 }
                 composable(route = Route.UserOderScreen.route) {
@@ -282,5 +288,15 @@ fun HomeNavigator(navGraphController: NavController) {
 
 fun navigateToDetails(navController: NavController, productLine: String) {
     navController.currentBackStackEntry?.savedStateHandle?.set("productLine", productLine)
+    navController.navigate(Route.ProductDetailsScreen.route);
+}
+
+fun navigateToDetailsProduct(
+    navController: NavController,
+    productLine: String,
+    categoryName: String
+) {
+    navController.currentBackStackEntry?.savedStateHandle?.set("productLine", productLine)
+    navController.currentBackStackEntry?.savedStateHandle?.set("categoryName", categoryName)
     navController.navigate(Route.ProductDetailsScreen.route);
 }
