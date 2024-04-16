@@ -146,51 +146,53 @@ fun ProductDetailsScreen(
             }
         },
         bottomBar = {
-            if (isLoggedIn) {
-                FloatingBottomBar(
-                    itemInWishList = itemInWishList.value,
-                    buttonText = "Mua ngay",
-                    onButtonClick = {
-                        (viewModel::onEvent)(
-                            ProductDetailsEvent.AddItemToCart(
-                                CartItem(
-                                    brandName = state.productDetail!!.brandName,
-                                    categoryName = state.productDetail!!.categoryName,
-                                    thumbnailUri = state.productDetail!!.thumbnailUri,
-                                    price = (
-                                            state.productDetail!!.product.price -
-                                                    ((state.productDetail!!.product.price * (state.productDetail!!.product.discount / 100)))
-                                            ),
-                                    productName = state.productDetail!!.product.productName,
-                                    productLine = productLine,
-                                    username = decodedToken.sub,
-                                    quantity = quantity,
-                                    stock = state.productDetail!!.stock
+            if (!state.isLoading && !stateProduct.isLoading) {
+                if (isLoggedIn) {
+                    FloatingBottomBar(
+                        itemInWishList = itemInWishList.value,
+                        buttonText = "Mua ngay",
+                        onButtonClick = {
+                            (viewModel::onEvent)(
+                                ProductDetailsEvent.AddItemToCart(
+                                    CartItem(
+                                        brandName = state.productDetail!!.brandName,
+                                        categoryName = state.productDetail!!.categoryName,
+                                        thumbnailUri = state.productDetail!!.thumbnailUri,
+                                        price = (
+                                                state.productDetail!!.product.price -
+                                                        ((state.productDetail!!.product.price * (state.productDetail!!.product.discount / 100)))
+                                                ),
+                                        productName = state.productDetail!!.product.productName,
+                                        productLine = productLine,
+                                        username = decodedToken.sub,
+                                        quantity = quantity,
+                                        stock = state.productDetail!!.stock
+                                    )
                                 )
                             )
-                        )
-                        navController.navigate(Route.CartScreen.route)
-                    },
-                    onAddToWishList = {
-                        (viewModel::onEvent)(
-                            ProductDetailsEvent.AddItemToWishListEvent(
-                                WishItem(
-                                    productLine = productLine,
-                                    productName = state.productDetail!!.product.productName,
-                                    username = decodedToken.sub
+                            navController.navigate(Route.CartScreen.route)
+                        },
+                        onAddToWishList = {
+                            (viewModel::onEvent)(
+                                ProductDetailsEvent.AddItemToWishListEvent(
+                                    WishItem(
+                                        productLine = productLine,
+                                        productName = state.productDetail!!.product.productName,
+                                        username = decodedToken.sub
+                                    )
                                 )
                             )
-                        )
-                    },
-                    onAddToCart = {
-                        showBottomSheet = true
-                    })
-            } else {
-                FloatingBottomBar(
-                    buttonText = "Đăng nhập",
-                    onButtonClick = { navGraphController.navigate(Route.AuthenticateNavigation.route) })
+                        },
+                        onAddToCart = {
+                            showBottomSheet = true
+                        })
+                } else {
+                    FloatingBottomBar(
+                        buttonText = "Đăng nhập",
+                        onButtonClick = { navGraphController.navigate(Route.AuthenticateNavigation.route) })
 
 
+                }
             }
         }
     ) {

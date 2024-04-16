@@ -130,7 +130,7 @@ fun CheckOutNavigator(navGraphController: NavController) {
                 navController.previousBackStackEntry?.savedStateHandle?.get<String?>("id")
                     ?.let { id ->
                         OrderDetailsScreen(
-                            onNavigateUp = { navController.navigateUp() },
+                            onNavigateUp = { navGraphController.navigate(Route.TechShopNavigation.route) },
                             id = id,
                             navController = navController
                         )
@@ -152,5 +152,5 @@ fun navigateToDetailOrder(navController: NavController, id: String) {
 
 fun navigateToPaymentSuccess(navController: NavController, id: String) {
     navController.currentBackStackEntry?.savedStateHandle?.set("id", id)
-    navController.navigate(Route.OderDetailsScreen.route);
+    navController.navigate(Route.PaymentSuccessnScreen.route);
 }

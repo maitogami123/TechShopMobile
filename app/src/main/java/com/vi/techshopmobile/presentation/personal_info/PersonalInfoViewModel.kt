@@ -8,6 +8,7 @@ import com.vi.techshopmobile.domain.usecases.authenticate.AuthenticateUseCases
 import com.vi.techshopmobile.domain.usecases.userDetail.UserDetailsUseCases
 import com.vi.techshopmobile.presentation.categories.CategoriesEvents
 import com.vi.techshopmobile.presentation.categories.CategoriesViewState
+import com.vi.techshopmobile.presentation.sendEvent
 import com.vi.techshopmobile.presentation.user_setting.UserSettingEvent
 import com.vi.techshopmobile.util.Event
 import com.vi.techshopmobile.util.EventBus
@@ -31,6 +32,9 @@ class PersonalInfoViewModel @Inject constructor(
     private val _isLoading = MutableStateFlow(false)
     val isLoading = _isLoading.asStateFlow()
 
+    private var _isUpdateUserDetail = MutableStateFlow(false)
+    val isUpdateUserDetail = _isUpdateUserDetail.asStateFlow()
+
     fun onEvent(event: PersonalInfoEvent) {
         when (event) {
             is PersonalInfoEvent.GetAllEventPersonalInfo -> {
@@ -39,6 +43,27 @@ class PersonalInfoViewModel @Inject constructor(
 
             is PersonalInfoEvent.GetListUserDetail -> {
                 getListUserDetail("Bearer " + event.token)
+            }
+
+            is PersonalInfoEvent.UpdateUserDetail -> {
+                viewModelScope.launch {
+                    val updateUserDetailResponse = userDetailsUseCases.updateUserDetail(
+                        token = "Bearer " + event.token,
+                        id = event.id,
+                        updateUserDetailRequest = event.updateUserDetailRequest
+                    )
+                    if (updateUserDetailResponse.isRight()) {
+                        updateUserDetailResponse.onRight {
+                            sendEvent(Event.Toast("Cập nhật thông tin người dùng ${state.value.userDetail.username} thành công"))
+                            _isUpdateUserDetail.value = true
+                        }
+                    } else {
+                        updateUserDetailResponse.onLeft {
+                            sendEvent(Event.Toast(it.detail))
+                            _isUpdateUserDetail.value = false
+                        }
+                    }
+                }
             }
         }
     }
