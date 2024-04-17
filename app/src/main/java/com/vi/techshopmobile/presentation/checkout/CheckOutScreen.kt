@@ -134,7 +134,7 @@ fun CheckOutScreen(
     LaunchedEffect(key1 = null) {
         (viewModel::onEvent)(CheckOutEvent.GetUserCart(decodedToken.sub))
     }
-    
+
     LaunchedEffect(key1 = idOrderCreated.value, key2 = maxPollingRequest.value) {
         if (idOrderCreated.value.isNotEmpty()) {
             (viewModel::onEvent)(CheckOutEvent.PollingOrderInfo(token, idOrderCreated.value))
@@ -239,9 +239,9 @@ fun CheckOutScreen(
                                     )
                                 }
                             }
-                        }
-                    )
-                    if(paymentUrl.value.isNotEmpty()){
+                        )
+                    }
+                    if (paymentUrl.value.isNotEmpty()) {
                         if (urlOpened.value == false) {
                             urlOpened.value = true
                             LocalUriHandler.current.openUri(paymentUrl.value)
