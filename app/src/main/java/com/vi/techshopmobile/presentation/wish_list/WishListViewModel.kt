@@ -37,6 +37,7 @@ class WishListViewModel @Inject constructor(
     suspend fun onEvent(event: WishListEvents) {
         when (event) {
             is WishListEvents.GetUserWishList -> {
+                _productDetail.value = emptyList()
                 wishListUseCases.getWishList(event.username).onEach {
                     _state.value = it.reversed()
                     for (wishItem in it) {
