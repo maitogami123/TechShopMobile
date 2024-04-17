@@ -47,6 +47,7 @@ import com.vi.techshopmobile.presentation.common.InputInfoNoUnder
 import com.vi.techshopmobile.presentation.home.home_navigator.component.UtilityTopNavigation
 import com.vi.techshopmobile.presentation.navgraph.Route
 import com.vi.techshopmobile.ui.theme.Blue_50
+import kotlinx.coroutines.delay
 
 @Composable
 fun AddNewAddressScreen(
@@ -55,8 +56,6 @@ fun AddNewAddressScreen(
 ) {
     val viewModel: CheckOutViewModel = hiltViewModel()
     val isCreateUserDetail = viewModel.isCreateUserDetail.collectAsState()
-    val state = viewModel.statePerson.collectAsState()
-    val createUserDetailError = viewModel.createUserDetailError.collectAsState()
     val token = LocalToken.current
 
     val firstName by remember {
@@ -93,29 +92,9 @@ fun AddNewAddressScreen(
 
     LaunchedEffect(key1 = isCreateUserDetail.value) {
         if (isCreateUserDetail.value) {
-            navController.navigate(Route.ListInfoScreen.route)
+            navController.navigateUp()
         }
     }
-    var personalInfo by remember {
-        mutableStateOf<AccountDetail>(
-            AccountDetail(
-                id = 0,
-                city = "",
-                detailedAddress = "",
-                phoneNumber = "",
-                district = "",
-                email = "",
-                lastName = "",
-                firstName = "",
-                default = false
-            )
-        )
-    }
-    if (state.value.listUserDetail.isNotEmpty()) {
-        personalInfo =
-            state.value.listUserDetail[LocalSelectedIndex.current.intValue].accountDetail
-    }
-
 
     Scaffold(
         topBar = {
@@ -162,15 +141,6 @@ fun AddNewAddressScreen(
                                 )
                             )
                         )
-
-                        if (isCheckedBox && state.value.listUserDetail.isNotEmpty()) {
-                            (viewModel::onEvent)(
-                                CheckOutEvent.UpdateAllUserDetailsToNotDefault(
-                                    id = personalInfo.id.toString(),
-                                    token = token
-                                )
-                            )
-                        }
                     }
                 }
             )
@@ -303,24 +273,6 @@ fun AddNewAddressScreen(
                                 .matches(it)
                         ) null else "Vui điền địa chỉ chi tiết (số nhà, đường)"
                     )
-                }
-
-                Spacer(modifier = Modifier.height(Dimens.SmallPadding))
-                Text(
-                    modifier = Modifier
-                        .background(Blue_50)
-                        .padding(vertical = Dimens.SmallGap)
-                        .fillMaxWidth()
-                        .padding(start = Dimens.SmallGap),
-                    text = "Cài đặt"
-                )
-
-                Spacer(modifier = Modifier.height(Dimens.SmallPadding))
-                CheckBoxText(
-                    title = "Đặt làm địa chỉ mặc định",
-                    isChecked = isCheckedBox
-                ) {
-                    isCheckedBox = !isCheckedBox
                 }
             }
         }
