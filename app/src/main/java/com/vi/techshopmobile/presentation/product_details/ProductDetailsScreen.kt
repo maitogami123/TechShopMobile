@@ -1,5 +1,6 @@
 package com.vi.techshopmobile.presentation.product_details
 
+import android.util.Log
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -44,31 +45,38 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import arrow.core.left
+import arrow.core.right
 import coil.compose.AsyncImage
 import com.vi.techshopmobile.LocalToken
 import com.vi.techshopmobile.R
 import com.vi.techshopmobile.domain.model.CartItem
 import com.vi.techshopmobile.domain.model.WishItem
+import com.vi.techshopmobile.presentation.Dimens
 import com.vi.techshopmobile.presentation.common.Accordion
 import com.vi.techshopmobile.presentation.common.FloatingBottomBar
 import com.vi.techshopmobile.presentation.common.LoadingDialog
 import com.vi.techshopmobile.presentation.home.home_navigator.component.UtilityTopNavigation
 import com.vi.techshopmobile.presentation.navgraph.LocalNavGraphController
 import com.vi.techshopmobile.presentation.navgraph.Route
+import com.vi.techshopmobile.presentation.products.component.ProductsRow
 import com.vi.techshopmobile.ui.theme.Danger
 import com.vi.techshopmobile.ui.theme.Gray_500
 import com.vi.techshopmobile.ui.theme.TechShopMobileTheme
 import com.vi.techshopmobile.util.Constants.BASE_URL
 import com.vi.techshopmobile.util.decodeToken
 import com.vi.techshopmobile.util.formatPrice
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
@@ -77,13 +85,16 @@ fun ProductDetailsScreen(
     navController: NavController,
     isLoggedIn: Boolean = false,
     productLine: String,
+    categoryName: String,
+    name: String? = null,
     onNavigateUp: () -> Unit
 ) {
     val viewModel: ProductDetailsViewModel = hiltViewModel()
     val navGraphController = LocalNavGraphController.current;
     val state by viewModel.productDetail.collectAsState();
+    val stateProduct by viewModel.state.collectAsState()
 
-    val quantityToAdd by viewModel.quantityProduct.collectAsState()
+    val itemInWishList = viewModel.itemInWishList.collectAsState()
 
     val scope = rememberCoroutineScope()
     val sheetState = rememberModalBottomSheetState()
@@ -103,8 +114,23 @@ fun ProductDetailsScreen(
         mutableStateOf(true)
     }
 
-    LaunchedEffect(key1 = productLine) {
+    LaunchedEffect(key1 = productLine, key2 = categoryName) {
         (viewModel::onEvent)(ProductDetailsEvent.GetDetailEvent(productLine))
+        (viewModel::onEvent)(
+            ProductDetailsEvent.GetProductsRandom(
+                categoryName = if (name.isNullOrEmpty()) categoryName else name,
+                num = 5
+            )
+        )
+    }
+
+    LaunchedEffect(key1 = itemInWishList) {
+        (viewModel::onEvent)(
+            ProductDetailsEvent.SelectItemWishList(
+                productLine = productLine,
+                username = decodedToken.sub
+            )
+        )
     }
 
     Scaffold(
@@ -120,47 +146,52 @@ fun ProductDetailsScreen(
             }
         },
         bottomBar = {
-            if (isLoggedIn) {
-                FloatingBottomBar(
-                    buttonText = "Mua ngay",
-                    onButtonClick = {
-                        (viewModel::onEvent)(
-                            ProductDetailsEvent.AddItemToCart(
-                                CartItem(
-                                    brandName = state.productDetail!!.brandName,
-                                    categoryName = state.productDetail!!.categoryName,
-                                    thumbnailUri = state.productDetail!!.thumbnailUri,
-                                    price = (
-                                            state.productDetail!!.product.price -
-                                                    ((state.productDetail!!.product.price * (state.productDetail!!.product.discount / 100)))
-                                            ),
-                                    productName = state.productDetail!!.product.productName,
-                                    productLine = productLine,
-                                    username = decodedToken.sub,
-                                    quantity = quantity,
-                                    stock = state.productDetail!!.stock
+            if (!state.isLoading && !stateProduct.isLoading) {
+                if (isLoggedIn) {
+                    FloatingBottomBar(
+                        itemInWishList = itemInWishList.value,
+                        buttonText = "Mua ngay",
+                        onButtonClick = {
+                            (viewModel::onEvent)(
+                                ProductDetailsEvent.AddItemToCart(
+                                    CartItem(
+                                        brandName = state.productDetail!!.brandName,
+                                        categoryName = state.productDetail!!.categoryName,
+                                        thumbnailUri = state.productDetail!!.thumbnailUri,
+                                        price = (
+                                                state.productDetail!!.product.price -
+                                                        ((state.productDetail!!.product.price * (state.productDetail!!.product.discount / 100)))
+                                                ),
+                                        productName = state.productDetail!!.product.productName,
+                                        productLine = productLine,
+                                        username = decodedToken.sub,
+                                        quantity = quantity,
+                                        stock = state.productDetail!!.stock
+                                    )
                                 )
                             )
-                        )
-                        navController.navigate(Route.CartScreen.route)
-                    },
-                    onAddToWishList = {
-                        (viewModel::onEvent)(
-                            ProductDetailsEvent.AddItemToWishListEvent(
-                                WishItem(
-                                    productLine = productLine,
-                                    productName = state.productDetail!!.product.productName,
-                                    username = decodedToken.sub
+                            navController.navigate(Route.CartScreen.route)
+                        },
+                        onAddToWishList = {
+                            (viewModel::onEvent)(
+                                ProductDetailsEvent.AddItemToWishListEvent(
+                                    WishItem(
+                                        productLine = productLine,
+                                        productName = state.productDetail!!.product.productName,
+                                        username = decodedToken.sub
+                                    )
                                 )
                             )
-                        )
-                    },
-                    onAddToCart = {
-                        showBottomSheet = true
-                    })
-            } else {
-                FloatingBottomBar(buttonText = "Đăng nhập") {
-                    navGraphController.navigate(Route.AuthenticateNavigation.route)
+                        },
+                        onAddToCart = {
+                            showBottomSheet = true
+                        })
+                } else {
+                    FloatingBottomBar(
+                        buttonText = "Đăng nhập",
+                        onButtonClick = { navGraphController.navigate(Route.AuthenticateNavigation.route) })
+
+
                 }
             }
         }
@@ -173,7 +204,7 @@ fun ProductDetailsScreen(
                 .fillMaxSize(),
             verticalArrangement = Arrangement.Top
         ) {
-            if (state.isLoading) {
+            if (state.isLoading && stateProduct.isLoading) {
                 LoadingDialog(isLoading = state.isLoading)
             } else {
                 if (state.productDetail != null) {
@@ -254,8 +285,16 @@ fun ProductDetailsScreen(
                             heading = "Thông tin sản phẩm",
                             items = state.productDetail!!.productInfos.map { item -> item.productInformation }
                         )
-                    }
 
+                        Text(
+                            text = "Sản phẩm gợi ý",
+                            style = MaterialTheme.typography.headlineMedium.copy(
+                                fontSize = 18.sp,
+                                fontWeight = FontWeight(600)
+                            )
+                        )
+                        ProductsRow(products = stateProduct.products)
+                    }
                 }
                 Spacer(Modifier.height(it.calculateBottomPadding()))
             }
@@ -391,7 +430,11 @@ fun ProductDetailsScreen(
 @Composable
 private fun PreviewProductDetails() {
     TechShopMobileTheme {
-        ProductDetailsScreen(productLine = "Next level", navController = rememberNavController()) {
+        ProductDetailsScreen(
+            productLine = "Next level",
+            categoryName = "Laptop",
+            navController = rememberNavController()
+        ) {
         }
     }
 }

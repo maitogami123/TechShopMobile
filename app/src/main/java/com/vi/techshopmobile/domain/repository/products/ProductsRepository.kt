@@ -10,4 +10,6 @@ interface ProductsRepository {
     suspend fun getProducts(): Either<ErrorResponse, List<ProductLine>>
 
     suspend fun getProductDetail(productLine: String): Either<ErrorResponse, ProductDetailResponse>
+
+    suspend fun getProductsRandom(categoryName: String, num: Int): Either<ErrorResponse, List<ProductLine>>
 }

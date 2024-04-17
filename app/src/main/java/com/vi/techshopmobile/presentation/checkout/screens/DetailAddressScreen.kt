@@ -71,24 +71,8 @@ fun DetailAddressScreen(
 
     LaunchedEffect(key1 = isUpdateUserDetail.value) {
         if (isUpdateUserDetail.value) {
-            navController.navigate(Route.ListInfoScreen.route)
+            navController.navigate(Route.UserSettingScreen.route)
         }
-    }
-
-
-    var personalInfo by remember {
-        mutableStateOf<UserDetailResponse>(
-            UserDetailResponse(
-                city = "",
-                detailedAddress = "",
-                phoneNumber = "",
-                district = "",
-                email = "",
-                lastName = "",
-                firstName = "",
-                default = false
-            )
-        )
     }
 
     var firstName by remember {
@@ -162,41 +146,43 @@ fun DetailAddressScreen(
                     onNavigateUp()
                 },
                 leftBtnIcon = R.drawable.ic_left_arrow,
-                title = "Thêm địa chỉ mới",
+                title = "Cập nhật địa chỉ",
                 onSearch = {})
         },
         bottomBar = {
-            FloatingBottomBar(buttonText = "Thêm mới",
-                onButtonClick = {
-                    if (state.value.detailUserDetail != null) {
-                        val detail = state.value.detailUserDetail!!
-                        (viewModel::onEvent)(
-                            CheckOutEvent.UpdateUserDetail(
-                                token = token,
-                                id = id,
-                                updateUserDetailRequest = UpdateUserDetailRequest(
-                                    firstName = if (firstName == detail.firstName || firstName.isEmpty()) detail.firstName else firstName,
-                                    lastName = if (lastName == detail.lastName || lastName.isEmpty()) detail.lastName else lastName,
-                                    email = if (email == detail.email || email.isEmpty()) detail.email else email,
-                                    detailedAddress = if (detailedAddress == detail.detailedAddress || detailedAddress.isEmpty()) detail.detailedAddress else detailedAddress,
-                                    district = if (district == detail.district || district.isEmpty()) detail.district else district,
-                                    phoneNumber = if (number.value.value == detail.phoneNumber || number.value.value.isEmpty()) detail.phoneNumber else number.value.value,
-                                    city = if (city == detail.city || city.isEmpty()) detail.city else city
-                                )
-                            )
-                        )
-
-                        if (isCheckedBox && state.value.detailUserDetail != null) {
+            if (!state.value.isLoading) {
+                FloatingBottomBar(buttonText = "Cập nhật",
+                    onButtonClick = {
+                        if (state.value.detailUserDetail != null) {
+                            val detail = state.value.detailUserDetail!!;
                             (viewModel::onEvent)(
-                                CheckOutEvent.UpdateAllUserDetailsToNotDefault(
+                                CheckOutEvent.UpdateUserDetail(
+                                    token = token,
                                     id = id,
-                                    token = token
+                                    updateUserDetailRequest = UpdateUserDetailRequest(
+                                        firstName = if (firstName == detail.firstName || firstName.isEmpty()) detail.firstName else firstName,
+                                        lastName = if (lastName == detail.lastName || lastName.isEmpty()) detail.lastName else lastName,
+                                        email = if (email == detail.email || email.isEmpty()) detail.email else email,
+                                        detailedAddress = if (detailedAddress == detail.detailedAddress || detailedAddress.isEmpty()) detail.detailedAddress else detailedAddress,
+                                        district = if (district == detail.district || district.isEmpty()) detail.district else district,
+                                        phoneNumber = if (number.value.value == detail.phoneNumber || number.value.value.isEmpty()) detail.phoneNumber else number.value.value,
+                                        city = if (city == detail.city || city.isEmpty()) detail.city else city
+                                    )
                                 )
                             )
+                            if (isCheckedBox == true) {
+                                (viewModel::onEvent)(
+                                    CheckOutEvent.UpdateAllUserDetailsToNotDefault(
+                                        id = id,
+                                        token = token
+                                    )
+                                )
+                            }
                         }
                     }
-                }
-            )
+
+                )
+            }
         }
     )
     {
@@ -304,9 +290,9 @@ fun DetailAddressScreen(
                         Spacer(modifier = Modifier.height(Dimens.SmallPadding))
                         CheckBoxText(
                             title = "Đặt làm địa chỉ mặc định",
-                            isChecked = detail.default
+                            isChecked = isCheckedBox
                         ) {
-                            isCheckedBox = !detail.default
+                            isCheckedBox = !isCheckedBox
                         }
                     }
                 }
@@ -314,11 +300,6 @@ fun DetailAddressScreen(
         }
     }
 }
-//
-//data class Input(
-//    val value: String = "",
-//    val error: String? = null
-//)
 
 @Preview
 @Composable

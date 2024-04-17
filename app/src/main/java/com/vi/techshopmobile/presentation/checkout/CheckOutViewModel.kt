@@ -90,6 +90,7 @@ class CheckOutViewModel @Inject constructor(
 
             is CheckOutEvent.CreateOrders -> {
                 viewModelScope.launch {
+                    _isOrderLoading.value = true
                     val orderResponse = ordersUseCases.createOrders(
                         token = "Bearer " + event.token,
                         requestCheckOut = event.requestCheckOut
@@ -99,10 +100,13 @@ class CheckOutViewModel @Inject constructor(
                             sendEvent(Event.Toast("Tạo đơn hàng thành công"))
                             _idOrderCreated.value = it.id.toString()
                             _isCreateOrder.value = true
+                            _isOrderLoading.value = false
                         }
                     } else {
                         orderResponse.onLeft {
                             sendEvent(Event.Toast(it.detail))
+                            _isCreateOrder.value = false
+                            _isOrderLoading.value = false
                         }
                     }
                 }
@@ -133,7 +137,6 @@ class CheckOutViewModel @Inject constructor(
 
             is CheckOutEvent.UpdateAllUserDetailsToNotDefault -> {
                 viewModelScope.launch {
-                    delay(500)
                     val updateRes = userDetailsUseCases.updateAllUserDetailsToNotDefault(
                         id = event.id,
                         token = "Bearer " + event.token
@@ -160,7 +163,6 @@ class CheckOutViewModel @Inject constructor(
                     if (updateUserDetailResponse.isRight()) {
                         updateUserDetailResponse.onRight {
                             sendEvent(Event.Toast("Cập nhật thông tin người dùng ${statePerson.value.userDetail.username} thành công"))
-                            delay(600)
                             _isUpdateUserDetail.value = true
                         }
                     } else {

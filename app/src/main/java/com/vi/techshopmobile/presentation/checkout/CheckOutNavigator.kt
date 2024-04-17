@@ -132,7 +132,7 @@ fun CheckOutNavigator(navGraphController: NavController) {
                 navController.previousBackStackEntry?.savedStateHandle?.get<String?>("id")
                     ?.let { id ->
                         OrderDetailsScreen(
-                            onNavigateUp = { navController.navigateUp() },
+                            onNavigateUp = { navGraphController.navigate(Route.TechShopNavigation.route) },
                             id = id,
                             navController = navController
                         )

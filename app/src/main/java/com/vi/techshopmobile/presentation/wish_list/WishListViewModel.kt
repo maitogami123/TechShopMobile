@@ -52,7 +52,23 @@ class WishListViewModel @Inject constructor(
 
             is WishListEvents.GetDetailEvent -> {
                 state.value.forEach {
-                    _productDetail.value.plus(productUseCases.getProductDetail(it.productLine).right())
+                    _productDetail.value.plus(
+                        productUseCases.getProductDetail(it.productLine).right()
+                    )
+                }
+            }
+
+            is WishListEvents.RemoveItemWishList -> {
+                viewModelScope.launch {
+                    wishListUseCases.deleteWishItem(event.wishItem)
+                    EventBus.sendEvent(Event.Toast("Đã xóa sản phẩm khỏi danh sách yêu thích"))
+                }
+            }
+
+            is WishListEvents.DeleteItemWishListByProductLine -> {
+                viewModelScope.launch {
+                    wishListUseCases.deleteWishItemByProductLine(event.username, event.productLine)
+                    EventBus.sendEvent(Event.Toast("Đã xóa sản phẩm khỏi danh sách yêu thích"))
                 }
             }
         }

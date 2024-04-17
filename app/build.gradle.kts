@@ -138,4 +138,7 @@ dependencies {
 
 
     implementation(platform("com.google.firebase:firebase-bom:32.8.0"))
+
+    //Lottie
+    implementation( "com.airbnb.android:lottie-compose:6.0.0")
 }

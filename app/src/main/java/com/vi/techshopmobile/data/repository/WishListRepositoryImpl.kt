@@ -10,16 +10,31 @@ import javax.inject.Inject
 
 class WishListRepositoryImpl @Inject constructor(
     private val wishListDao: WishListDao
-): WishListRepository {
+) : WishListRepository {
     override suspend fun upsertArticle(wishItem: WishItem) {
         return wishListDao.upsert(wishItem)
     }
 
     override suspend fun deleteArticle(wishItem: WishItem) {
-        TODO("Not yet implemented")
+        return wishListDao.delete(wishItem)
+    }
+
+    override suspend fun deleteItem(username: String, productLine: String) {
+        return wishListDao.deleteItem(username, productLine)
     }
 
     override fun getWishList(username: String): Flow<List<WishItem>> {
         return wishListDao.getWishList(username);
+    }
+
+    override fun selectWishItem(
+        username: String,
+        productLine: String,
+    ): Flow<WishItem> {
+        return wishListDao.selectWishItem(username, productLine)
+    }
+
+    override suspend fun updateWishItem(isSelected: Boolean, id: Int) {
+        return wishListDao.updateWishItem(isSelected, id)
     }
 }

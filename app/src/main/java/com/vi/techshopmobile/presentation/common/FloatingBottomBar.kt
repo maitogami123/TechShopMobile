@@ -171,6 +171,7 @@ fun FloatingBottomBar(
     modifier: Modifier = Modifier,
     buttonText: String,
     onButtonClick: () -> Unit,
+    enable: Boolean = true
 ) {
     Row(
         modifier = modifier
@@ -178,9 +179,10 @@ fun FloatingBottomBar(
             .fillMaxWidth()
             .height(64.dp)
             .clip(RoundedCornerShape(24.dp))
-            .background(MaterialTheme.colorScheme.primary)
+            .background(if(enable)MaterialTheme.colorScheme.primary else Color.Gray)
     ) {
         Button(
+            enabled = enable,
             onClick = { onButtonClick() }, modifier = Modifier
                 .fillMaxHeight()
                 .padding(0.dp)

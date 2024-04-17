@@ -48,7 +48,8 @@ fun CategoryProducts() {
                         }
                     }
                 }
-                ProductsRow(products = state.categoriesProduct[index].products)
+                if (state.categoriesProduct[index].products.isNotEmpty())
+                    ProductsRow(products = state.categoriesProduct[index].products)
             }
         }
     }

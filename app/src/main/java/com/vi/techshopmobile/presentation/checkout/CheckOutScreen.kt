@@ -134,12 +134,6 @@ fun CheckOutScreen(
     LaunchedEffect(key1 = null) {
         (viewModel::onEvent)(CheckOutEvent.GetUserCart(decodedToken.sub))
     }
-
-//    LaunchedEffect(key1 = isCreateOrder.value) {
-//        if (isCreateOrder.value == true && idOrderCreated.value != null) {
-//            navigateToPaymentSuccess(navController, idOrderCreated.value)
-//        }
-//    }
     
     LaunchedEffect(key1 = idOrderCreated.value, key2 = maxPollingRequest.value) {
         if (idOrderCreated.value.isNotEmpty()) {
@@ -153,6 +147,7 @@ fun CheckOutScreen(
             navigateToPaymentSuccess(navController, idOrderCreated.value)
         } else if (maxPollingRequest.value == 0 || orderPaymentStatus.value == "FAIL") {
             navigateToPaymentFail(navController, idOrderCreated.value)
+
         }
     }
 
@@ -168,80 +163,81 @@ fun CheckOutScreen(
                 onSearch = {})
         },
         bottomBar = {
-            if (isOrderLoading.value) {
-                Button(
-                    onClick = { /*TODO*/ }, enabled = !isOrderLoading.value,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(40.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.primary,
-                        contentColor = Color.White
-                    ), shape = RoundedCornerShape(size = 6.dp)
-                ) {
-                    CircularProgressIndicator(
+            if (!statePersonalInfo.value.isLoading) {
+                if (isOrderLoading.value) {
+                    Button(
+                        onClick = { /*TODO*/ }, enabled = !isOrderLoading.value,
                         modifier = Modifier
-                            .width(20.dp)
-                            .align(Alignment.CenterVertically),
-                        color = MaterialTheme.colorScheme.secondary,
-                        trackColor = MaterialTheme.colorScheme.surfaceVariant,
-                    )
-                }
-            } else {
-                if (statePersonalInfo.value.listUserDetail.isNotEmpty()) {
-                    personalInfo =
-                        statePersonalInfo.value.listUserDetail[LocalSelectedIndex.current.intValue].accountDetail
-                    Log.d("IND", LocalSelectedIndex.current.intValue.toString())
-                    FloatingBottomBar(
-                        buttonText = "Thanh Toán",
-                        onButtonClick = {
-                            if (paymentMethodState.intValue == 1) {
-                                (viewModel::onEvent)(
-                                    CheckOutEvent.CreateOrders(
-                                        token = token,
-                                        requestCheckOut = RequestCheckOut(
-                                            email = personalInfo.email,
-                                            phoneNumber = personalInfo.phoneNumber,
-                                            lastName = personalInfo.lastName,
-                                            firstName = personalInfo.firstName,
-                                            district = personalInfo.district,
-                                            detailedAddress = personalInfo.detailedAddress,
-                                            cartItems =
-                                            state.value.map { item ->
-                                                CartItem(
-                                                    productLine = item.productLine,
-                                                    quantity = item.quantity
-                                                )
-                                            },
-                                            city = personalInfo.city,
-                                            total = totalPrice.value.toInt()
-                                        ),
+                            .fillMaxWidth()
+                            .height(64.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.primary,
+                            contentColor = Color.White
+                        ), shape = RoundedCornerShape(size = 24.dp)
+                    ) {
+                        CircularProgressIndicator(
+                            modifier = Modifier
+                                .align(Alignment.CenterVertically),
+                            color = MaterialTheme.colorScheme.secondary,
+                            trackColor = MaterialTheme.colorScheme.surfaceVariant,
+                        )
+                    }
+                } else {
+                    if (statePersonalInfo.value.listUserDetail.isNotEmpty()) {
+                        personalInfo =
+                            statePersonalInfo.value.listUserDetail[LocalSelectedIndex.current.intValue].accountDetail
+                        Log.d("IND", LocalSelectedIndex.current.intValue.toString())
+                        FloatingBottomBar(
+                            buttonText = "Thanh Toán",
+                            onButtonClick = {
+                                if (paymentMethodState.intValue == 1) {
+                                    (viewModel::onEvent)(
+                                        CheckOutEvent.CreateOrders(
+                                            token = token,
+                                            requestCheckOut = RequestCheckOut(
+                                                email = personalInfo.email,
+                                                phoneNumber = personalInfo.phoneNumber,
+                                                lastName = personalInfo.lastName,
+                                                firstName = personalInfo.firstName,
+                                                district = personalInfo.district,
+                                                detailedAddress = personalInfo.detailedAddress,
+                                                cartItems =
+                                                state.value.map { item ->
+                                                    CartItem(
+                                                        productLine = item.productLine,
+                                                        quantity = item.quantity
+                                                    )
+                                                },
+                                                city = personalInfo.city,
+                                                total = totalPrice.value.toInt()
+                                            ),
+                                        )
                                     )
-                                )
-                            }
-                            if (paymentMethodState.intValue == 0) {
-                                (viewModel::onEvent)(
-                                    CheckOutEvent.VnPayPayment(
-                                        token = token,
-                                        requestCheckOut = RequestCheckOut(
-                                            email = personalInfo.email,
-                                            phoneNumber = personalInfo.phoneNumber,
-                                            lastName = personalInfo.lastName,
-                                            firstName = personalInfo.firstName,
-                                            district = personalInfo.district,
-                                            detailedAddress = personalInfo.detailedAddress,
-                                            cartItems =
-                                            state.value.map { item ->
-                                                CartItem(
-                                                    productLine = item.productLine,
-                                                    quantity = item.quantity
-                                                )
-                                            },
-                                            city = personalInfo.city,
-                                            total = totalPrice.value.toInt()
-                                        ),
+                                }
+                                if (paymentMethodState.intValue == 0) {
+                                    (viewModel::onEvent)(
+                                        CheckOutEvent.VnPayPayment(
+                                            token = token,
+                                            requestCheckOut = RequestCheckOut(
+                                                email = personalInfo.email,
+                                                phoneNumber = personalInfo.phoneNumber,
+                                                lastName = personalInfo.lastName,
+                                                firstName = personalInfo.firstName,
+                                                district = personalInfo.district,
+                                                detailedAddress = personalInfo.detailedAddress,
+                                                cartItems =
+                                                state.value.map { item ->
+                                                    CartItem(
+                                                        productLine = item.productLine,
+                                                        quantity = item.quantity
+                                                    )
+                                                },
+                                                city = personalInfo.city,
+                                                total = totalPrice.value.toInt()
+                                            ),
+                                        )
                                     )
-                                )
+                                }
                             }
                         }
                     )
@@ -249,6 +245,7 @@ fun CheckOutScreen(
                         if (urlOpened.value == false) {
                             urlOpened.value = true
                             LocalUriHandler.current.openUri(paymentUrl.value)
+
                         }
                     }
                 }
