@@ -10,9 +10,9 @@
               <option name="connection">
                 <ConnectionSetting>
                   <option name="appId" value="com.vi.techshopmobile" />
-                  <option name="mobileSdkAppId" value="1:969933065479:android:7d1b6230d36249461449a2" />
-                  <option name="projectId" value="authenggtechshop-7413e" />
-                  <option name="projectNumber" value="969933065479" />
+                  <option name="mobileSdkAppId" value="1:990819816783:android:aef06539987fd1f3efa13a" />
+                  <option name="projectId" value="techshopmoblie" />
+                  <option name="projectNumber" value="990819816783" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />

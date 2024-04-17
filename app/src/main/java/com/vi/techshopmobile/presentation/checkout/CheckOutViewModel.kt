@@ -58,8 +58,15 @@ class CheckOutViewModel @Inject constructor(
     private var _isOrderLoading = MutableStateFlow(false)
     val isOrderLoading = _isOrderLoading.asStateFlow()
 
-    private var _isVnPayLoading = MutableStateFlow("")
-    val isVnPayLoading = _isVnPayLoading.asStateFlow()
+    private var _paymentUrl = MutableStateFlow("")
+    val paymentUrl = _paymentUrl.asStateFlow()
+
+    private var _orderPaymentStatus = MutableStateFlow("PENDING");
+    val orderPaymentStatus = _orderPaymentStatus.asStateFlow();
+
+    private var _pollingRequest = MutableStateFlow(10);
+    val pollingRequest = _pollingRequest.asStateFlow();
+
     fun onEvent(event: CheckOutEvent) {
         when (event) {
             is CheckOutEvent.GetUserCart -> {
@@ -171,7 +178,6 @@ class CheckOutViewModel @Inject constructor(
                 viewModelScope.launch {
                     cartUseCases.clearCart(event.username)
                     calculateTotal()
-                    //EventBus.sendEvent(Event.Toast("Đã xóa sản phẩm khỏi giỏ hàng"))
                 }
             }
 
@@ -186,8 +192,10 @@ class CheckOutViewModel @Inject constructor(
                         orderVnPayResponse.onRight {
                             sendEvent(Event.Toast("Vui lòng thanh toán để tạo đơn hàng"))
                             _idOrderCreated.value = it.orderId.toString()
-                            _isCreateOrder.value = true
-                            _isVnPayLoading.value = it.url
+                            // Add loading state
+                            _isLoading.value = true
+//                            _isCreateOrder.value = true
+                            _paymentUrl.value = it.url
                         }
                     } else {
                         orderVnPayResponse.onLeft {
@@ -196,6 +204,28 @@ class CheckOutViewModel @Inject constructor(
                     }
                 }
             }
+
+            is CheckOutEvent.PollingOrderInfo -> {
+                viewModelScope.launch {
+                    _pollingRequest.value -= 1;
+                    val orderResponse = ordersUseCases.getOrdersDetail("Bearer " + event.token, event.orderId);
+                    if (orderResponse.isRight()) {
+                        orderResponse.onRight {
+                            if (it.paymentStatus == "SUCCESS") {
+                                sendEvent(Event.Toast("Đơn hàng thanh toán thành công"))
+                                _isLoading.value = false
+                                _orderPaymentStatus.value = "SUCCESS";
+                                _pollingRequest.value -= 0;
+                            } else if (it.paymentStatus == "FAIL"){
+                                _isLoading.value = false
+                                _orderPaymentStatus.value = "FAIL";
+                                _pollingRequest.value -= 0;
+                            }
+                        }
+                    }
+                }
+            }
+
         }
     }
 

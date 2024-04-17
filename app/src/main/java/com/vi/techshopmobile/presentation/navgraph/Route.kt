@@ -32,7 +32,7 @@ sealed class Route(
     object CartScreen: Route(route = "cartScreen")
     object CheckOutScreen: Route(route = "checkoutScreen")
     object ListInfoScreen: Route(route = "listInfoScreen")
-    object PaymentSuccessnScreen: Route(route = "paymentSuccessScreen")
+    object PaymentSuccessScreen: Route(route = "paymentSuccessScreen")
     object PaymentErrorScreen: Route(route = "paymentErrorScreen")
     object AddNewAddressScreen: Route(route = "addNewAddressScreen")
     object DetailAddressScreen: Route(route = "detailAddressScreen")
