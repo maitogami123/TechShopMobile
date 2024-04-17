@@ -61,8 +61,12 @@ class CheckOutViewModel @Inject constructor(
     private var _paymentUrl = MutableStateFlow("")
     val paymentUrl = _paymentUrl.asStateFlow()
 
-    private var _orderPaymentStatus = MutableStateFlow(false);
+    private var _orderPaymentStatus = MutableStateFlow("PENDING");
     val orderPaymentStatus = _orderPaymentStatus.asStateFlow();
+
+    private var _pollingRequest = MutableStateFlow(10);
+    val pollingRequest = _pollingRequest.asStateFlow();
+
     fun onEvent(event: CheckOutEvent) {
         when (event) {
             is CheckOutEvent.GetUserCart -> {
@@ -201,19 +205,21 @@ class CheckOutViewModel @Inject constructor(
 
             is CheckOutEvent.PollingOrderInfo -> {
                 viewModelScope.launch {
+                    _pollingRequest.value -= 1;
                     val orderResponse = ordersUseCases.getOrdersDetail("Bearer " + event.token, event.orderId);
                     if (orderResponse.isRight()) {
                         orderResponse.onRight {
                             if (it.paymentStatus == "SUCCESS") {
                                 sendEvent(Event.Toast("Đơn hàng thanh toán thành công"))
                                 _isLoading.value = false
-                                _orderPaymentStatus.value = true;
+                                _orderPaymentStatus.value = "SUCCESS";
+                                _pollingRequest.value -= 0;
+                            } else if (it.paymentStatus == "FAIL"){
+                                _isLoading.value = false
+                                _orderPaymentStatus.value = "FAIL";
+                                _pollingRequest.value -= 0;
                             }
                         }
-                    } else {
-                        sendEvent(Event.Toast("Có lỗi xảy ra khi thanh toán!"))
-                        _isLoading.value = false
-                        _orderPaymentStatus.value = false;
                     }
                 }
             }

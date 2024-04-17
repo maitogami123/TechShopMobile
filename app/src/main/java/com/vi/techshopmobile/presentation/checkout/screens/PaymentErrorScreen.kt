@@ -27,6 +27,7 @@ import com.vi.techshopmobile.presentation.navgraph.Route
 @Composable
 fun PaymentErrorScreen(
     navController: NavController,
+    navGraphController: NavController,
     onNavigateUp: () -> Unit
 ) {
     Scaffold(
@@ -34,12 +35,21 @@ fun PaymentErrorScreen(
         },
         bottomBar = {
             Column {
-//                FloatingBottomBar(buttonText = "Xác nhận lại đơn hàng",
-//                    onButtonClick = {
-//                    }
-//                )
-                FloatingOnBottomBar(buttonText = "Trở về đơn hàng chủ", onButtonClick = {
-                    navController.navigateUp()
+                FloatingBottomBar(buttonText = "Xác nhận lại đơn hàng",
+                    onButtonClick = {
+                        navController.navigate(Route.CheckOutScreen.route) {
+                            popUpTo(Route.CheckOutScreen.route) {
+                                inclusive = true
+                            }
+                        }
+                    }
+                )
+                FloatingOnBottomBar(buttonText = "Trở về trang chủ", onButtonClick = {
+                    navGraphController.navigate(Route.HomeScreen.route) {
+                        popUpTo(Route.HomeScreen.route) {
+                            inclusive = true
+                        }
+                    }
                 })
             }
 
@@ -60,7 +70,7 @@ fun PaymentErrorScreen(
                 verticalArrangement = Arrangement.Center
             ) {
                 Image(
-                    painterResource(id = R.drawable.success),
+                    painterResource(id = R.drawable.error),
                     contentDescription = null,
                 )
                 Text(

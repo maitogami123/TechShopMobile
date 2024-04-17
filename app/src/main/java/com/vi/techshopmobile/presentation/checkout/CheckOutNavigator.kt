@@ -96,13 +96,15 @@ fun CheckOutNavigator(navGraphController: NavController) {
                         )
                     }
             }
+
             composable(
                 route = Route.PaymentErrorScreen.route
             ) {
-                PaymentErrorScreen(
-                    onNavigateUp = { navController.navigateUp() },
-                    navController = navController
-                )
+                        PaymentErrorScreen(
+                            onNavigateUp = { navController.navigateUp() },
+                            navGraphController = navGraphController,
+                            navController = navController
+                        )
             }
             composable(
                 route = Route.AddNewAddressScreen.route
@@ -157,6 +159,14 @@ fun navigateToDetailOrder(navController: NavController, id: String) {
 fun navigateToPaymentSuccess(navController: NavController, id: String) {
     navController.currentBackStackEntry?.savedStateHandle?.set("id", id)
     navController.navigate(Route.PaymentSuccessScreen.route) {
+        popUpTo(Route.HomeScreen.route) {
+            inclusive = true
+        }
+    };
+}
+
+fun navigateToPaymentFail(navController: NavController, id: String) {
+    navController.navigate(Route.PaymentErrorScreen.route) {
         popUpTo(Route.HomeScreen.route) {
             inclusive = true
         }

@@ -85,9 +85,7 @@ fun CheckOutScreen(
     val isOrderLoading = viewModel.isOrderLoading.collectAsState()
     val orderPaymentStatus = viewModel.orderPaymentStatus.collectAsState()
     // Delay 2s per poll
-    val maxPollingRequest = remember {
-        mutableIntStateOf(10)
-    }
+    val maxPollingRequest = viewModel.pollingRequest.collectAsState()
 
     val urlOpened = remember {
         mutableStateOf(false)
@@ -143,23 +141,18 @@ fun CheckOutScreen(
 //        }
 //    }
     
-    LaunchedEffect(key1 = idOrderCreated.value, key2 = maxPollingRequest.intValue) {
+    LaunchedEffect(key1 = idOrderCreated.value, key2 = maxPollingRequest.value) {
         if (idOrderCreated.value.isNotEmpty()) {
             (viewModel::onEvent)(CheckOutEvent.PollingOrderInfo(token, idOrderCreated.value))
             delay(2000)
-            maxPollingRequest.intValue -= 1
         }
-//        if (maxPollingRequest.intValue == 0) {
-//            // TODO: navigate to payment error
-//        }
     }
 
     LaunchedEffect(key1 = orderPaymentStatus.value) {
-        if (orderPaymentStatus.value == true) {
+        if (orderPaymentStatus.value == "SUCCESS") {
             navigateToPaymentSuccess(navController, idOrderCreated.value)
-        } else if (maxPollingRequest.intValue == 0) {
-            EventBus.sendEvent(Event.Toast("Error payment..."))
-            // TODO: navigate to payment error
+        } else if (maxPollingRequest.value == 0 || orderPaymentStatus.value == "FAIL") {
+            navigateToPaymentFail(navController, idOrderCreated.value)
         }
     }
 
