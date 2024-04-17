@@ -71,7 +71,6 @@ class SearchViewModel @Inject constructor(
             _productsSearch.update {
                 it.copy(isLoading = false)
             }
-            Log.d("Hello", _productsSearch.value.productsSearch.toString())
         }
     }
 

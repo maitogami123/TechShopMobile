@@ -52,6 +52,7 @@ fun UtilityTopNavigation(
     leftBtnIcon: Int? = null,
     @Nullable onLeftBtnClick: () -> Unit?,
     title: String? = null,
+    titleSearch: String? = null,
     @Nullable onSearch: () -> Unit?,
 ) {
     TopAppBar(
@@ -65,13 +66,16 @@ fun UtilityTopNavigation(
                         .padding(0.dp, 0.dp, if (rightBtnIcon == null) 48.dp else 0.dp, 0.dp)
                 )
             else
-                SearchBar(
-                    text = "Hello",
-                    readOnly = false,
-                    onValueChange = {},
-                    onSearch = { onSearch() }
-                )
+                titleSearch?.let {
+                    SearchBar(
+                        text = it,
+                        readOnly = false,
+                        onValueChange = {},
+                        onSearch = { onSearch() }
+                    )
+                }
         },
+
         modifier = Modifier
             .fillMaxWidth()
             .background(Color.White)
@@ -184,6 +188,7 @@ fun PreviewUtilityTopNavigation() {
                 onLeftBtnClick = { /*TODO*/ },
                 leftBtnIcon = R.drawable.ic_left_arrow,
                 rightBtnIcon = R.drawable.ic_filter,
+                titleSearch = "Laptop",
                 onSearch = {})
             Spacer(modifier = Modifier.fillMaxWidth().height(10.dp))
             UtilityTopNavigation(

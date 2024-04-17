@@ -36,6 +36,7 @@ import com.vi.techshopmobile.presentation.filter.component.FilterCheckBoxGroup
 import com.vi.techshopmobile.presentation.filter.component.FilterRadioGroup
 import com.vi.techshopmobile.presentation.home.home_navigator.component.UtilityTopNavigation
 import com.vi.techshopmobile.presentation.home.home_navigator.navigateToProducts
+import com.vi.techshopmobile.presentation.home.home_navigator.navigateToSearchResult
 import com.vi.techshopmobile.presentation.products.ProductsViewModel
 import com.vi.techshopmobile.ui.theme.Blue_50
 
@@ -45,8 +46,9 @@ fun FilterScreen(
     category: String,
     brands: ArrayList<Brand>,
     products: List<ProductLine>,
+    isSearch: Boolean = false,
     onNavigateUp: () -> Unit,
-    ) {
+) {
     val filterPrice = listOf(
         FilterPrice(
             index = 1,
@@ -98,12 +100,7 @@ fun FilterScreen(
         )
     }
 
-    var initialSelectedOptions = LocalSelectedIndex.current
-    val selectedOptions = remember {
-        mutableStateOf(initialSelectedOptions.value)
-    }
 
-    var initialSeclectedPriceOption = LocalSelectedIndex.current
     var checkItemPricePos by remember {
         mutableStateOf(listOf<Int>())
     }
@@ -119,19 +116,36 @@ fun FilterScreen(
                 onRightBtnClick = { /*TODO*/ },
                 onLeftBtnClick = { onNavigateUp() },
                 leftBtnIcon = R.drawable.ic_cross,
-                title = "Filter Product",
+                title = "Product Filter",
                 onSearch = {})
         },
         bottomBar = {
             FloatingBottomBar(
                 buttonText = "Xác nhận",
                 onButtonClick = {
-                    initialSelectedOptions.intValue = selectedOptions.value
-                    if (brands.size == 1) navigateToProducts(
-                        navController,
-                        category,
-                        brands[0].brandName, state.products, isFilter = true
-                    ) else navigateToProducts(navController, category, "", state.products, isFilter = true)
+                    if (isSearch) {
+                        Log.d("Hello", state.products.toString())
+                        navigateToSearchResult(
+                            navController = navController,
+                            searchQuery = category,
+                            state.products,
+                            isFilter = true
+                        )
+                    } else if (brands.size == 1)
+                        navigateToProducts(
+                            navController,
+                            category,
+                            brands[0].brandName,
+                            state.products,
+                            isFilter = true
+                        ) else
+                        navigateToProducts(
+                            navController,
+                            category,
+                            "",
+                            state.products,
+                            isFilter = true
+                        )
                 })
         }
     ) {
@@ -166,7 +180,7 @@ fun FilterScreen(
                                     (viewModel::onEvent)(
                                         FilterEvent.FilterProductsByOption(
                                             selectedIndexOptionSelected,
-                                            products = products,
+                                            products = state.products,
                                             value = filterLabel.value
                                         )
                                     )
@@ -201,11 +215,20 @@ fun FilterScreen(
                                     (viewModel::onEvent)(
                                         FilterEvent.FilterProductByPrice(
                                             checkItemPricePos,
-                                            products = state.products,
+                                            products = products,
                                             filterLabel.valueStart,
                                             filterLabel.valueEnd
                                         )
                                     )
+                                    if (selectedIndexOptionSelected != -1) {
+                                        (viewModel::onEvent)(
+                                            FilterEvent.FilterProductsByOption(
+                                                selectedIndexOptionSelected,
+                                                products = state.products,
+                                                value = selectedIndexOptionSelected.toString()
+                                            )
+                                        )
+                                    }
                                 }
                             )
                         }
@@ -242,6 +265,15 @@ fun FilterScreen(
                                                 value = filterLabel.brand
                                             )
                                         )
+                                        if (selectedIndexOptionSelected != -1) {
+                                            (viewModel::onEvent)(
+                                                FilterEvent.FilterProductsByOption(
+                                                    selectedIndexOptionSelected,
+                                                    products = state.products,
+                                                    value = selectedIndexOptionSelected.toString()
+                                                )
+                                            )
+                                        }
                                     }
                                 )
                             }

@@ -44,7 +44,7 @@ fun CategoryProducts(navController: NavController) {
                     items(category.brands) { brand ->
                         Button(
                             colors = ButtonDefaults.buttonColors(containerColor = Color(0xffC3DDFD)),
-                            onClick = { navigateToProducts(navController, category.name, brand.brandName, brand.products) }) {
+                            onClick = { navigateToProducts(navController, category.name, brand.brandName, emptyList(), isFilter = false) }) {
                             Text(text = brand.brandName, color = Color(0xff1A56DB))
                         }
                     }

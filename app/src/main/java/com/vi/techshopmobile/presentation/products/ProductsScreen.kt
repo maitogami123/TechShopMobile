@@ -31,14 +31,13 @@ fun ProductsScreen(
     navController: NavController,
     categoryName: String,
     brandName: String,
-    products: List<ProductLine>,
-    isFilter: Boolean = false,
+    productsFilter: List<ProductLine>,
+    isFilter: Boolean = false
 ) {
     val viewModel: ProductsViewModel = hiltViewModel()
     val isLoading by viewModel.isLoading.collectAsState()
     val swipeRefreshState = rememberSwipeRefreshState(isRefreshing = isLoading)
     val state by viewModel.state.collectAsStateWithLifecycle()
-
     val brands = ArrayList<Brand>()
     var productsShow = emptyList<ProductLine>()
 
@@ -79,9 +78,10 @@ fun ProductsScreen(
                 onRightBtnClick = {
                     navigateToFilter(
                         navController = navController,
-                        category = categoryName,
+                        categoryName = categoryName,
                         brands = brands,
                         products = productsShow,
+                        isSearch = false
                     )
                 },
                 onLeftBtnClick = { navController.navigate(Route.HomeScreen.route) },
@@ -96,12 +96,12 @@ fun ProductsScreen(
                 Box(
                     modifier = Modifier.padding(top = it.calculateTopPadding()),
                 ) {
-                    if (isFilter && products.isEmpty()) {
+                    if (isFilter && productsFilter.isEmpty()) {
                         Text(text = "Hiện tại không có sản phẩm phù hợp")
                     } else if (isFilter) {
                         ProductsColumn(
                             modifier = Modifier,
-                            products = products,
+                            products = productsFilter,
                             isLoading = isLoading
                         )
                     } else if (brandName.isNotBlank() && productsShow.isEmpty()) {

@@ -20,14 +20,7 @@ import javax.inject.Inject
 class FilterViewModel @Inject constructor(
     private val categoriesUseCases: CategoriesUseCases
 ) : ViewModel() {
-    private val _filterBrand = MutableStateFlow(emptyList<Int>())
-    val filterBrand = _filterBrand.asStateFlow()
 
-    private val _filterOption = MutableStateFlow(-1)
-    val filterOption = _filterOption.asStateFlow()
-
-    private val _filterPrice = MutableStateFlow(emptyList<Int>())
-    val filterPrice = _filterPrice.asStateFlow()
 
     private val _state = MutableStateFlow(FilterViewState())
     val state = _state.asStateFlow()
@@ -45,20 +38,20 @@ class FilterViewModel @Inject constructor(
             is FilterEvent.FilterProductByPrice -> {
                 viewModelScope.launch {
                     val filteredProducts =
-                        if (event.index.isNotEmpty()) {
-                            state.value.products.filter { productLine ->
-                                productLine.price < event.end && productLine.price > event.start && (event.index.contains(
-                                    productLine.id
-                                ) ?: true)
-                            }
-                        } else {
-                            state.value.products
+                        event.products.filter { productLine ->
+                            productLine.price < event.end && productLine.price > event.start
                         }
                     _state.update { filterViewState ->
                         filterViewState.copy(
-                            products = filterViewState.products.plus(
+                            products = if (event.index.isEmpty()) {
+                                event.products
+                            } else if (event.index.size == 1) {
                                 filteredProducts
-                            ).distinctBy { it.id }
+                            } else {
+                                filterViewState.products.plus(
+                                    filteredProducts
+                                ).distinctBy { it.id }
+                            }
                         )
                     }
                 }
@@ -111,7 +104,7 @@ class FilterViewModel @Inject constructor(
     }
 
     private fun sortProductsRevertAlphabetically(products: List<ProductLine>): List<ProductLine> {
-        return products.sortedBy { productLine -> productLine.productName }
+        return products.sortedBy { productLine -> productLine.productName }.reversed()
     }
 
 }

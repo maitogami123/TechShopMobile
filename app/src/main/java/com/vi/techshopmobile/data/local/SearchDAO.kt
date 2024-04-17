@@ -12,7 +12,7 @@ interface SearchDAO {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsert(searchHistory: SearchHistory)
 
-    @Query("SELECT * FROM SearchHistory WHERE username=:username")
+    @Query("SELECT * FROM SearchHistory WHERE username=:username ORDER BY id DESC LIMIT 5")
     fun getSearchHistory(username: String): Flow<List<SearchHistory>>
 
 }

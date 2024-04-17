@@ -16,13 +16,19 @@ import com.vi.techshopmobile.domain.model.ProductLine
 import com.vi.techshopmobile.presentation.common.ShimmerListItem
 
 @Composable
-fun ProductsColumn(modifier: Modifier = Modifier ,products: List<ProductLine>, isLoading: Boolean) {
+fun ProductsColumn(
+    modifier: Modifier = Modifier,
+    products: List<ProductLine>,
+    isLoading: Boolean
+) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
         horizontalArrangement = Arrangement.spacedBy(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
         modifier = modifier
-            .fillMaxWidth().padding(16.dp).fillMaxHeight(),
+            .fillMaxWidth()
+            .padding(16.dp)
+            .fillMaxHeight(),
     ) {
         items(products) { product ->
             ShimmerListItem(

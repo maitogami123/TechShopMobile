@@ -15,7 +15,6 @@ interface ProductsApi {
     @GET("all")
     suspend fun getProducts(): Either<ErrorResponse, List<ProductLine>>
 
-
     @GET("{productLine}")
     suspend fun getProductDetail(
         @Path(
