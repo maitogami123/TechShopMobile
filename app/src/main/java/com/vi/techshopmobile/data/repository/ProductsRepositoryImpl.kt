@@ -26,4 +26,11 @@ class ProductsRepositoryImpl @Inject constructor(
     override suspend fun getProductDetail(productLine: String): Either<ErrorResponse, ProductDetailResponse> {
         return productsApi.getProductDetail(productLine)
     }
+
+    override suspend fun getProductsRandom(
+        categoryName: String,
+        num: Int
+    ): Either<ErrorResponse, List<ProductLine>> {
+        return  productsApi.getProductsRandom(categoryName, num)
+    }
 }

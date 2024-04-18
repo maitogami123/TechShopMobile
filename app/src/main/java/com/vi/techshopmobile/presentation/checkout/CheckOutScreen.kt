@@ -1,10 +1,8 @@
 package com.vi.techshopmobile.presentation.checkout
 
-import android.app.Activity
-import android.content.Intent
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.animation.animateContentSize
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -24,12 +22,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableIntState
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.currentCompositionLocalContext
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -40,7 +36,6 @@ import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.app.ActivityCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.vi.techshopmobile.LocalToken
@@ -49,10 +44,7 @@ import com.vi.techshopmobile.data.remote.cart.CartResponse
 import com.vi.techshopmobile.data.remote.orders.dto.CartItem
 import com.vi.techshopmobile.data.remote.orders.dto.RequestCheckOut
 import com.vi.techshopmobile.domain.model.AccountDetail
-import com.vi.techshopmobile.domain.usecases.orders.CreateOrders
 import com.vi.techshopmobile.presentation.Dimens
-import com.vi.techshopmobile.presentation.cart.CartViewModel
-import com.vi.techshopmobile.presentation.cart.CartEvent
 import com.vi.techshopmobile.presentation.cart.components.ProductCart
 import com.vi.techshopmobile.presentation.cart.components.RowPaymentGateNavigate
 import com.vi.techshopmobile.presentation.cart.components.RowPaymentNavigate
@@ -61,14 +53,14 @@ import com.vi.techshopmobile.presentation.checkout.components.PaymentOption
 import com.vi.techshopmobile.presentation.common.AddressTitle
 import com.vi.techshopmobile.presentation.common.FloatingBottomBar
 import com.vi.techshopmobile.presentation.common.LoadingDialog
-import com.vi.techshopmobile.presentation.common.SwipeToDeleteContainer
 import com.vi.techshopmobile.presentation.home.home_navigator.component.UtilityTopNavigation
 import com.vi.techshopmobile.presentation.navgraph.Route
-import com.vi.techshopmobile.presentation.personal_info.PersonalInfoEvent
-import com.vi.techshopmobile.presentation.personal_info.PersonalInfoViewModel
 import com.vi.techshopmobile.ui.theme.TechShopMobileTheme
+import com.vi.techshopmobile.util.Event
+import com.vi.techshopmobile.util.EventBus
 import com.vi.techshopmobile.util.formatPhoneNumber
 import com.vi.techshopmobile.util.decodeToken
+import kotlinx.coroutines.delay
 
 
 @Composable
@@ -85,11 +77,20 @@ fun CheckOutScreen(
     val paymentMethod = listOf("online" to "Chuyển khoản", "cash" to "Tiền mặt")
     val paymentOnlineGate = listOf("ic_cast" to "VN Pay", "ic_money" to "Momo")
     val totalPrice = viewModel.totalPrice.collectAsState()
-    val isVnPayLoading = viewModel.isVnPayLoading.collectAsState()
+    val paymentUrl = viewModel.paymentUrl.collectAsState()
     val statePersonalInfo = viewModel.statePerson.collectAsState()
     val isCreateOrder = viewModel.isCreateOrder.collectAsState()
-
+    // HACK: Duplicated state
+    val paymentInProgress = viewModel.isLoading.collectAsState()
     val isOrderLoading = viewModel.isOrderLoading.collectAsState()
+    val orderPaymentStatus = viewModel.orderPaymentStatus.collectAsState()
+    // Delay 2s per poll
+    val maxPollingRequest = viewModel.pollingRequest.collectAsState()
+
+    val urlOpened = remember {
+        mutableStateOf(false)
+    }
+
     val paymentMethodIsExpanded = remember {
         mutableStateOf(false);
     }
@@ -126,19 +127,26 @@ fun CheckOutScreen(
         )
     }
     LaunchedEffect(key1 = null) {
-        // TODO: Migrate event
         if (statePersonalInfo.value.listUserDetail.isEmpty()) {
             (viewModel::onEvent)(CheckOutEvent.GetListUserDetail(token))
         }
     }
     LaunchedEffect(key1 = null) {
-        // TODO: Migrate event
         (viewModel::onEvent)(CheckOutEvent.GetUserCart(decodedToken.sub))
     }
 
-    LaunchedEffect(key1 = isCreateOrder.value) {
-        if (isCreateOrder.value == true && idOrderCreated.value != null) {
+    LaunchedEffect(key1 = idOrderCreated.value, key2 = maxPollingRequest.value) {
+        if (idOrderCreated.value.isNotEmpty()) {
+            (viewModel::onEvent)(CheckOutEvent.PollingOrderInfo(token, idOrderCreated.value))
+            delay(2000)
+        }
+    }
+
+    LaunchedEffect(key1 = orderPaymentStatus.value) {
+        if (orderPaymentStatus.value == "SUCCESS") {
             navigateToPaymentSuccess(navController, idOrderCreated.value)
+        } else if (maxPollingRequest.value == 0 || orderPaymentStatus.value == "FAIL") {
+            navigateToPaymentFail(navController, idOrderCreated.value)
         }
     }
 
@@ -154,86 +162,90 @@ fun CheckOutScreen(
                 onSearch = {})
         },
         bottomBar = {
-            if (isOrderLoading.value) {
-                Button(
-                    onClick = { /*TODO*/ }, enabled = !isOrderLoading.value,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(40.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.primary,
-                        contentColor = Color.White
-                    ), shape = RoundedCornerShape(size = 6.dp)
-                ) {
-                    CircularProgressIndicator(
+            if (!statePersonalInfo.value.isLoading) {
+                if (isOrderLoading.value) {
+                    Button(
+                        onClick = { /*TODO*/ }, enabled = !isOrderLoading.value,
                         modifier = Modifier
-                            .width(20.dp)
-                            .align(Alignment.CenterVertically),
-                        color = MaterialTheme.colorScheme.secondary,
-                        trackColor = MaterialTheme.colorScheme.surfaceVariant,
-                    )
-                }
-            } else {
-                if (statePersonalInfo.value.listUserDetail.isNotEmpty()) {
-                    personalInfo =
-                        statePersonalInfo.value.listUserDetail[LocalSelectedIndex.current.intValue].accountDetail
-                    Log.d("IND", LocalSelectedIndex.current.intValue.toString())
-                    FloatingBottomBar(
-                        buttonText = "Thanh Toán",
-                        onButtonClick = {
-                            if (paymentMethodState.intValue == 1) {
-                                (viewModel::onEvent)(
-                                    CheckOutEvent.CreateOrders(
-                                        token = token,
-                                        requestCheckOut = RequestCheckOut(
-                                            email = personalInfo.email,
-                                            phoneNumber = personalInfo.phoneNumber,
-                                            lastName = personalInfo.lastName,
-                                            firstName = personalInfo.firstName,
-                                            district = personalInfo.district,
-                                            detailedAddress = personalInfo.detailedAddress,
-                                            cartItems =
-                                            state.value.map { item ->
-                                                CartItem(
-                                                    productLine = item.productLine,
-                                                    quantity = item.quantity
-                                                )
-                                            },
-                                            city = personalInfo.city,
-                                            total = totalPrice.value.toInt()
-                                        ),
+                            .fillMaxWidth()
+                            .height(64.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.primary,
+                            contentColor = Color.White
+                        ), shape = RoundedCornerShape(size = 24.dp)
+                    ) {
+                        CircularProgressIndicator(
+                            modifier = Modifier
+                                .align(Alignment.CenterVertically),
+                            color = MaterialTheme.colorScheme.secondary,
+                            trackColor = MaterialTheme.colorScheme.surfaceVariant,
+                        )
+                    }
+                } else {
+                    if (statePersonalInfo.value.listUserDetail.isNotEmpty()) {
+                        personalInfo =
+                            statePersonalInfo.value.listUserDetail[LocalSelectedIndex.current.intValue].accountDetail
+                        Log.d("IND", LocalSelectedIndex.current.intValue.toString())
+                        FloatingBottomBar(
+                            buttonText = "Thanh Toán",
+                            onButtonClick = {
+                                if (paymentMethodState.intValue == 1) {
+                                    (viewModel::onEvent)(
+                                        CheckOutEvent.CreateOrders(
+                                            token = token,
+                                            requestCheckOut = RequestCheckOut(
+                                                email = personalInfo.email,
+                                                phoneNumber = personalInfo.phoneNumber,
+                                                lastName = personalInfo.lastName,
+                                                firstName = personalInfo.firstName,
+                                                district = personalInfo.district,
+                                                detailedAddress = personalInfo.detailedAddress,
+                                                cartItems =
+                                                state.value.map { item ->
+                                                    CartItem(
+                                                        productLine = item.productLine,
+                                                        quantity = item.quantity
+                                                    )
+                                                },
+                                                city = personalInfo.city,
+                                                total = totalPrice.value.toInt()
+                                            ),
+                                        )
                                     )
-                                )
-                            }
-                            if (paymentMethodState.intValue == 0) {
-                                (viewModel::onEvent)(
-                                    CheckOutEvent.VnPayPayment(
-                                        token = token,
-                                        requestCheckOut = RequestCheckOut(
-                                            email = personalInfo.email,
-                                            phoneNumber = personalInfo.phoneNumber,
-                                            lastName = personalInfo.lastName,
-                                            firstName = personalInfo.firstName,
-                                            district = personalInfo.district,
-                                            detailedAddress = personalInfo.detailedAddress,
-                                            cartItems =
-                                            state.value.map { item ->
-                                                CartItem(
-                                                    productLine = item.productLine,
-                                                    quantity = item.quantity
-                                                )
-                                            },
-                                            city = personalInfo.city,
-                                            total = totalPrice.value.toInt()
-                                        ),
+                                }
+                                if (paymentMethodState.intValue == 0) {
+                                    (viewModel::onEvent)(
+                                        CheckOutEvent.VnPayPayment(
+                                            token = token,
+                                            requestCheckOut = RequestCheckOut(
+                                                email = personalInfo.email,
+                                                phoneNumber = personalInfo.phoneNumber,
+                                                lastName = personalInfo.lastName,
+                                                firstName = personalInfo.firstName,
+                                                district = personalInfo.district,
+                                                detailedAddress = personalInfo.detailedAddress,
+                                                cartItems =
+                                                state.value.map { item ->
+                                                    CartItem(
+                                                        productLine = item.productLine,
+                                                        quantity = item.quantity
+                                                    )
+                                                },
+                                                city = personalInfo.city,
+                                                total = totalPrice.value.toInt()
+                                            ),
+                                        )
                                     )
-                                )
+                                }
                             }
+                        )
+                    }
+                    if (paymentUrl.value.isNotEmpty()) {
+                        if (urlOpened.value == false) {
+                            urlOpened.value = true
+                            LocalUriHandler.current.openUri(paymentUrl.value)
+
                         }
-                    )
-                    if (isVnPayLoading.value.isNotEmpty()) {
-//                        LocalUrlVnPay.current.value = isVnPayLoading.value
-                        LocalUriHandler.current.openUri(isVnPayLoading.value)
                     }
                 }
             }
@@ -248,8 +260,11 @@ fun CheckOutScreen(
             verticalArrangement = Arrangement.SpaceBetween,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            if (statePersonalInfo.value.isLoading) {
-                LoadingDialog(isLoading = statePersonalInfo.value.isLoading)
+            if (statePersonalInfo.value.isLoading || paymentInProgress.value) {
+                if (statePersonalInfo.value.isLoading)
+                    LoadingDialog(isLoading = statePersonalInfo.value.isLoading)
+                else if (paymentInProgress.value)
+                    LoadingDialog(isLoading = paymentInProgress.value)
             } else {
                 LazyColumn(
                     modifier = Modifier
@@ -306,9 +321,6 @@ fun CheckOutScreen(
                         Column(
                             modifier = Modifier
                                 .animateContentSize()
-//                            .clickable {
-//                                paymentMethodIsExpanded.value = !paymentMethodIsExpanded.value
-//                            }
                         ) {
                             RowPaymentNavigate(
                                 textLeft = "Phương thức thanh toán",

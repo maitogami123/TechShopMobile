@@ -208,11 +208,15 @@ fun HomeNavigator(navGraphController: NavController) {
                 composable(route = Route.ProductDetailsScreen.route) {
                     navController.previousBackStackEntry?.savedStateHandle?.get<String?>("productLine")
                         ?.let { productLine ->
-                            ProductDetailsScreen(
-                                navController = navController,
-                                productLine = productLine,
-                                isLoggedIn = isLoggedIn
-                            ) { navController.navigateUp() }
+                            navController.previousBackStackEntry?.savedStateHandle?.get<String?>("categoryName")
+                                ?.let { categoryName ->
+                                    ProductDetailsScreen(
+                                        navController = navController,
+                                        productLine = productLine,
+                                        categoryName = categoryName,
+                                        isLoggedIn = isLoggedIn
+                                    ) { navController.navigateUp() }
+                                }
                         }
                 }
 
@@ -226,6 +230,7 @@ fun HomeNavigator(navGraphController: NavController) {
                 composable(route = Route.PersonalInfoScreen.route) {
                     PersonalInfoScreen(onNavigateUp = { navController.navigateUp() }, navController)
                 }
+
                 composable(route = Route.PersonalAddressScreen.route) {
                     PersonalAddressScreen(
                         onNavigateUp = { navController.navigateUp() }, navController
@@ -394,4 +399,12 @@ fun navigateToSearchResult(
     navController.currentBackStackEntry?.savedStateHandle?.set("isFilter", isFilter)
     navController.currentBackStackEntry?.savedStateHandle?.set("searchQuery", searchQuery)
     navController.navigate(Route.SearchResultScreen.route)
+fun navigateToDetailsProduct(
+    navController: NavController,
+    productLine: String,
+    categoryName: String
+) {
+    navController.currentBackStackEntry?.savedStateHandle?.set("productLine", productLine)
+    navController.currentBackStackEntry?.savedStateHandle?.set("categoryName", categoryName)
+    navController.navigate(Route.ProductDetailsScreen.route);
 }

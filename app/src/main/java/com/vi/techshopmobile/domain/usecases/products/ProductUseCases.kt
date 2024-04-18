@@ -6,4 +6,5 @@ data class ProductUseCases(
     val getProducts: GetProducts,
     val getProductDetail: GetProductDetail,
     val getSearchProducts: GetSearchProducts,
+    val getProductsRandom: GetProductsRandom
 )

@@ -6,6 +6,7 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class ProductLine(
     val brandName: String,
+    val name: String? = "",
     val categoryName: String,
     val createdAt: String,
     val deletedAt: String,

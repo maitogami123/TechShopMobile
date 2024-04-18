@@ -48,12 +48,14 @@ fun PersonalAddressScreen(onNavigateUp: () -> Unit, navController: NavController
             ) { }
         },
         bottomBar = {
-            FloatingBottomBar(
-                buttonText = "+ Thêm địa chỉ mới",
-                onButtonClick = {
-                    navController.navigate(Route.AddNewAddressScreen.route)
-                }
-            )
+            if (!state.value.isLoading) {
+                FloatingBottomBar(
+                    buttonText = "+ Thêm địa chỉ mới",
+                    onButtonClick = {
+                        navController.navigate(Route.AddNewAddressScreen.route)
+                    }
+                )
+            }
         }
     ) {
         if (state.value.isLoading) {
@@ -62,8 +64,8 @@ fun PersonalAddressScreen(onNavigateUp: () -> Unit, navController: NavController
             LazyColumn(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(it),
-//                .padding(horizontal = Dimens.SmallPadding),
+                    .padding(it)
+                .padding(horizontal = Dimens.SmallPadding),
                 verticalArrangement = Arrangement.spacedBy(Dimens.SmallPadding)
             ) {
                 itemsIndexed(state.value.listUserDetail) { index, item ->

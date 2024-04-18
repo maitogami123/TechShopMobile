@@ -6,6 +6,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.vi.techshopmobile.domain.model.ProductLine
 import com.vi.techshopmobile.domain.usecases.categories.CategoriesUseCases
+import com.vi.techshopmobile.domain.usecases.products.ProductUseCases
+import com.vi.techshopmobile.presentation.products.ProductsViewState
 import com.vi.techshopmobile.util.Event
 import com.vi.techshopmobile.util.EventBus
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,11 +20,15 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CategoriesViewModel @Inject constructor(
-    private val categoriesUseCases: CategoriesUseCases
+    private val categoriesUseCases: CategoriesUseCases,
+    private val productUseCases: ProductUseCases,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(CategoriesViewState())
     val state = _state.asStateFlow()
+
+    private val _stateProduct = MutableStateFlow(ProductsViewState())
+    val stateProduct = _stateProduct.asStateFlow()
 
     private val _isLoading = MutableStateFlow(false)
     val isLoading = _isLoading.asStateFlow()
@@ -32,14 +38,18 @@ class CategoriesViewModel @Inject constructor(
     }
 
     fun onEvent(event: CategoriesEvents) {
-       when (event) {
+        when (event) {
             is CategoriesEvents.GetAllEventCategories -> {
                 getCategories()
             }
             is CategoriesEvents.GetCategoryProduct -> {
                 getProductCategory(event.categoryName)
             }
-       }
+
+            is CategoriesEvents.GetProductsRandom -> {
+                getProductsRandom(event.categoryName, event.num)
+            }
+        }
     }
     fun getCategories(){
         viewModelScope.launch {
@@ -91,4 +101,32 @@ class CategoriesViewModel @Inject constructor(
         }
     }
 
+    fun getProductsRandom(categoryName: String, num: Int) {
+        viewModelScope.launch {
+            _stateProduct.update {
+                it.copy(isLoading = true)
+            }
+            delay(2000L)
+            productUseCases.getProductsRandom(categoryName, num)
+                .onRight { products ->
+                    _stateProduct.update {
+                        it.copy(
+                            products = products
+                        )
+                    }
+                }
+                .onLeft { error ->
+                    _stateProduct.update {
+                        it.copy(
+                            error = error.detail
+                        )
+                    }
+                    EventBus.sendEvent(Event.Toast(error.detail))
+                }
+
+            _stateProduct.update {
+                it.copy(isLoading = false)
+            }
+        }
+    }
 }

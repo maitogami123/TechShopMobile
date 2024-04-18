@@ -10,6 +10,7 @@ import com.vi.techshopmobile.domain.repository.products.ProductsRepository
 import com.vi.techshopmobile.domain.usecases.products.GetProductDetail
 import com.vi.techshopmobile.domain.usecases.products.GetProducts
 import com.vi.techshopmobile.domain.usecases.products.GetSearchProducts
+import com.vi.techshopmobile.domain.usecases.products.GetProductsRandom
 import com.vi.techshopmobile.domain.usecases.products.ProductUseCases
 import com.vi.techshopmobile.domain.usecases.search.GetSearchHistory
 import com.vi.techshopmobile.util.Constants
@@ -17,8 +18,12 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import okhttp3.Interceptor
+import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.net.SocketTimeoutException
+import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
 @Module
@@ -46,5 +51,6 @@ object ProductModule {
         getProducts = GetProducts(productsRepository),
         getProductDetail = GetProductDetail(productsRepository),
         getSearchProducts = GetSearchProducts(productsRepository)
+        getProductsRandom = GetProductsRandom(productsRepository)
     )
 }

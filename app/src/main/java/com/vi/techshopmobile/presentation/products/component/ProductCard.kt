@@ -2,25 +2,19 @@ package com.vi.techshopmobile.presentation.products.component
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -32,15 +26,12 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.navigation.NavController
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import com.vi.techshopmobile.R
 import com.vi.techshopmobile.domain.model.ProductLine
 import com.vi.techshopmobile.presentation.Dimens.IconSizeLarge
 import com.vi.techshopmobile.presentation.home.home_navigator.LocalNavController
-import com.vi.techshopmobile.presentation.home.home_navigator.navigateToDetails
+import com.vi.techshopmobile.presentation.home.home_navigator.navigateToDetailsProduct
 import com.vi.techshopmobile.ui.theme.Danger
 import com.vi.techshopmobile.ui.theme.Gray_500
 import com.vi.techshopmobile.ui.theme.Info
@@ -51,14 +42,29 @@ import com.vi.techshopmobile.util.formatPrice
 @Composable
 fun ProductCard(
     modifier: Modifier = Modifier,
-    product: ProductLine
+    product: ProductLine,
 ) {
     val navController = LocalNavController.current;
 
     Card(
         modifier = modifier
             .clickable {
-                navigateToDetails(navController, product.productLine)
+                if (product.categoryName != null)
+                    navigateToDetailsProduct(
+                        navController,
+                        product.productLine,
+                        product.categoryName
+                    )
+                else
+                {
+                    product.name?.let {
+                        navigateToDetailsProduct(
+                            navController,
+                            product.productLine,
+                            it
+                        )
+                    }
+                }
             }
             .width(180.dp)
             .height(250.dp),
@@ -128,7 +134,7 @@ fun ProductCard(
                         Text(
                             modifier = Modifier
                                 .fillMaxWidth(),
-                            text = formatPrice(product.price - (product.price*(product.discount/100))),
+                            text = formatPrice(product.price - (product.price * (product.discount / 100))),
                             style = MaterialTheme.typography.displaySmall,
                             color = Danger
                         )
@@ -156,6 +162,7 @@ private fun PreviewProductCard() {
         ProductCard(
             product = ProductLine(
                 brandName = "",
+                name = "",
                 createdAt = "",
                 deletedAt = "",
                 productLine = "AcerNitro5",

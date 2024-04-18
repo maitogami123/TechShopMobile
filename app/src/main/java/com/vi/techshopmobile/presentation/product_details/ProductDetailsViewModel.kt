@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.vi.techshopmobile.domain.usecases.cart.CartUseCases
 import com.vi.techshopmobile.domain.usecases.products.ProductUseCases
 import com.vi.techshopmobile.domain.usecases.wish_list.WishListUseCases
+import com.vi.techshopmobile.presentation.products.ProductsViewState
 import com.vi.techshopmobile.util.Event
 import com.vi.techshopmobile.util.EventBus
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -26,6 +27,9 @@ class ProductDetailsViewModel @Inject constructor(
 ) : ViewModel() {
     private val _productDetail = MutableStateFlow(ProductDetailsViewState())
     val productDetail = _productDetail.asStateFlow();
+
+    private val _state = MutableStateFlow(ProductsViewState())
+    val state = _state.asStateFlow()
 
     private val _quantityProduct = MutableStateFlow(1)
     val quantityProduct = _quantityProduct.asStateFlow()
@@ -117,6 +121,9 @@ class ProductDetailsViewModel @Inject constructor(
             }
 
             is ProductDetailsEvent.DeleteWishItemByProductLine -> TODO()
+            is ProductDetailsEvent.GetProductsRandom -> {
+                getProductsRandom(event.categoryName, event.num)
+            }
         }
     }
 
@@ -144,6 +151,35 @@ class ProductDetailsViewModel @Inject constructor(
                 }
 
             _productDetail.update {
+                it.copy(isLoading = false)
+            }
+        }
+    }
+
+    fun getProductsRandom(categoryName: String, num: Int) {
+        viewModelScope.launch {
+            _state.update {
+                it.copy(isLoading = true)
+            }
+            delay(2000L)
+            productUseCases.getProductsRandom(categoryName, num)
+                .onRight { products ->
+                    _state.update {
+                        it.copy(
+                            products = products
+                        )
+                    }
+                }
+                .onLeft { error ->
+                    _state.update {
+                        it.copy(
+                            error = error.detail
+                        )
+                    }
+                    EventBus.sendEvent(Event.Toast(error.detail))
+                }
+
+            _state.update {
                 it.copy(isLoading = false)
             }
         }

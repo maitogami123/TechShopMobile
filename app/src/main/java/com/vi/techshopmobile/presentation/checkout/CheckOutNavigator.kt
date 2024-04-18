@@ -84,7 +84,7 @@ fun CheckOutNavigator(navGraphController: NavController) {
                 )
             }
             composable(
-                route = Route.PaymentSuccessnScreen.route
+                route = Route.PaymentSuccessScreen.route
             ) {
                 navController.previousBackStackEntry?.savedStateHandle?.get<String?>("id")
                     ?.let { id ->
@@ -96,13 +96,15 @@ fun CheckOutNavigator(navGraphController: NavController) {
                         )
                     }
             }
+
             composable(
                 route = Route.PaymentErrorScreen.route
             ) {
-                PaymentErrorScreen(
-                    onNavigateUp = { navController.navigateUp() },
-                    navController = navController
-                )
+                        PaymentErrorScreen(
+                            onNavigateUp = { navController.navigateUp() },
+                            navGraphController = navGraphController,
+                            navController = navController
+                        )
             }
             composable(
                 route = Route.AddNewAddressScreen.route
@@ -130,7 +132,7 @@ fun CheckOutNavigator(navGraphController: NavController) {
                 navController.previousBackStackEntry?.savedStateHandle?.get<String?>("id")
                     ?.let { id ->
                         OrderDetailsScreen(
-                            onNavigateUp = { navController.navigateUp() },
+                            onNavigateUp = { navGraphController.navigate(Route.TechShopNavigation.route) },
                             id = id,
                             navController = navController
                         )
@@ -147,10 +149,26 @@ fun navigateToDetailAddress(navController: NavController, id: String) {
 
 fun navigateToDetailOrder(navController: NavController, id: String) {
     navController.currentBackStackEntry?.savedStateHandle?.set("id", id)
-    navController.navigate(Route.OderDetailsScreen.route);
+    navController.navigate(Route.OderDetailsScreen.route) {
+        popUpTo(Route.HomeScreen.route) {
+            inclusive = true
+        }
+    };
 }
 
 fun navigateToPaymentSuccess(navController: NavController, id: String) {
     navController.currentBackStackEntry?.savedStateHandle?.set("id", id)
-    navController.navigate(Route.OderDetailsScreen.route);
+    navController.navigate(Route.PaymentSuccessScreen.route) {
+        popUpTo(Route.HomeScreen.route) {
+            inclusive = true
+        }
+    };
+}
+
+fun navigateToPaymentFail(navController: NavController, id: String) {
+    navController.navigate(Route.PaymentErrorScreen.route) {
+        popUpTo(Route.HomeScreen.route) {
+            inclusive = true
+        }
+    };
 }

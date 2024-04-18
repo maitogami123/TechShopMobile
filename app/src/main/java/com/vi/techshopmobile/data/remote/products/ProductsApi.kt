@@ -10,11 +10,11 @@ import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface ProductsApi {
     @GET("all")
     suspend fun getProducts(): Either<ErrorResponse, List<ProductLine>>
-
 
     @GET("{productLine}")
     suspend fun getProductDetail(
@@ -28,4 +28,11 @@ interface ProductsApi {
     suspend fun getSearchProducts(
         @Body searchProduct: SearchProduct
     ): Either<ErrorResponse, List<ProductLine>>
+  
+    @GET("randomProduct/{categoryName}")
+    suspend fun getProductsRandom(
+        @Path("categoryName", encoded = true) categoryName: String,
+        @Query("num", encoded = true) num: Int
+    ): Either<ErrorResponse, List<ProductLine>>
+
 }

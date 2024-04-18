@@ -37,6 +37,7 @@ import com.vi.techshopmobile.presentation.cart.components.ProductCartRowNoQuanti
 import com.vi.techshopmobile.presentation.common.SwipeToDeleteContainer
 import com.vi.techshopmobile.presentation.home.home_navigator.component.UtilityTopNavigation
 import com.vi.techshopmobile.presentation.home.home_navigator.navigateToDetails
+import com.vi.techshopmobile.presentation.home.home_navigator.navigateToDetailsProduct
 import com.vi.techshopmobile.presentation.navgraph.Route
 import com.vi.techshopmobile.util.decodeToken
 import kotlinx.coroutines.coroutineScope
@@ -121,7 +122,7 @@ fun WishListScreen(onNavigateUp: () -> Unit, navController: NavController) {
                         ) { item ->
                             ProductCartRowNoQuantity(
                                 modifier = Modifier.clickable {
-                                    navigateToDetails(navController, item.product.productLine)
+                                    navigateToDetailsProduct(navController, item.product.productLine,item.categoryName)
                                 },
                                 cartResponse = CartResponse(
                                     productLine = item.product.productLine,

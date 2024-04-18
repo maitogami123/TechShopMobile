@@ -35,10 +35,10 @@ interface UserDetailsApi {
         @Path("id") id: String,
         @Body updateUserDetailRequest: UpdateUserDetailRequest
     ): Either<ErrorResponse, UserDetailResponse>
-
-    @PATCH("{id}/active")
+    @PATCH("{id}/default")
     suspend fun updateAllUserDetailsToNotDefault(
         @Path("id") id: String,
         @Header("Authorization") token: String
     ): Either<ErrorResponse, UserDetailResponse>
+
 }
