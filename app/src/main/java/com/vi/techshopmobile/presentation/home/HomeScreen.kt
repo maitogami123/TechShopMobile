@@ -117,7 +117,7 @@ fun HomeScreen(navController: NavController) {
                             }
                         }
                         ProductsRow(state.products)
-                        CategoryProducts()
+                        CategoryProducts(navController)
                     }
                 }
             }

@@ -147,7 +147,6 @@ fun CheckOutScreen(
             navigateToPaymentSuccess(navController, idOrderCreated.value)
         } else if (maxPollingRequest.value == 0 || orderPaymentStatus.value == "FAIL") {
             navigateToPaymentFail(navController, idOrderCreated.value)
-
         }
     }
 

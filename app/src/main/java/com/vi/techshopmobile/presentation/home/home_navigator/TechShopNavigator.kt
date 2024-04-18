@@ -1,6 +1,7 @@
 package com.vi.techshopmobile.presentation.home.home_navigator
 
 import android.app.Activity
+import android.util.Log
 import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
@@ -25,6 +26,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.vi.techshopmobile.LocalToken
 import com.vi.techshopmobile.R
+import com.vi.techshopmobile.domain.model.Brand
 import com.vi.techshopmobile.domain.model.ProductLine
 import com.vi.techshopmobile.presentation.about.AboutScreen
 import com.vi.techshopmobile.presentation.cart.CartScreen
@@ -33,6 +35,7 @@ import com.vi.techshopmobile.presentation.change_password.ChangePasswordScreen
 import com.vi.techshopmobile.presentation.chatAI.ChatAiScreen
 import com.vi.techshopmobile.presentation.checkout.screens.AddNewAddressScreen
 import com.vi.techshopmobile.presentation.checkout.screens.DetailAddressScreen
+import com.vi.techshopmobile.presentation.filter.FilterScreen
 import com.vi.techshopmobile.presentation.home.HomeScreen
 import com.vi.techshopmobile.presentation.home.home_navigator.component.BottomNavigationItem
 import com.vi.techshopmobile.presentation.home.home_navigator.component.MainTopNavigation
@@ -45,6 +48,8 @@ import com.vi.techshopmobile.presentation.order_details.OrderDetailsScreen
 import com.vi.techshopmobile.presentation.personal_address.PersonalAddressScreen
 import com.vi.techshopmobile.presentation.personal_info.PersonalInfoScreen
 import com.vi.techshopmobile.presentation.product_details.ProductDetailsScreen
+import com.vi.techshopmobile.presentation.products.ProductsScreen
+import com.vi.techshopmobile.presentation.search.SearchResultScreen
 import com.vi.techshopmobile.presentation.search.SearchScreen
 import com.vi.techshopmobile.presentation.sendEvent
 import com.vi.techshopmobile.presentation.user_setting.UserSettingScreen
@@ -89,48 +94,45 @@ fun HomeNavigator(navGraphController: NavController) {
     }
 
     CompositionLocalProvider(LocalNavController provides navController) {
-        Scaffold(
-            topBar = {
-                if (selectedItem == 2 && isLoggedIn) {
-                    // TODO: Fetch user information
-                    val decodedToken = decodeToken(LocalToken.current)
-                    UserTopNavigation(
-                        userInfo = UserInformation(
-                            decodedToken.sub,
-                            "placeholder@domain.com",
-                            "https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/9d58f5a8-7784-442e-80b7-1f17231cb636/dgkoqel-0d33ec31-5bf0-4164-93e0-3d0f58913a91.jpg/v1/fit/w_808,h_808,q_70,strp/aporia_by_cogwurx_dgkoqel-414w-2x.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9ODA4IiwicGF0aCI6IlwvZlwvOWQ1OGY1YTgtNzc4NC00NDJlLTgwYjctMWYxNzIzMWNiNjM2XC9kZ2tvcWVsLTBkMzNlYzMxLTViZjAtNDE2NC05M2UwLTNkMGY1ODkxM2E5MS5qcGciLCJ3aWR0aCI6Ijw9ODA4In1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmltYWdlLm9wZXJhdGlvbnMiXX0.5P7jBM1aKS7F0a1p9aI0DuFSH5IMq84T5rACbsgFCSY"
-                        )
+        Scaffold(topBar = {
+            if (selectedItem == 2 && isLoggedIn) {
+                // TODO: Fetch user information
+                val decodedToken = decodeToken(LocalToken.current)
+                UserTopNavigation(
+                    userInfo = UserInformation(
+                        decodedToken.sub,
+                        "placeholder@domain.com",
+                        "https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/9d58f5a8-7784-442e-80b7-1f17231cb636/dgkoqel-0d33ec31-5bf0-4164-93e0-3d0f58913a91.jpg/v1/fit/w_808,h_808,q_70,strp/aporia_by_cogwurx_dgkoqel-414w-2x.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9ODA4IiwicGF0aCI6IlwvZlwvOWQ1OGY1YTgtNzc4NC00NDJlLTgwYjctMWYxNzIzMWNiNjM2XC9kZ2tvcWVsLTBkMzNlYzMxLTViZjAtNDE2NC05M2UwLTNkMGY1ODkxM2E5MS5qcGciLCJ3aWR0aCI6Ijw9ODA4In1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmltYWdlLm9wZXJhdGlvbnMiXX0.5P7jBM1aKS7F0a1p9aI0DuFSH5IMq84T5rACbsgFCSY"
                     )
-                } else if (selectedItem == 1) {
-                    MainTopNavigation(onClick = {
-                        if (isLoggedIn) {
-                            navController.navigate(Route.CartScreen.route)
-                        } else {
-                            navGraphController.navigate(Route.AuthenticateNavigation.route)
-                        }
-                    }, isLoggedIn = isLoggedIn)
-                }
-            },
-            bottomBar = {
-                if (selectedItem != -1 && selectedItem != 3)
-                    TechShopBottomNavigation(
-                        items = bottomNavigationItem,
-                        selectedItem = selectedItem,
-                        onItemClick = { index ->
-                            when (index) {
-                                0 -> navigateToTap(navController, Route.SearchScreen.route)
-                                1 -> navigateToTap(navController, Route.HomeScreen.route)
-                                2 -> {
-                                    if (isLoggedIn)
-                                        navigateToTap(navController, Route.UserSettingScreen.route)
-                                    else {
-                                        viewModel.sendEvent(Event.Toast("Vui lòng đăng nhập"))
-                                    }
-                                }
-                            }
-                        })
+                )
+            } else if (selectedItem == 1) {
+                MainTopNavigation(onClick = {
+                    if (isLoggedIn) {
+                        navController.navigate(Route.CartScreen.route)
+                    } else {
+                        navGraphController.navigate(Route.AuthenticateNavigation.route)
+                    }
+                }, isLoggedIn = isLoggedIn)
             }
-        ) {
+        }, bottomBar = {
+            if (selectedItem != -1 && selectedItem != 3) TechShopBottomNavigation(items = bottomNavigationItem,
+                selectedItem = selectedItem,
+                onItemClick = { index ->
+                    when (index) {
+                        0 -> navigateToTap(navController, Route.SearchScreen.route)
+                        1 -> navigateToTap(navController, Route.HomeScreen.route)
+                        2 -> {
+                            if (isLoggedIn) navigateToTap(
+                                navController,
+                                Route.UserSettingScreen.route
+                            )
+                            else {
+                                viewModel.sendEvent(Event.Toast("Vui lòng đăng nhập"))
+                            }
+                        }
+                    }
+                })
+        }) {
             val bottomPadding = it.calculateBottomPadding()
             val topPadding = it.calculateTopPadding()
             NavHost(
@@ -176,7 +178,7 @@ fun HomeNavigator(navGraphController: NavController) {
                         )
                     },
                 ) {
-                    SearchScreen()
+                    SearchScreen(navController)
                 }
                 composable(
                     route = Route.UserSettingScreen.route,
@@ -231,13 +233,11 @@ fun HomeNavigator(navGraphController: NavController) {
 
                 composable(route = Route.PersonalAddressScreen.route) {
                     PersonalAddressScreen(
-                        onNavigateUp = { navController.navigateUp() },
-                        navController
+                        onNavigateUp = { navController.navigateUp() }, navController
                     )
                 }
                 composable(route = Route.AddNewAddressScreen.route) {
-                    AddNewAddressScreen(
-                        navController = navController,
+                    AddNewAddressScreen(navController = navController,
                         onNavigateUp = { navController.navigateUp() })
                 }
                 composable(
@@ -271,8 +271,7 @@ fun HomeNavigator(navGraphController: NavController) {
                 composable(route = Route.OderDetailsScreen.route) {
                     navController.previousBackStackEntry?.savedStateHandle?.get<String?>("id")
                         ?.let { id ->
-                            OrderDetailsScreen(
-                                id,
+                            OrderDetailsScreen(id,
                                 navController = navController,
                                 onNavigateUp = { navController.navigateUp() })
                         }
@@ -281,6 +280,76 @@ fun HomeNavigator(navGraphController: NavController) {
                     CartScreen(navController = navGraphController) {
                         navController.navigateUp()
                     }
+                }
+                composable(route = Route.ProductsScreen.route) {
+                    val categoryName =
+                        navController.previousBackStackEntry?.savedStateHandle?.get<String>("categoryName")
+                            ?: ""
+
+                    val brandName =
+                        navController.previousBackStackEntry?.savedStateHandle?.get<String>("brandName")
+                            ?: ""
+
+                    val productsFilter =
+                        navController.previousBackStackEntry?.savedStateHandle?.get<List<ProductLine>>(
+                            "productsFilter"
+                        ) ?: emptyList()
+                    val isFilter =
+                        navController.previousBackStackEntry?.savedStateHandle?.get<Boolean>("isFilter")
+                            ?: false
+
+                    ProductsScreen(
+                        navController = navController,
+                        categoryName = categoryName,
+                        brandName = brandName,
+                        productsFilter = productsFilter,
+                        isFilter = isFilter
+                    )
+                }
+                composable(route = Route.FilterProductScreen.route) {
+                    val categoryName =
+                        navController.previousBackStackEntry?.savedStateHandle?.get<String>("categoryName")
+                            ?: ""
+                    val brands =
+                        navController.previousBackStackEntry?.savedStateHandle?.get<ArrayList<Brand>?>(
+                            "brands"
+                        ) ?: ArrayList()
+                    val products =
+                        navController.previousBackStackEntry?.savedStateHandle?.get<List<ProductLine>?>(
+                            "products"
+                        ) ?: emptyList()
+                    val isSearch =
+                        navController.previousBackStackEntry?.savedStateHandle?.get<Boolean?>("isSearch")
+                            ?: false
+
+                    FilterScreen(
+                        navController = navController,
+                        category = categoryName,
+                        brands = brands,
+                        products = products,
+                        isSearch = isSearch
+                    ) {
+                        navController.navigateUp()
+                    }
+                }
+                composable(route = Route.SearchResultScreen.route) {
+                    val searchQuery =
+                        navController.previousBackStackEntry?.savedStateHandle?.get<String>("searchQuery")
+                            ?: ""
+                    val productsFilter =
+                        navController.previousBackStackEntry?.savedStateHandle?.get<List<ProductLine>>(
+                            "productsFilter"
+                        ) ?: emptyList()
+                    val isFilter =
+                        navController.previousBackStackEntry?.savedStateHandle?.get<Boolean>("isFilter")
+                            ?: false
+                    SearchResultScreen(
+                        navController = navController,
+                        searchQuery = searchQuery,
+                        productsFilter = productsFilter,
+                        isFilter = isFilter
+                    )
+
                 }
             }
         }
@@ -292,6 +361,44 @@ fun navigateToDetails(navController: NavController, productLine: String) {
     navController.navigate(Route.ProductDetailsScreen.route);
 }
 
+fun navigateToProducts(
+    navController: NavController,
+    categoryName: String,
+    brandName: String,
+    productsFilter: List<ProductLine>,
+    isFilter: Boolean
+) {
+    navController.currentBackStackEntry?.savedStateHandle?.set("categoryName", categoryName)
+    navController.currentBackStackEntry?.savedStateHandle?.set("brandName", brandName)
+    navController.currentBackStackEntry?.savedStateHandle?.set("productsFilter", productsFilter)
+    navController.currentBackStackEntry?.savedStateHandle?.set("isFilter", isFilter)
+    navController.navigate(Route.ProductsScreen.route)
+}
+
+fun navigateToFilter(
+    navController: NavController,
+    categoryName: String,
+    brands: ArrayList<Brand>,
+    products: List<ProductLine>,
+    isSearch: Boolean
+) {
+    navController.currentBackStackEntry?.savedStateHandle?.set("categoryName", categoryName)
+    navController.currentBackStackEntry?.savedStateHandle?.set("brands", brands)
+    navController.currentBackStackEntry?.savedStateHandle?.set("products", products)
+    navController.currentBackStackEntry?.savedStateHandle?.set("isSearch", isSearch)
+    navController.navigate(Route.FilterProductScreen.route)
+}
+
+fun navigateToSearchResult(
+    navController: NavController,
+    searchQuery: String,
+    productsFilter: List<ProductLine>,
+    isFilter: Boolean
+) {
+    navController.currentBackStackEntry?.savedStateHandle?.set("productsFilter", productsFilter)
+    navController.currentBackStackEntry?.savedStateHandle?.set("isFilter", isFilter)
+    navController.currentBackStackEntry?.savedStateHandle?.set("searchQuery", searchQuery)
+    navController.navigate(Route.SearchResultScreen.route)
 fun navigateToDetailsProduct(
     navController: NavController,
     productLine: String,

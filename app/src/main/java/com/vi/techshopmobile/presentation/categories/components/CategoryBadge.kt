@@ -28,7 +28,7 @@ import androidx.compose.ui.unit.dp
 import com.vi.techshopmobile.domain.model.Category
 import com.vi.techshopmobile.presentation.Dimens
 import com.vi.techshopmobile.presentation.home.home_navigator.LocalNavController
-import com.vi.techshopmobile.presentation.home.home_navigator.navigateToDetails
+import com.vi.techshopmobile.presentation.home.home_navigator.navigateToProducts
 
 @Composable
 fun CategoryBadge(modifier: Modifier = Modifier, category: Category) {
@@ -38,7 +38,7 @@ fun CategoryBadge(modifier: Modifier = Modifier, category: Category) {
             .height(92.dp)
             .width(83.dp)
             .clickable {
-                navigateToDetails(navController, category.name)
+                navigateToProducts(navController, category.name, "", emptyList(), isFilter = false)
             },
     )
     {

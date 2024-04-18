@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -19,7 +18,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -29,21 +27,12 @@ import com.vi.techshopmobile.LocalToken
 import com.vi.techshopmobile.R
 import com.vi.techshopmobile.data.remote.cart.CartResponse
 import com.vi.techshopmobile.presentation.Dimens
-import com.vi.techshopmobile.presentation.cart.components.ProductCart
 import com.vi.techshopmobile.presentation.cart.components.ProductCartOrderDetail
-import com.vi.techshopmobile.presentation.cart.components.RowPaymentGateNavigate
-import com.vi.techshopmobile.presentation.cart.components.RowPaymentNavigate
 import com.vi.techshopmobile.presentation.cart.components.RowTotalPrice
-import com.vi.techshopmobile.presentation.checkout.LocalSelectedIndex
-import com.vi.techshopmobile.presentation.common.Address
 import com.vi.techshopmobile.presentation.common.AddressTitle
 import com.vi.techshopmobile.presentation.common.LoadingDialog
 import com.vi.techshopmobile.presentation.home.home_navigator.component.UtilityTopNavigation
-import com.vi.techshopmobile.presentation.navgraph.Route
-import com.vi.techshopmobile.presentation.personal_info.PersonalInfoEvent
-import com.vi.techshopmobile.presentation.personal_info.PersonalInfoViewModel
 import com.vi.techshopmobile.util.formatPhoneNumber
-import com.vi.techshopmobile.util.formatPrice
 
 @Composable
 fun OrderDetailsScreen(id: String, navController: NavController, onNavigateUp: () -> Unit) {

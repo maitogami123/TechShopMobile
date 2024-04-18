@@ -35,5 +35,9 @@ sealed class Route(
     object PaymentSuccessScreen: Route(route = "paymentSuccessScreen")
     object PaymentErrorScreen: Route(route = "paymentErrorScreen")
     object AddNewAddressScreen: Route(route = "addNewAddressScreen")
+
+    object ProductsScreen: Route(route = "productsScreen")
+    object FilterProductScreen: Route(route= "filterProductsScreen")
     object DetailAddressScreen: Route(route = "detailAddressScreen")
+    object SearchResultScreen : Route(route = "searchResultScreen")
 }

@@ -10,7 +10,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -18,11 +17,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
 import com.vi.techshopmobile.presentation.categories.components.CategoriesBanner
+import com.vi.techshopmobile.presentation.home.home_navigator.navigateToProducts
 import com.vi.techshopmobile.presentation.products.component.ProductsRow
 
 @Composable
-fun CategoryProducts() {
+fun CategoryProducts(navController: NavController) {
     val viewModel: CategoriesViewModel = hiltViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
 
@@ -32,7 +33,7 @@ fun CategoryProducts() {
     ) {
         state.categories.forEachIndexed { index, category ->
             if (state.categoriesProduct.isNotEmpty() && state.categoriesProduct.size > index && state.categoriesProduct[index].products.isNotEmpty()) {
-                CategoriesBanner(categoryName = category.name)
+                CategoriesBanner(navController,categoryName = category.name)
                 LazyRow(
                     modifier = Modifier
                         .padding(top = 15.dp)
@@ -43,7 +44,7 @@ fun CategoryProducts() {
                     items(category.brands) { brand ->
                         Button(
                             colors = ButtonDefaults.buttonColors(containerColor = Color(0xffC3DDFD)),
-                            onClick = { /*TODO*/ }) {
+                            onClick = { navigateToProducts(navController, category.name, brand.brandName, emptyList(), isFilter = false) }) {
                             Text(text = brand.brandName, color = Color(0xff1A56DB))
                         }
                     }

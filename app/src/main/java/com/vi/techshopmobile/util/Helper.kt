@@ -24,13 +24,12 @@ fun navigateToTap(navController: NavController, route: String) {
 }
 
 fun formatPrice(price: Double): String {
-    val format: NumberFormat = NumberFormat.getCurrencyInstance()
-    format.setMaximumFractionDigits(0)
-    format.currency = Currency.getInstance("VND")
-    val formatedStr = format.format(price).replace(",", ".")
-    return formatedStr.substring(1, formatedStr.length) + " VNĐ"
+    val formatter = NumberFormat.getCurrencyInstance()
+    formatter.maximumFractionDigits = 2
+    formatter.currency = Currency.getInstance("VND")
+    val formattedPrice = formatter.format(price)
+    return formattedPrice.replace("₫", "").replaceFirst(",", ".") + "VNĐ"
 }
-
 fun decodeToken(token: String): UserToken {
     if (token.isBlank())
         return UserToken();

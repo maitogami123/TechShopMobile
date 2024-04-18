@@ -19,12 +19,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.vi.techshopmobile.R
+import com.vi.techshopmobile.presentation.home.home_navigator.navigateToProducts
 
 @Composable
-fun CategoriesBanner(modifier: Modifier = Modifier, categoryName: String) {
+fun CategoriesBanner(navController: NavController, modifier: Modifier = Modifier, categoryName: String) {
     Box(
         modifier = modifier
             .fillMaxWidth()
@@ -48,7 +49,7 @@ fun CategoriesBanner(modifier: Modifier = Modifier, categoryName: String) {
                 color = Color(0xffE1EFFE)
             )
             Text(
-                modifier = Modifier.padding(top = 4.dp).clickable {  },
+                modifier = Modifier.padding(top = 4.dp),
                 text = "Xem tất cả sản phẩm",
                 style = MaterialTheme.typography.titleSmall,
                 color = Color(0xffE1EFFE),
@@ -58,8 +59,4 @@ fun CategoriesBanner(modifier: Modifier = Modifier, categoryName: String) {
     }
 }
 
-@Preview
-@Composable
-fun CategoriesBoxPreview() {
-    CategoriesBanner(categoryName = "Laptops")
-}
+
