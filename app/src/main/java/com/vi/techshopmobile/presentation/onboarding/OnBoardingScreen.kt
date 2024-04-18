@@ -37,9 +37,9 @@ fun OnBoardingScreen(event: (OnBoardingEvent) -> Unit) {
         val buttonState = remember {
             derivedStateOf {
                 when (pagerState.currentPage) {
-                    0 -> listOf("", "Next")
-                    1 -> listOf("Back", "Next")
-                    2 -> listOf("Back", "Get Started")
+                    0 -> listOf("", "Tiếp tục")
+                    1 -> listOf("Trở lại", "Tiếp tục")
+                    2 -> listOf("Trở lại", "Bắt đầu")
                     else -> listOf("", "")
                 }
             }
