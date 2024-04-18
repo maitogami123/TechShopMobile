@@ -25,7 +25,7 @@ interface ProductsApi {
     ): Either<ErrorResponse, ProductDetailResponse>
 
     @POST("search")
-    suspend fun getSearchProduct(
+    suspend fun getSearchProducts(
         @Body searchProduct: SearchProduct
     ): Either<ErrorResponse, List<ProductLine>>
 }

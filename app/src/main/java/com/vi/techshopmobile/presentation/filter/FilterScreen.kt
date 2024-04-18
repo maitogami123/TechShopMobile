@@ -25,19 +25,16 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.vi.techshopmobile.R
 import com.vi.techshopmobile.domain.model.Brand
 import com.vi.techshopmobile.domain.model.ProductLine
-import com.vi.techshopmobile.presentation.checkout.LocalSelectedIndex
 import com.vi.techshopmobile.presentation.common.FloatingBottomBar
-import com.vi.techshopmobile.presentation.filter.component.FilterCheckBoxGroup
-import com.vi.techshopmobile.presentation.filter.component.FilterRadioGroup
+import com.vi.techshopmobile.presentation.filter.component.FilterCheckBox
+import com.vi.techshopmobile.presentation.filter.component.FilterRadio
 import com.vi.techshopmobile.presentation.home.home_navigator.component.UtilityTopNavigation
 import com.vi.techshopmobile.presentation.home.home_navigator.navigateToProducts
 import com.vi.techshopmobile.presentation.home.home_navigator.navigateToSearchResult
-import com.vi.techshopmobile.presentation.products.ProductsViewModel
 import com.vi.techshopmobile.ui.theme.Blue_50
 
 @Composable
@@ -100,6 +97,7 @@ fun FilterScreen(
         )
     }
 
+    Log.d("Filter Receive", products.toString())
 
     var checkItemPricePos by remember {
         mutableStateOf(listOf<Int>())
@@ -171,7 +169,7 @@ fun FilterScreen(
                             style = MaterialTheme.typography.displayMedium
                         )
                         filterOption.forEachIndexed { index, filterLabel ->
-                            FilterRadioGroup(
+                            FilterRadio(
                                 index = index,
                                 lableName = filterLabel.label,
                                 selectedIndex = selectedIndexOptionSelected,
@@ -201,7 +199,7 @@ fun FilterScreen(
                             style = MaterialTheme.typography.displayMedium
                         )
                         filterPrice.forEachIndexed { _, filterLabel ->
-                            FilterCheckBoxGroup(
+                            FilterCheckBox(
                                 index = filterLabel.index,
                                 lableName = filterLabel.labelName,
                                 checkItemPos = checkItemPricePos,
@@ -247,7 +245,7 @@ fun FilterScreen(
                                 style = MaterialTheme.typography.displayMedium
                             )
                             filterBrand.forEachIndexed { index, filterLabel ->
-                                FilterCheckBoxGroup(
+                                FilterCheckBox(
                                     index = index,
                                     lableName = filterLabel.brand,
                                     checkItemPos = checkItemBrandPos,

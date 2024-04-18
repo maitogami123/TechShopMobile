@@ -3,7 +3,7 @@ package com.vi.techshopmobile.di
 import android.app.Application
 import androidx.room.Room
 import com.vi.techshopmobile.data.local.CartDao
-import com.vi.techshopmobile.data.local.SearchDAO
+import com.vi.techshopmobile.data.local.SearchDao
 import com.vi.techshopmobile.data.local.TechShopDatabase
 import com.vi.techshopmobile.data.local.WishListDao
 import com.vi.techshopmobile.data.manager.LocalUserManagerImpl
@@ -128,13 +128,13 @@ object AppModule {
     @Singleton
     fun provideSearchDao(
         techShopDatabase: TechShopDatabase
-    ): SearchDAO = techShopDatabase.searchDAO
+    ): SearchDao = techShopDatabase.searchDao
 
     @Provides
     @Singleton
     fun provideSearchRepository(
-        searchDAO: SearchDAO
-    ): SearchRepository = SearchRepositoryImpl(searchDAO)
+        searchDao: SearchDao
+    ): SearchRepository = SearchRepositoryImpl(searchDao)
 
     @Provides
     @Singleton

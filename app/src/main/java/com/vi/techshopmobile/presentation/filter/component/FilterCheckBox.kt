@@ -18,7 +18,7 @@ import com.vi.techshopmobile.ui.theme.Blue
 import com.vi.techshopmobile.ui.theme.Gray_900
 
 @Composable
-fun FilterCheckBoxGroup(
+fun FilterCheckBox(
     index: Int,
     lableName: String,
     checkItemPos: List<Int>,

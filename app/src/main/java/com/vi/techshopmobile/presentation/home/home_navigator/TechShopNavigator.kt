@@ -94,48 +94,45 @@ fun HomeNavigator(navGraphController: NavController) {
     }
 
     CompositionLocalProvider(LocalNavController provides navController) {
-        Scaffold(
-            topBar = {
-                if (selectedItem == 2 && isLoggedIn) {
-                    // TODO: Fetch user information
-                    val decodedToken = decodeToken(LocalToken.current)
-                    UserTopNavigation(
-                        userInfo = UserInformation(
-                            decodedToken.sub,
-                            "placeholder@domain.com",
-                            "https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/9d58f5a8-7784-442e-80b7-1f17231cb636/dgkoqel-0d33ec31-5bf0-4164-93e0-3d0f58913a91.jpg/v1/fit/w_808,h_808,q_70,strp/aporia_by_cogwurx_dgkoqel-414w-2x.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9ODA4IiwicGF0aCI6IlwvZlwvOWQ1OGY1YTgtNzc4NC00NDJlLTgwYjctMWYxNzIzMWNiNjM2XC9kZ2tvcWVsLTBkMzNlYzMxLTViZjAtNDE2NC05M2UwLTNkMGY1ODkxM2E5MS5qcGciLCJ3aWR0aCI6Ijw9ODA4In1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmltYWdlLm9wZXJhdGlvbnMiXX0.5P7jBM1aKS7F0a1p9aI0DuFSH5IMq84T5rACbsgFCSY"
-                        )
+        Scaffold(topBar = {
+            if (selectedItem == 2 && isLoggedIn) {
+                // TODO: Fetch user information
+                val decodedToken = decodeToken(LocalToken.current)
+                UserTopNavigation(
+                    userInfo = UserInformation(
+                        decodedToken.sub,
+                        "placeholder@domain.com",
+                        "https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/9d58f5a8-7784-442e-80b7-1f17231cb636/dgkoqel-0d33ec31-5bf0-4164-93e0-3d0f58913a91.jpg/v1/fit/w_808,h_808,q_70,strp/aporia_by_cogwurx_dgkoqel-414w-2x.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9ODA4IiwicGF0aCI6IlwvZlwvOWQ1OGY1YTgtNzc4NC00NDJlLTgwYjctMWYxNzIzMWNiNjM2XC9kZ2tvcWVsLTBkMzNlYzMxLTViZjAtNDE2NC05M2UwLTNkMGY1ODkxM2E5MS5qcGciLCJ3aWR0aCI6Ijw9ODA4In1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmltYWdlLm9wZXJhdGlvbnMiXX0.5P7jBM1aKS7F0a1p9aI0DuFSH5IMq84T5rACbsgFCSY"
                     )
-                } else if (selectedItem == 1) {
-                    MainTopNavigation(onClick = {
-                        if (isLoggedIn) {
-                            navController.navigate(Route.CartScreen.route)
-                        } else {
-                            navGraphController.navigate(Route.AuthenticateNavigation.route)
-                        }
-                    }, isLoggedIn = isLoggedIn)
-                }
-            },
-            bottomBar = {
-                if (selectedItem != -1 && selectedItem != 3)
-                    TechShopBottomNavigation(
-                        items = bottomNavigationItem,
-                        selectedItem = selectedItem,
-                        onItemClick = { index ->
-                            when (index) {
-                                0 -> navigateToTap(navController, Route.SearchScreen.route)
-                                1 -> navigateToTap(navController, Route.HomeScreen.route)
-                                2 -> {
-                                    if (isLoggedIn)
-                                        navigateToTap(navController, Route.UserSettingScreen.route)
-                                    else {
-                                        viewModel.sendEvent(Event.Toast("Vui lòng đăng nhập"))
-                                    }
-                                }
-                            }
-                        })
+                )
+            } else if (selectedItem == 1) {
+                MainTopNavigation(onClick = {
+                    if (isLoggedIn) {
+                        navController.navigate(Route.CartScreen.route)
+                    } else {
+                        navGraphController.navigate(Route.AuthenticateNavigation.route)
+                    }
+                }, isLoggedIn = isLoggedIn)
             }
-        ) {
+        }, bottomBar = {
+            if (selectedItem != -1 && selectedItem != 3) TechShopBottomNavigation(items = bottomNavigationItem,
+                selectedItem = selectedItem,
+                onItemClick = { index ->
+                    when (index) {
+                        0 -> navigateToTap(navController, Route.SearchScreen.route)
+                        1 -> navigateToTap(navController, Route.HomeScreen.route)
+                        2 -> {
+                            if (isLoggedIn) navigateToTap(
+                                navController,
+                                Route.UserSettingScreen.route
+                            )
+                            else {
+                                viewModel.sendEvent(Event.Toast("Vui lòng đăng nhập"))
+                            }
+                        }
+                    }
+                })
+        }) {
             val bottomPadding = it.calculateBottomPadding()
             val topPadding = it.calculateTopPadding()
             NavHost(
@@ -231,13 +228,11 @@ fun HomeNavigator(navGraphController: NavController) {
                 }
                 composable(route = Route.PersonalAddressScreen.route) {
                     PersonalAddressScreen(
-                        onNavigateUp = { navController.navigateUp() },
-                        navController
+                        onNavigateUp = { navController.navigateUp() }, navController
                     )
                 }
                 composable(route = Route.AddNewAddressScreen.route) {
-                    AddNewAddressScreen(
-                        navController = navController,
+                    AddNewAddressScreen(navController = navController,
                         onNavigateUp = { navController.navigateUp() })
                 }
                 composable(
@@ -271,8 +266,7 @@ fun HomeNavigator(navGraphController: NavController) {
                 composable(route = Route.OderDetailsScreen.route) {
                     navController.previousBackStackEntry?.savedStateHandle?.get<String?>("id")
                         ?.let { id ->
-                            OrderDetailsScreen(
-                                id,
+                            OrderDetailsScreen(id,
                                 navController = navController,
                                 onNavigateUp = { navController.navigateUp() })
                         }
@@ -283,72 +277,74 @@ fun HomeNavigator(navGraphController: NavController) {
                     }
                 }
                 composable(route = Route.ProductsScreen.route) {
-                    navController.previousBackStackEntry?.savedStateHandle?.get<String?>("categoryName")
-                        ?.let { categoryName ->
-                            navController.previousBackStackEntry?.savedStateHandle?.get<String?>("brandName")
-                                ?.let { brandName ->
-                                    navController.previousBackStackEntry?.savedStateHandle?.get<List<ProductLine>?>(
-                                        "productsFilter"
-                                    )?.let { productsFilter ->
-                                        navController.previousBackStackEntry?.savedStateHandle?.get<Boolean?>(
-                                            "isFilter"
-                                        )?.let { isFilter ->
-                                            ProductsScreen(
-                                                navController = navController,
-                                                categoryName = categoryName,
-                                                brandName = brandName,
-                                                productsFilter = productsFilter,
-                                                isFilter = isFilter
-                                            )
-                                        }
-                                    }
-                                }
-                        }
+                    val categoryName =
+                        navController.previousBackStackEntry?.savedStateHandle?.get<String>("categoryName")
+                            ?: ""
+
+                    val brandName =
+                        navController.previousBackStackEntry?.savedStateHandle?.get<String>("brandName")
+                            ?: ""
+
+                    val productsFilter =
+                        navController.previousBackStackEntry?.savedStateHandle?.get<List<ProductLine>>(
+                            "productsFilter"
+                        ) ?: emptyList()
+                    val isFilter =
+                        navController.previousBackStackEntry?.savedStateHandle?.get<Boolean>("isFilter")
+                            ?: false
+
+                    ProductsScreen(
+                        navController = navController,
+                        categoryName = categoryName,
+                        brandName = brandName,
+                        productsFilter = productsFilter,
+                        isFilter = isFilter
+                    )
                 }
                 composable(route = Route.FilterProductScreen.route) {
-                    navController.previousBackStackEntry?.savedStateHandle?.get<String?>("categoryName")
-                        ?.let { categoryName ->
-                            navController.previousBackStackEntry?.savedStateHandle?.get<ArrayList<Brand>?>(
-                                "brands"
-                            )?.let { brands ->
-                                navController.previousBackStackEntry?.savedStateHandle?.get<List<ProductLine>?>(
-                                    "products"
-                                )?.let { products ->
-                                    navController.previousBackStackEntry?.savedStateHandle?.get<Boolean?>(
-                                        "isSearch"
-                                    )?.let { isSearch ->
-                                        FilterScreen(
-                                            navController = navController,
-                                            category = categoryName,
-                                            brands = brands,
-                                            products = products,
-                                            isSearch = isSearch
-                                        ) {
-                                            navController.navigateUp()
-                                        }
-                                    }
-                                }
-                            }
-                        }
+                    val categoryName =
+                        navController.previousBackStackEntry?.savedStateHandle?.get<String>("categoryName")
+                            ?: ""
+                    val brands =
+                        navController.previousBackStackEntry?.savedStateHandle?.get<ArrayList<Brand>?>(
+                            "brands"
+                        ) ?: ArrayList()
+                    val products =
+                        navController.previousBackStackEntry?.savedStateHandle?.get<List<ProductLine>?>(
+                            "products"
+                        ) ?: emptyList()
+                    val isSearch =
+                        navController.previousBackStackEntry?.savedStateHandle?.get<Boolean?>("isSearch")
+                            ?: false
+
+                    FilterScreen(
+                        navController = navController,
+                        category = categoryName,
+                        brands = brands,
+                        products = products,
+                        isSearch = isSearch
+                    ) {
+                        navController.navigateUp()
+                    }
                 }
                 composable(route = Route.SearchResultScreen.route) {
-                    navController.previousBackStackEntry?.savedStateHandle?.get<String?>("searchQuery")
-                        ?.let { searchQuery ->
-                            navController.previousBackStackEntry?.savedStateHandle?.get<List<ProductLine>?>(
-                                "productsFilter"
-                            )?.let { productsFilter ->
-                                navController.previousBackStackEntry?.savedStateHandle?.get<Boolean?>(
-                                    "isFilter"
-                                )?.let { isFilter ->
-                                    SearchResultScreen(
-                                        navController = navController,
-                                        searchQuery = searchQuery,
-                                        productsFilter = productsFilter,
-                                        isFilter = isFilter
-                                    )
-                                }
-                            }
-                        }
+                    val searchQuery =
+                        navController.previousBackStackEntry?.savedStateHandle?.get<String>("searchQuery")
+                            ?: ""
+                    val productsFilter =
+                        navController.previousBackStackEntry?.savedStateHandle?.get<List<ProductLine>>(
+                            "productsFilter"
+                        ) ?: emptyList()
+                    val isFilter =
+                        navController.previousBackStackEntry?.savedStateHandle?.get<Boolean>("isFilter")
+                            ?: false
+                    SearchResultScreen(
+                        navController = navController,
+                        searchQuery = searchQuery,
+                        productsFilter = productsFilter,
+                        isFilter = isFilter
+                    )
+
                 }
             }
         }

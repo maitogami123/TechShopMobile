@@ -40,7 +40,6 @@ fun ProductsScreen(
     val state by viewModel.state.collectAsStateWithLifecycle()
     val brands = ArrayList<Brand>()
     var productsShow = emptyList<ProductLine>()
-
     if (brandName.isEmpty()) {
         productsShow =
             state.productsOfCategory.find { it.category == categoryName }?.products ?: emptyList()
@@ -61,6 +60,7 @@ fun ProductsScreen(
         brands.addAll(state.categories.filter { it.name == categoryName }.flatMap { it.brands }
             .filter { it.brandName == brandName }.map { it })
     }
+    Log.d("Product seeding", productsShow.toString())
     SwipeRefresh(
         state = swipeRefreshState,
         onRefresh = { (viewModel::onEvent)(ProductsEvents.GetAllProductByCategory(categoryName)) },

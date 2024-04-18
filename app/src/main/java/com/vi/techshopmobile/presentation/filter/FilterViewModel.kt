@@ -21,7 +21,6 @@ class FilterViewModel @Inject constructor(
     private val categoriesUseCases: CategoriesUseCases
 ) : ViewModel() {
 
-
     private val _state = MutableStateFlow(FilterViewState())
     val state = _state.asStateFlow()
 

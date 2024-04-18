@@ -18,9 +18,9 @@ class ProductsRepositoryImpl @Inject constructor(
         return productsApi.getProducts()
     }
 
-    override suspend fun getSearchProduct(searchProduct: SearchProduct): Either<ErrorResponse,List<ProductLine>> {
+    override suspend fun getSearchProducts(searchProduct: SearchProduct): Either<ErrorResponse,List<ProductLine>> {
         Log.d("SearchImpl", searchProduct.toString())
-        return productsApi.getSearchProduct(searchProduct)
+        return productsApi.getSearchProducts(searchProduct)
     }
 
     override suspend fun getProductDetail(productLine: String): Either<ErrorResponse, ProductDetailResponse> {

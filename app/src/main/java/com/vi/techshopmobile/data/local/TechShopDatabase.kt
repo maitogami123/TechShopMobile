@@ -10,5 +10,5 @@ import com.vi.techshopmobile.domain.model.WishItem
 abstract class TechShopDatabase : RoomDatabase() {
     abstract val wishListDao : WishListDao
     abstract val cartDao: CartDao
-    abstract val searchDAO : SearchDAO
+    abstract val searchDao : SearchDao
 }

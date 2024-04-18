@@ -8,7 +8,7 @@ import com.vi.techshopmobile.domain.model.SearchHistory;
 import kotlinx.coroutines.flow.Flow;
 
 @Dao
-interface SearchDAO {
+interface SearchDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsert(searchHistory: SearchHistory)
 

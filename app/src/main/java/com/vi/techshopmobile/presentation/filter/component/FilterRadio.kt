@@ -18,7 +18,7 @@ import com.vi.techshopmobile.ui.theme.Blue
 import com.vi.techshopmobile.ui.theme.Gray_900
 
 @Composable
-fun FilterRadioGroup(
+fun FilterRadio(
     index: Int,
     lableName: String,
     selectedIndex: Int,

@@ -12,6 +12,6 @@ class GetSearchProducts(
     private val productRepository: ProductsRepository
 ) {
     suspend operator fun invoke(searchProduct: SearchProduct): Either<ErrorResponse, List<ProductLine>> {
-        return productRepository.getSearchProduct(searchProduct)
+        return productRepository.getSearchProducts(searchProduct)
     }
 }

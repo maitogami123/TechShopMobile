@@ -10,7 +10,7 @@ import com.vi.techshopmobile.domain.model.ProductLine
 interface ProductsRepository {
     // Either<return Error, return Success>
     suspend fun getProducts(): Either<ErrorResponse, List<ProductLine>>
-    suspend fun getSearchProduct(searchProduct: SearchProduct): Either<ErrorResponse, List<ProductLine>>
+    suspend fun getSearchProducts(searchProduct: SearchProduct): Either<ErrorResponse, List<ProductLine>>
 
     suspend fun getProductDetail(productLine: String): Either<ErrorResponse, ProductDetailResponse>
 }
