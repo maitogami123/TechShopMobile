@@ -122,7 +122,6 @@ class CheckOutViewModel @Inject constructor(
                     if (userDetailRes.isRight()) {
                         userDetailRes.onRight {
                             sendEvent(Event.Toast("Tạo thông tin người dùng ${statePerson.value.userDetail.username} thành công"))
-                            delay(600)
                             _isCreateUserDetail.value = true
                         }
                     } else {

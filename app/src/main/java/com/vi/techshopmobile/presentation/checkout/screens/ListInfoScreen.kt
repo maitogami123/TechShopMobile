@@ -70,7 +70,7 @@ fun ListInfoScreen(
                 FloatingBottomBar(buttonText = "Xác nhận địa chỉ",
                     onButtonClick = {
                         initialSelectedAddress.intValue = selectedAddress.value
-                        navController.navigateUp()
+                        onNavigateUp();
                     }
                 )
             }

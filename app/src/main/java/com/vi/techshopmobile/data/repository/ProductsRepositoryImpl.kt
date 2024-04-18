@@ -13,7 +13,7 @@ class ProductsRepositoryImpl @Inject constructor(
 ): ProductsRepository {
     override suspend fun getProducts(): Either<ErrorResponse, List<ProductLine>> {
         return productsApi.getProducts()
-       }
+   }
 
     override suspend fun getProductDetail(productLine: String): Either<ErrorResponse, ProductDetailResponse> {
         return productsApi.getProductDetail(productLine)

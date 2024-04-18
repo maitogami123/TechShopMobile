@@ -1,5 +1,7 @@
 package com.vi.techshopmobile.di
 
+import android.content.ContentValues.TAG
+import android.util.Log
 import arrow.retrofit.adapter.either.EitherCallAdapterFactory
 import com.vi.techshopmobile.data.remote.categories.CategoriesApi
 import com.vi.techshopmobile.data.repository.CategoriesRepositoryImpl
@@ -12,14 +14,20 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import okhttp3.Interceptor
+import okhttp3.OkHttpClient
+import okhttp3.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.io.IOException
+import java.net.SocketTimeoutException
+import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
+
 
 @Module
 @InstallIn(SingletonComponent::class)
 object CategoryModule {
-
     @Provides
     @Singleton
     fun provideCategoriesApi(): CategoriesApi {

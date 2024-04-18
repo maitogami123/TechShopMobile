@@ -34,6 +34,10 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -56,6 +60,7 @@ import com.vi.techshopmobile.presentation.Dimens
 import com.vi.techshopmobile.presentation.Dimens.SmallPadding
 import com.vi.techshopmobile.presentation.chatAI.component.ModelChatItem
 import com.vi.techshopmobile.presentation.chatAI.component.UserChatItem
+import com.vi.techshopmobile.presentation.checkout.components.ComboBoxQuestion
 import com.vi.techshopmobile.presentation.common.Input
 import com.vi.techshopmobile.presentation.home.home_navigator.component.UtilityTopNavigation
 import com.vi.techshopmobile.presentation.navgraph.Route
@@ -68,7 +73,15 @@ private val uriState = MutableStateFlow("")
 fun ChatAiScreen(onNavigateUp: () -> Unit) {
     val chaViewModel = viewModel<ChatViewModel>()
     val chatState = chaViewModel.chatState.collectAsState().value
-
+    val listQuestion = listOf(
+        "Bạn muốn biết thêm thông tin gì?",
+        "Hi TechShop",
+        "What is your store address?",
+        "What type of technology products do you sell?",
+    )
+    var question by remember {
+        mutableStateOf("")
+    }
     val bitmap = getBitmap()
     Scaffold(
         topBar = {
@@ -113,27 +126,28 @@ fun ChatAiScreen(onNavigateUp: () -> Unit) {
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center
             ) {
-                Input(
-                    inputText = chatState.prompt,
-                    modifier = Modifier.weight(1f),
-                    placeHolderText = "Bạn cần trợ giúp?"
-                ) {
-                    chaViewModel.onEvent(ChatEvent.UpdatePrompt(it))
+//                Input(
+//                    inputText = chatState.prompt,
+//                    modifier = Modifier.weight(1f),
+//                    placeHolderText = "Bạn cần hỗ trợ gì ạ?"
+//                ) {
+//                    chaViewModel.onEvent(ChatEvent.UpdatePrompt(it))
+//                }
+//                Spacer(modifier = Modifier.width(8.dp))
+                ComboBoxQuestion(
+                    modifier = Modifier.weight(.6f),
+                    placeHolderText = "Bạn cần hỗ trợ gì ạ?",
+                    list = listQuestion,
+                    mSelectedText = if (question.isEmpty()) listQuestion[0] else question,
+                    onChange = {
+                        question = it
+                        //chaViewModel.onEvent(ChatEvent.UpdatePrompt(it))
+                        chaViewModel.onEvent(ChatEvent.UpdatePrompt(it))
+                    }
+                ){
+                    chaViewModel.onEvent(ChatEvent.SendPrompt(chatState.prompt, bitmap))
+                    uriState.update { "" }
                 }
-
-                Spacer(modifier = Modifier.width(8.dp))
-
-                Icon(
-                    modifier = Modifier
-                        .size(40.dp)
-                        .clickable {
-                            chaViewModel.onEvent(ChatEvent.SendPrompt(chatState.prompt, bitmap))
-                            uriState.update { "" }
-                        },
-                    imageVector = Icons.Rounded.Send,
-                    contentDescription = "Send prompt",
-                    tint = MaterialTheme.colorScheme.primary
-                )
             }
         }
 
