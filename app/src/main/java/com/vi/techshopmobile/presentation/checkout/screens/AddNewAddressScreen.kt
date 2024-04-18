@@ -92,7 +92,7 @@ fun AddNewAddressScreen(
 
     LaunchedEffect(key1 = isCreateUserDetail.value) {
         if (isCreateUserDetail.value) {
-            navController.navigateUp()
+            onNavigateUp()
         }
     }
 

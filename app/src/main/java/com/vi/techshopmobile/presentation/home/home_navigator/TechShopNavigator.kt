@@ -228,6 +228,7 @@ fun HomeNavigator(navGraphController: NavController) {
                 composable(route = Route.PersonalInfoScreen.route) {
                     PersonalInfoScreen(onNavigateUp = { navController.navigateUp() }, navController)
                 }
+
                 composable(route = Route.PersonalAddressScreen.route) {
                     PersonalAddressScreen(
                         onNavigateUp = { navController.navigateUp() },
