@@ -48,7 +48,7 @@ fun OrdersItem(order: OrderItem, onClick: () -> Unit) {
             Row {
                 Text(
                     modifier = Modifier
-                        .weight(3f),
+                        .weight(1f),
                     textAlign = TextAlign.Start,
                     style = MaterialTheme.typography.displaySmall.copy(
                         fontSize = 16.sp,
@@ -58,7 +58,7 @@ fun OrdersItem(order: OrderItem, onClick: () -> Unit) {
                 )
                 Box(
                     modifier = Modifier
-                        .weight(1f)
+                        .weight(.4f)
                         .border(
                             width = 1.dp,
                             color = color,
