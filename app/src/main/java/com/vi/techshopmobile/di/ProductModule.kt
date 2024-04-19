@@ -50,7 +50,7 @@ object ProductModule {
     fun provideProductsUseCases(productsRepository: ProductsRepository) = ProductUseCases(
         getProducts = GetProducts(productsRepository),
         getProductDetail = GetProductDetail(productsRepository),
-        getSearchProducts = GetSearchProducts(productsRepository)
+        getSearchProducts = GetSearchProducts(productsRepository),
         getProductsRandom = GetProductsRandom(productsRepository)
     )
 }

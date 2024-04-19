@@ -2,7 +2,6 @@ package com.vi.techshopmobile.presentation.common
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -19,8 +18,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -53,6 +52,7 @@ fun FloatingBottomBar(
     onAddToCart: () -> Unit,
     buttonText: String,
     onButtonClick: () -> Unit,
+    onButtonClickEnable: Boolean = true,
 ) {
     Row(
         modifier = modifier
@@ -60,7 +60,11 @@ fun FloatingBottomBar(
             .fillMaxWidth()
             .height(64.dp)
             .clip(RoundedCornerShape(24.dp))
-            .background(MaterialTheme.colorScheme.primary)
+            .background(
+                if(onButtonClickEnable)
+                    MaterialTheme.colorScheme.primary
+                else Color(0xFF8F8B8B)
+            )
     ) {
         Button(
             onClick = { onAddToWishList() }, modifier = Modifier.fillMaxHeight(),
@@ -91,10 +95,16 @@ fun FloatingBottomBar(
             )
         }
         Button(
+            enabled = onButtonClickEnable,
             onClick = { onButtonClick() }, modifier = Modifier
                 .fillMaxHeight()
                 .padding(0.dp)
-                .weight(1f),
+                .weight(1f).alpha(1f),
+            colors = ButtonDefaults.buttonColors(
+                contentColor = if (onButtonClickEnable) Color(
+                    0xffFFFFFF
+                ) else Color.Black,
+            ),
             shape = RoundedCornerShape(0)
         ) {
             Text(
@@ -179,7 +189,7 @@ fun FloatingBottomBar(
             .fillMaxWidth()
             .height(64.dp)
             .clip(RoundedCornerShape(24.dp))
-            .background(if(enable)MaterialTheme.colorScheme.primary else Color.Gray)
+            .background(if (enable) MaterialTheme.colorScheme.primary else Color.Gray)
     ) {
         Button(
             enabled = enable,
@@ -236,8 +246,17 @@ fun FloatingOnBottomBar(
 fun PreviewFloatingBottomBar() {
     TechShopMobileTheme {
         Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Bottom) {
-            FloatingBottomBar(buttonText = "Mua ngay", onButtonClick = {}, onAddToWishList = {}, onAddToCart = {})
-            FloatingBottomBar(buttonText = "Liên hệ", onButtonClick = {}, onAddToWishList = {}, itemInWishList = true)
+            FloatingBottomBar(
+                buttonText = "Mua ngay",
+                onButtonClick = {},
+                onAddToWishList = {},
+                onAddToCart = {})
+            FloatingBottomBar(
+                buttonText = "Liên hệ",
+                onButtonClick = {},
+                onAddToWishList = {},
+                itemInWishList = true
+            )
             FloatingBottomBar(buttonText = "Xác nhận", onButtonClick = {})
             FloatingOnBottomBar(buttonText = "+ Thêm dịa chỉ mới", onButtonClick = {})
 

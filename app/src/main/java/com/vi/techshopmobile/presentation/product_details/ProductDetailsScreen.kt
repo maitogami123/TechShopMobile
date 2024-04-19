@@ -1,5 +1,8 @@
 package com.vi.techshopmobile.presentation.product_details
 
+import android.annotation.SuppressLint
+import android.content.Context
+import android.content.Intent
 import android.util.Log
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -44,6 +47,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
@@ -74,6 +78,7 @@ import com.vi.techshopmobile.ui.theme.Danger
 import com.vi.techshopmobile.ui.theme.Gray_500
 import com.vi.techshopmobile.ui.theme.TechShopMobileTheme
 import com.vi.techshopmobile.util.Constants.BASE_URL
+import com.vi.techshopmobile.util.Constants.IPV4
 import com.vi.techshopmobile.util.decodeToken
 import com.vi.techshopmobile.util.formatPrice
 import kotlinx.coroutines.coroutineScope
@@ -89,6 +94,7 @@ fun ProductDetailsScreen(
     name: String? = null,
     onNavigateUp: () -> Unit
 ) {
+    val context = LocalContext.current
     val viewModel: ProductDetailsViewModel = hiltViewModel()
     val navGraphController = LocalNavGraphController.current;
     val state by viewModel.productDetail.collectAsState();
@@ -137,7 +143,13 @@ fun ProductDetailsScreen(
         topBar = {
             UtilityTopNavigation(
                 onRightBtnClick = {
-
+                    if (state.productDetail != null) {
+                        Share(
+                            context = context,
+                            productName = state.productDetail!!.product.productName,
+                            productLine = productLine
+                        )
+                    }
                 },
                 leftBtnIcon = R.drawable.ic_left_arrow,
                 rightBtnIcon = R.drawable.ic_share
@@ -151,6 +163,16 @@ fun ProductDetailsScreen(
                     FloatingBottomBar(
                         itemInWishList = itemInWishList.value,
                         buttonText = "Mua ngay",
+                        onButtonClickEnable =
+                        if(state.productDetail != null){
+                            if (state.productDetail?.stock!! > quantity) {
+                                true
+                            } else {
+                                false
+                            }
+                        } else {
+                              true
+                        },
                         onButtonClick = {
                             (viewModel::onEvent)(
                                 ProductDetailsEvent.AddItemToCart(
@@ -393,37 +415,54 @@ fun ProductDetailsScreen(
                 }
                 // TODO - END
 
-                Button(modifier = Modifier.fillMaxWidth(), onClick = {
-                    // TODO: Dismiss bottom sheet box then add the product into user cart.
-                    scope.launch { sheetState.hide() }.invokeOnCompletion {
-                        if (!sheetState.isVisible) {
-                            showBottomSheet = false
-                            (viewModel::onEvent)(
-                                ProductDetailsEvent.AddItemToCart(
-                                    CartItem(
-                                        brandName = state.productDetail!!.brandName,
-                                        categoryName = state.productDetail!!.categoryName,
-                                        thumbnailUri = state.productDetail!!.thumbnailUri,
-                                        price = (
-                                                state.productDetail!!.product.price -
-                                                        ((state.productDetail!!.product.price * (state.productDetail!!.product.discount / 100)))
-                                                ),
-                                        productName = state.productDetail!!.product.productName,
-                                        productLine = productLine,
-                                        username = decodedToken.sub,
-                                        quantity = quantity,
-                                        stock = state.productDetail!!.stock
+                Button(modifier = Modifier.fillMaxWidth(),
+                    enabled = if (state.productDetail?.stock!! > 0) true else false,
+                    onClick = {
+                        // TODO: Dismiss bottom sheet box then add the product into user cart.
+                        scope.launch { sheetState.hide() }.invokeOnCompletion {
+                            if (!sheetState.isVisible) {
+                                showBottomSheet = false
+                                (viewModel::onEvent)(
+                                    ProductDetailsEvent.AddItemToCart(
+                                        CartItem(
+                                            brandName = state.productDetail!!.brandName,
+                                            categoryName = state.productDetail!!.categoryName,
+                                            thumbnailUri = state.productDetail!!.thumbnailUri,
+                                            price = (
+                                                    state.productDetail!!.product.price -
+                                                            ((state.productDetail!!.product.price * (state.productDetail!!.product.discount / 100)))
+                                                    ),
+                                            productName = state.productDetail!!.product.productName,
+                                            productLine = productLine,
+                                            username = decodedToken.sub,
+                                            quantity = quantity,
+                                            stock = state.productDetail!!.stock
+                                        )
                                     )
                                 )
-                            )
+                            }
                         }
-                    }
-                }) {
+                    }) {
                     Text("Thêm vào giỏ hàng")
                 }
             }
         }
     }
+}
+
+@SuppressLint("QueryPermissionsNeeded")
+fun Share(context: Context, productName: String, productLine: String) {
+    val sendIntent: Intent = Intent().apply {
+        action = Intent.ACTION_SEND
+        putExtra(
+            Intent.EXTRA_TEXT,
+            "Click to preview:\n http://$IPV4:3000/Home/Product/$productLine"
+        )
+        type = "text/plain"
+    }
+
+    val shareIntent = Intent.createChooser(sendIntent, null)
+    context.startActivity(shareIntent)
 }
 
 @Preview

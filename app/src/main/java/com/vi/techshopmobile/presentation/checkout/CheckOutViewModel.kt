@@ -101,12 +101,14 @@ class CheckOutViewModel @Inject constructor(
                             _idOrderCreated.value = it.id.toString()
                             _isCreateOrder.value = true
                             _isOrderLoading.value = false
+                            _orderPaymentStatus.value = "SUCCESS"
                         }
                     } else {
                         orderResponse.onLeft {
                             sendEvent(Event.Toast(it.detail))
                             _isCreateOrder.value = false
                             _isOrderLoading.value = false
+                            _orderPaymentStatus.value = "FAIL"
                         }
                     }
                 }

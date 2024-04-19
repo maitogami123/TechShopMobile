@@ -88,7 +88,7 @@ fun ListInfoScreen(
                 LoadingDialog(isLoading = state.value.isLoading)
             } else {
                 LazyColumn(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth().fillMaxHeight(.8f),
 //                    .padding(it),
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
@@ -113,10 +113,10 @@ fun ListInfoScreen(
                         Divider()
                     }
                 }
+                FloatingOnBottomBar(buttonText = "+ Thêm địa chỉ mới", onButtonClick = {
+                    navController.navigate((Route.AddNewAddressScreen.route))
+                })
             }
-            FloatingOnBottomBar(buttonText = "+ Thêm địa chỉ mới", onButtonClick = {
-                navController.navigate((Route.AddNewAddressScreen.route))
-            })
         }
     }
 }
