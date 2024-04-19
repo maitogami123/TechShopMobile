@@ -144,6 +144,7 @@ fun CheckOutScreen(
 
     LaunchedEffect(key1 = orderPaymentStatus.value) {
         if (orderPaymentStatus.value == "SUCCESS") {
+            (viewModel::onEvent)(CheckOutEvent.ClearCart(decodedToken.sub))
             navigateToPaymentSuccess(navController, idOrderCreated.value)
         } else if (maxPollingRequest.value == 0 || orderPaymentStatus.value == "FAIL") {
             navigateToPaymentFail(navController, idOrderCreated.value)

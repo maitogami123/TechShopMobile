@@ -1,7 +1,7 @@
 package com.vi.techshopmobile.util
 
 object Constants {
-    const val IPV4 = "192.168.1.12"
+    const val IPV4 = "10.0.2.2"
     const val BASE_URL = "http://$IPV4:8080/"
 
     const val USER_SETTINGS = "userSettings"

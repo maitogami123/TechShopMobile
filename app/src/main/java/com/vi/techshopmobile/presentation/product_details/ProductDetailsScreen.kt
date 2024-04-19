@@ -144,7 +144,11 @@ fun ProductDetailsScreen(
             UtilityTopNavigation(
                 onRightBtnClick = {
                     if (state.productDetail != null) {
-                        Share(context = context, productName= state.productDetail!!.product.productName, productLine = productLine)
+                        Share(
+                            context = context,
+                            productName = state.productDetail!!.product.productName,
+                            productLine = productLine
+                        )
                     }
                 },
                 leftBtnIcon = R.drawable.ic_left_arrow,
@@ -159,6 +163,16 @@ fun ProductDetailsScreen(
                     FloatingBottomBar(
                         itemInWishList = itemInWishList.value,
                         buttonText = "Mua ngay",
+                        onButtonClickEnable =
+                        if(state.productDetail != null){
+                            if (state.productDetail?.stock!! > quantity) {
+                                true
+                            } else {
+                                false
+                            }
+                        } else {
+                              true
+                        },
                         onButtonClick = {
                             (viewModel::onEvent)(
                                 ProductDetailsEvent.AddItemToCart(
@@ -401,32 +415,34 @@ fun ProductDetailsScreen(
                 }
                 // TODO - END
 
-                Button(modifier = Modifier.fillMaxWidth(), onClick = {
-                    // TODO: Dismiss bottom sheet box then add the product into user cart.
-                    scope.launch { sheetState.hide() }.invokeOnCompletion {
-                        if (!sheetState.isVisible) {
-                            showBottomSheet = false
-                            (viewModel::onEvent)(
-                                ProductDetailsEvent.AddItemToCart(
-                                    CartItem(
-                                        brandName = state.productDetail!!.brandName,
-                                        categoryName = state.productDetail!!.categoryName,
-                                        thumbnailUri = state.productDetail!!.thumbnailUri,
-                                        price = (
-                                                state.productDetail!!.product.price -
-                                                        ((state.productDetail!!.product.price * (state.productDetail!!.product.discount / 100)))
-                                                ),
-                                        productName = state.productDetail!!.product.productName,
-                                        productLine = productLine,
-                                        username = decodedToken.sub,
-                                        quantity = quantity,
-                                        stock = state.productDetail!!.stock
+                Button(modifier = Modifier.fillMaxWidth(),
+                    enabled = if (state.productDetail?.stock!! > 0) true else false,
+                    onClick = {
+                        // TODO: Dismiss bottom sheet box then add the product into user cart.
+                        scope.launch { sheetState.hide() }.invokeOnCompletion {
+                            if (!sheetState.isVisible) {
+                                showBottomSheet = false
+                                (viewModel::onEvent)(
+                                    ProductDetailsEvent.AddItemToCart(
+                                        CartItem(
+                                            brandName = state.productDetail!!.brandName,
+                                            categoryName = state.productDetail!!.categoryName,
+                                            thumbnailUri = state.productDetail!!.thumbnailUri,
+                                            price = (
+                                                    state.productDetail!!.product.price -
+                                                            ((state.productDetail!!.product.price * (state.productDetail!!.product.discount / 100)))
+                                                    ),
+                                            productName = state.productDetail!!.product.productName,
+                                            productLine = productLine,
+                                            username = decodedToken.sub,
+                                            quantity = quantity,
+                                            stock = state.productDetail!!.stock
+                                        )
                                     )
                                 )
-                            )
+                            }
                         }
-                    }
-                }) {
+                    }) {
                     Text("Thêm vào giỏ hàng")
                 }
             }
@@ -439,7 +455,7 @@ fun Share(context: Context, productName: String, productLine: String) {
     val sendIntent: Intent = Intent().apply {
         action = Intent.ACTION_SEND
         putExtra(
-                Intent.EXTRA_TEXT,
+            Intent.EXTRA_TEXT,
             "Click to preview:\n http://$IPV4:3000/Home/Product/$productLine"
         )
         type = "text/plain"

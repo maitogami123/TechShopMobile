@@ -399,6 +399,7 @@ fun navigateToSearchResult(
     navController.currentBackStackEntry?.savedStateHandle?.set("isFilter", isFilter)
     navController.currentBackStackEntry?.savedStateHandle?.set("searchQuery", searchQuery)
     navController.navigate(Route.SearchResultScreen.route)
+}
 fun navigateToDetailsProduct(
     navController: NavController,
     productLine: String,

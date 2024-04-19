@@ -149,11 +149,7 @@ fun navigateToDetailAddress(navController: NavController, id: String) {
 
 fun navigateToDetailOrder(navController: NavController, id: String) {
     navController.currentBackStackEntry?.savedStateHandle?.set("id", id)
-    navController.navigate(Route.OderDetailsScreen.route) {
-        popUpTo(Route.HomeScreen.route) {
-            inclusive = true
-        }
-    };
+    navController.navigate(Route.OderDetailsScreen.route)
 }
 
 fun navigateToPaymentSuccess(navController: NavController, id: String) {
