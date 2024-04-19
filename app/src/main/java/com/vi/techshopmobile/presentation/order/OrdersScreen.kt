@@ -5,10 +5,12 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -28,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -35,6 +38,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.vi.techshopmobile.LocalToken
 import com.vi.techshopmobile.R
+import com.vi.techshopmobile.presentation.Dimens
 import com.vi.techshopmobile.presentation.Dimens.SmallPadding
 import com.vi.techshopmobile.presentation.checkout.navigateToDetailOrder
 import com.vi.techshopmobile.presentation.common.LoadingDialog
@@ -122,48 +126,59 @@ fun UserOrdersScreen(
                     }
                 }
             }
-            LazyColumn(
-                modifier = Modifier.padding(horizontal = SmallPadding)
-            )
-            {
-                var counter = 0;
-                items(state.orders) { order ->
-                    if (selectedItem.value == "ALL") {
-                        OrdersItem(order = order) {
-                            navigateToDetailOrder(navController, order.id.toString())
-                        }
-                        counter += 1;
-                    } else if (order.status == selectedItem.value) {
-                        OrdersItem(order = order) {
-                            navigateToDetailOrder(navController, order.id.toString())
-                        }
-                        counter += 1;
-                    }
-                }
-
-                if (state.error != null) {
-                    item {
-                        // Hiển thị thông báo lỗi tại đây
-                    }
-                }
-
-                if (state.orders.isEmpty() && !state.isLoading) {
-                    item {
-                        Box(
+            if (state.orders.isEmpty() && !state.isLoading) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Column(
                             modifier = Modifier
-                                .padding(top = it.calculateTopPadding())
-                                .fillMaxSize(),
-                            contentAlignment = Alignment.BottomCenter
+                                .fillMaxWidth()
+                                .padding(horizontal = 67.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center
                         ) {
                             Image(
+                                modifier = Modifier.size(250.dp),
                                 painter = painterResource(id = R.drawable.cart_illustartion),
                                 contentDescription = null,
-                                modifier = Modifier
-                                    .padding(bottom = 40.dp)
-                                    .width(272.dp)
-                                    .height(262.dp)
                             )
-                            Text(text = "Hiện tại không có đơn hàng")
+                            Spacer(modifier = Modifier.height(6.dp))
+                            Text(
+                                text = "Hiện tại không có đơn hàng",
+                                style = MaterialTheme.typography.displaySmall.copy(
+                                    fontSize = 22.sp,
+                                    fontWeight = FontWeight(600)
+                                ),
+                                textAlign = TextAlign.Center
+                            )
+                        }
+
+                    }
+            }else {
+                LazyColumn(
+                    modifier = Modifier.padding(horizontal = SmallPadding)
+                )
+                {
+                    var counter = 0;
+                    items(state.orders) { order ->
+                        if (selectedItem.value == "ALL") {
+                            OrdersItem(order = order) {
+                                navigateToDetailOrder(navController, order.id.toString())
+                            }
+                            counter += 1;
+                        } else if (order.status == selectedItem.value) {
+                            OrdersItem(order = order) {
+                                navigateToDetailOrder(navController, order.id.toString())
+                            }
+                            counter += 1;
+                        }
+                    }
+
+                    if (state.error != null) {
+                        item {
+                            // Hiển thị thông báo lỗi tại đây
                         }
                     }
                 }

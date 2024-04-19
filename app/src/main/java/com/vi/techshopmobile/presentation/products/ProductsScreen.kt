@@ -1,16 +1,28 @@
 package com.vi.techshopmobile.presentation.products
 
 import android.util.Log
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
@@ -20,6 +32,7 @@ import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.vi.techshopmobile.R
 import com.vi.techshopmobile.domain.model.Brand
 import com.vi.techshopmobile.domain.model.ProductLine
+import com.vi.techshopmobile.presentation.Dimens
 import com.vi.techshopmobile.presentation.common.LoadingDialog
 import com.vi.techshopmobile.presentation.home.home_navigator.component.UtilityTopNavigation
 import com.vi.techshopmobile.presentation.home.home_navigator.navigateToFilter
@@ -60,7 +73,6 @@ fun ProductsScreen(
         brands.addAll(state.categories.filter { it.name == categoryName }.flatMap { it.brands }
             .filter { it.brandName == brandName }.map { it })
     }
-    Log.d("Product seeding", productsShow.toString())
     SwipeRefresh(
         state = swipeRefreshState,
         onRefresh = { (viewModel::onEvent)(ProductsEvents.GetAllProductByCategory(categoryName)) },
@@ -90,14 +102,41 @@ fun ProductsScreen(
                 title = "$categoryName $brandName",
                 onSearch = {})
         }) {
-            if (state.isLoading) {
+            if (state.isLoading && productsShow.isEmpty() && brandName.isEmpty()) {
                 LoadingDialog(isLoading = state.isLoading)
             } else {
                 Box(
                     modifier = Modifier.padding(top = it.calculateTopPadding()),
                 ) {
                     if (isFilter && productsFilter.isEmpty()) {
-                        Text(text = "Hiện tại không có sản phẩm phù hợp")
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(it),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 67.dp),
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.Center
+                            ) {
+                                Image(
+                                    painterResource(id = R.drawable.error),
+                                    contentDescription = null,
+                                )
+                                Spacer(modifier = Modifier.height(Dimens.SmallPadding))
+                                Text(
+                                    text = "Hiện không có sản phẩm phù hợp!",
+                                    style = MaterialTheme.typography.displayLarge.copy(
+                                        fontWeight = FontWeight(500),
+                                    ),
+                                    textAlign = TextAlign.Center
+                                )
+                            }
+
+                        }
                     } else if (isFilter) {
                         ProductsColumn(
                             modifier = Modifier,
@@ -105,7 +144,34 @@ fun ProductsScreen(
                             isLoading = isLoading
                         )
                     } else if (brandName.isNotBlank() && productsShow.isEmpty()) {
-                        Text(text = "Hiện tại không có sản phẩm nào của $categoryName $brandName")
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(it),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 67.dp),
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.Center
+                            ) {
+                                Image(
+                                    painterResource(id = R.drawable.error),
+                                    contentDescription = null,
+                                )
+                                Spacer(modifier = Modifier.height(Dimens.SmallPadding))
+                                Text(
+                                    text = "Hiện tại không có sản phẩm nào của $categoryName $brandName!",
+                                    style = MaterialTheme.typography.displayLarge.copy(
+                                        fontWeight = FontWeight(500),
+                                    ),
+                                    textAlign = TextAlign.Center
+                                )
+                            }
+
+                        }
                     } else {
                         ProductsColumn(
                             modifier = Modifier,
