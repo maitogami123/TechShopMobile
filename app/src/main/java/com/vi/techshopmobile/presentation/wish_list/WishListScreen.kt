@@ -14,6 +14,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.ButtonDefaults.outlinedButtonColors
 import androidx.compose.material3.Divider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -25,7 +26,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.vi.techshopmobile.LocalToken
@@ -92,6 +96,11 @@ fun WishListScreen(onNavigateUp: () -> Unit, navController: NavController) {
                     )
                     Text(
                         modifier = Modifier.padding(top = 200.dp),
+                        style = MaterialTheme.typography.displaySmall.copy(
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight(600)
+                        ),
+                        textAlign = TextAlign.Center,
                         text = "Hiện tại bạn không có sản phẩm yêu thích nào"
                     )
                     OutlinedButton(modifier = Modifier.padding(top = 300.dp),

@@ -141,4 +141,7 @@ dependencies {
 
     //Lottie
     implementation( "com.airbnb.android:lottie-compose:6.0.0")
+
+    //Firebase message
+    implementation("com.google.firebase:firebase-messaging-ktx:23.4.1")
 }

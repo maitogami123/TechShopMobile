@@ -20,6 +20,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
@@ -122,7 +123,6 @@ fun FilterScreen(
                 buttonText = "Xác nhận",
                 onButtonClick = {
                     if (isSearch) {
-                        Log.d("Hello", state.products.toString())
                         navigateToSearchResult(
                             navController = navController,
                             searchQuery = category,
@@ -162,7 +162,8 @@ fun FilterScreen(
                         modifier = Modifier
                             .selectableGroup()
                             .fillMaxSize(),
-                        verticalArrangement = Arrangement.Center
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.Start
                     ) {
                         Text(
                             text = "Sắp xếp sản phẩm theo",

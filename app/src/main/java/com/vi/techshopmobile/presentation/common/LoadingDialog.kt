@@ -29,27 +29,9 @@ fun LoadingDialog(isLoading: Boolean) {
         composition = composition,
         isPlaying = isLoading
     )
-//    if (isLoading) {
-//        Dialog(
-//            onDismissRequest = { /*TODO*/ },
-//            properties = DialogProperties(
-//                dismissOnClickOutside = false
-//            )
-//        ) {
-//            Box(
-//                modifier = Modifier
-//                    .width(200.dp)
-//                    .clip(RoundedCornerShape(15.dp))
-//                    .background(Color.White),
-//                contentAlignment = Alignment.Center
-//            ) {
-//                CircularProgressIndicator(modifier = Modifier.padding(10.dp)) //màn hình loading
-//            }
-//        }
-//    }
     if (isLoading) {
         LottieAnimation(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier.fillMaxSize().background(Color.White),
             composition = composition,
             progress = { progress })
     }

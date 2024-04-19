@@ -1,5 +1,8 @@
 package com.vi.techshopmobile
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -11,21 +14,19 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.compositionLocalOf
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.repeatOnLifecycle
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import com.vi.techshopmobile.network.ConnectionState
-import com.vi.techshopmobile.network.connectivityState
 import com.vi.techshopmobile.presentation.navgraph.NavGraph
 import com.vi.techshopmobile.ui.theme.TechShopMobileTheme
 import com.vi.techshopmobile.util.Event
@@ -50,7 +51,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         val data = ReadJSONFromAssets(context = baseContext, "provinces.json")
 //        WindowCompat.setDecorFitsSystemWindows(window, false);
-
+        requestNotificationPermission()
         installSplashScreen().apply {
             setKeepOnScreenCondition {
                 viewModel.splashCondition
@@ -98,6 +99,22 @@ class MainActivity : ComponentActivity() {
                             }
                     }
                 }
+            }
+        }
+    }
+    private fun requestNotificationPermission() {
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            val hasPermission = ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.POST_NOTIFICATIONS
+            ) == PackageManager.PERMISSION_GRANTED
+
+            if(!hasPermission) {
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(Manifest.permission.POST_NOTIFICATIONS),
+                    0
+                )
             }
         }
     }

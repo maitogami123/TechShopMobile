@@ -7,6 +7,6 @@ data class OrderItem(
     val modified_at: String,
     val paymentStatus: String,
     val status: String,
-    val total: Int,
+    val total: Double,
     val username: String
 )

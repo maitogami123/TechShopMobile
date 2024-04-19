@@ -96,6 +96,9 @@ fun SearchScreen(navController: NavController) {
                         .padding(vertical = 4.dp)
                 )
                 state.value.reversed().forEachIndexed { index, searchString ->
+                    if (index != searchString.searchString.lastIndex && index > 0) {
+                        Divider(modifier = Modifier.fillMaxWidth())
+                    }
                     Row(modifier = Modifier
                         .fillMaxWidth()
                         .height(40.dp)
@@ -114,24 +117,15 @@ fun SearchScreen(navController: NavController) {
                             color = Gray_500,
                             modifier = Modifier.align(Alignment.CenterVertically)
                         )
+                    }
 
-                    }
-                    if (index != searchString.searchString.lastIndex) {
-                        Divider(modifier = Modifier.fillMaxWidth())
-                    }
                 }
             }
-            Row(
-                modifier = Modifier.padding(vertical = Dimens.ExtraSmallGap)
-            ) {
-                Spacer(
-                    modifier = Modifier
-                        .background(color = Blue_50)
-                        .height(16.dp)
-                        .fillMaxWidth()
-                )
-            }
 
+            Spacer(modifier = Modifier.height(Dimens.SmallPadding))
+            Divider(thickness = 5.dp)
+            Spacer(modifier = Modifier.height(Dimens.SmallPadding))
+            
             LazyColumn {
                 item {
                     Text(

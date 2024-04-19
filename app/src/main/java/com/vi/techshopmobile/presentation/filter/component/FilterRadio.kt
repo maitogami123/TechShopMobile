@@ -28,7 +28,6 @@ fun FilterRadio(
         modifier = Modifier
             .fillMaxWidth()
             .height(40.dp)
-            .padding(start = 8.dp)
             .selectable(
                 selected = selectedIndex == index,
                 onClick = {
@@ -40,12 +39,13 @@ fun FilterRadio(
     ) {
         RadioButton(
             selected = selectedIndex == index,
+            enabled = false,
             onClick = { },
             colors = RadioButtonDefaults.colors(
                 selectedColor = Blue,
                 unselectedColor = Gray_900,
                 disabledUnselectedColor = Gray_900,
-                disabledSelectedColor = Gray_900
+                disabledSelectedColor = Blue
             ),
             modifier = Modifier.padding(end = 4.dp)
         )
@@ -54,7 +54,5 @@ fun FilterRadio(
             style = MaterialTheme.typography.bodyMedium,
             color = if (index != selectedIndex) Gray_900 else Blue
         )
-
-
     }
 }

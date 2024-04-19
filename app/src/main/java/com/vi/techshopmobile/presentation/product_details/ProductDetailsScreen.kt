@@ -141,20 +141,22 @@ fun ProductDetailsScreen(
 
     Scaffold(
         topBar = {
-            UtilityTopNavigation(
-                onRightBtnClick = {
-                    if (state.productDetail != null) {
-                        Share(
-                            context = context,
-                            productName = state.productDetail!!.product.productName,
-                            productLine = productLine
-                        )
-                    }
-                },
-                leftBtnIcon = R.drawable.ic_left_arrow,
-                rightBtnIcon = R.drawable.ic_share
-            ) {
-                onNavigateUp()
+            if (!state.isLoading && !stateProduct.isLoading) {
+                UtilityTopNavigation(
+                    onRightBtnClick = {
+                        if (state.productDetail != null) {
+                            Share(
+                                context = context,
+                                productName = state.productDetail!!.product.productName,
+                                productLine = productLine
+                            )
+                        }
+                    },
+                    leftBtnIcon = R.drawable.ic_left_arrow,
+                    rightBtnIcon = R.drawable.ic_share
+                ) {
+                    onNavigateUp()
+                }
             }
         },
         bottomBar = {
