@@ -86,17 +86,6 @@ fun SignInScreen(
         mutableStateOf("")
     }
 
-//    val context = LocalContext.current
-//    LaunchedEffect(key1 = stateGoogle.value.signInError) {
-//        stateGoogle.value.signInError?.let { error ->
-//            Toast.makeText(
-//                context,
-//                error,
-//                Toast.LENGTH_LONG
-//            ).show()
-//        }
-//    }
-
     LaunchedEffect(key1 = isLoggedInState.value) {
         if (isLoggedInState.value) {
             navGraphController.navigate(Route.TechShopNavigation.route) {
@@ -180,7 +169,6 @@ fun SignInScreen(
                     Text(
                         "Quên mật khẩu",
                         modifier = Modifier
-                            .fillMaxWidth()
                             .clickable { navController.navigate(Route.ForgetPasswordScreenEmailScreen.route) },
                         textAlign = TextAlign.Right,
                         style = MaterialTheme.typography.labelMedium
@@ -213,8 +201,6 @@ fun SignInScreen(
 
                         val googleSignInClient = GoogleSignIn
                             .getClient(context, gso)
-//                        val googleSignInClient = GoogleSignIn
-//                            .getClient(context, test.value.options)
                         launcher
                             .launch(googleSignInClient.signInIntent)
                     }

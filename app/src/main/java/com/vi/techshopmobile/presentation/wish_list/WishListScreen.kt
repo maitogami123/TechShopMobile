@@ -40,11 +40,9 @@ import com.vi.techshopmobile.presentation.Dimens
 import com.vi.techshopmobile.presentation.cart.components.ProductCartRowNoQuantity
 import com.vi.techshopmobile.presentation.common.SwipeToDeleteContainer
 import com.vi.techshopmobile.presentation.home.home_navigator.component.UtilityTopNavigation
-import com.vi.techshopmobile.presentation.home.home_navigator.navigateToDetails
 import com.vi.techshopmobile.presentation.home.home_navigator.navigateToDetailsProduct
 import com.vi.techshopmobile.presentation.navgraph.Route
 import com.vi.techshopmobile.util.decodeToken
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 

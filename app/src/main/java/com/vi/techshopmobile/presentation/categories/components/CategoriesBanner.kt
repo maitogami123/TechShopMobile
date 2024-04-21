@@ -49,7 +49,9 @@ fun CategoriesBanner(navController: NavController, modifier: Modifier = Modifier
                 color = Color(0xffE1EFFE)
             )
             Text(
-                modifier = Modifier.padding(top = 4.dp),
+                modifier = Modifier.padding(top = 4.dp).clickable {
+                    navigateToProducts(navController, categoryName, "", emptyList(), isFilter = false)
+                },
                 text = "Xem tất cả sản phẩm",
                 style = MaterialTheme.typography.titleSmall,
                 color = Color(0xffE1EFFE),

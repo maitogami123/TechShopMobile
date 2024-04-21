@@ -356,11 +356,6 @@ fun HomeNavigator(navGraphController: NavController) {
     }
 }
 
-fun navigateToDetails(navController: NavController, productLine: String) {
-    navController.currentBackStackEntry?.savedStateHandle?.set("productLine", productLine)
-    navController.navigate(Route.ProductDetailsScreen.route);
-}
-
 fun navigateToProducts(
     navController: NavController,
     categoryName: String,
@@ -400,6 +395,7 @@ fun navigateToSearchResult(
     navController.currentBackStackEntry?.savedStateHandle?.set("searchQuery", searchQuery)
     navController.navigate(Route.SearchResultScreen.route)
 }
+
 fun navigateToDetailsProduct(
     navController: NavController,
     productLine: String,

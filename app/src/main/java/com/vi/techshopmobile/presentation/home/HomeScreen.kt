@@ -99,13 +99,13 @@ fun HomeScreen(navController: NavController) {
                                     textAlign = TextAlign.Center,
                                     text = "Sản phẩm mới"
                                 )
-                                TextButton(onClick = { /*TODO*/ }) {
-                                    Text(
-                                        text = "Xem tất cả",
-                                        style = MaterialTheme.typography.displaySmall,
-                                        textDecoration = TextDecoration.Underline
-                                    )
-                                }
+//                                TextButton(onClick = { /*TODO*/ }) {
+//                                    Text(
+//                                        text = "Xem tất cả",
+//                                        style = MaterialTheme.typography.displaySmall,
+//                                        textDecoration = TextDecoration.Underline
+//                                    )
+//                                }
                             }
                         }
                         ProductsRow(state.products)
