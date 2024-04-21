@@ -22,6 +22,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -34,6 +35,11 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.LottieConstants
+import com.airbnb.lottie.compose.animateLottieCompositionAsState
+import com.airbnb.lottie.compose.rememberLottieComposition
 import com.vi.techshopmobile.LocalToken
 import com.vi.techshopmobile.R
 import com.vi.techshopmobile.presentation.Dimens.ExtraSmallPadding2
@@ -110,6 +116,11 @@ fun ShoppingCartButton(
     items: Int,
     onClick: () -> Unit
 ) {
+    val composition by rememberLottieComposition(spec = LottieCompositionSpec.RawRes(R.raw.cart))
+    val progress by animateLottieCompositionAsState(
+        composition = composition,
+        iterations = LottieConstants.IterateForever
+    )
     Row(
         modifier = Modifier
             .clip(
@@ -125,16 +136,21 @@ fun ShoppingCartButton(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Box {
-            Icon(
-                painter = painterResource(id = R.drawable.ic_shopping_cart),
-                tint = Color.White,
-                contentDescription = null
+            LottieAnimation(
+            modifier = Modifier,
+            composition = composition,
+                progress = {progress}
             )
+//            Icon(
+//                painter = painterResource(id = R.drawable.ic_shopping_cart),
+//                tint = Color.White,
+//                contentDescription = null
+//            )
             Text(
                 text = if (items > 9) "9+" else "$items",
                 modifier = Modifier
                     .align(Alignment.TopEnd)
-                    .offset(2.dp, (-2).dp)
+                    .offset(4.dp, (-2).dp)
                     .clip(CircleShape)
                     .background(Danger)
                     .size(12.dp),
@@ -146,7 +162,7 @@ fun ShoppingCartButton(
             )
         }
         Text(
-            modifier = Modifier.padding(2.dp, 0.dp, 0.dp, 0.dp),
+            modifier = Modifier.padding(4.dp, 0.dp, 0.dp, 0.dp),
             text = "Giỏ hàng",
             style = MaterialTheme.typography.displaySmall.copy(color = Color.White)
         )
